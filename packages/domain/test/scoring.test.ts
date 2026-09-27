@@ -41,3 +41,24 @@ describe("punts per partit", () => {
     expect(sideTotals(m, "A")).toMatchObject({ points: 0, gamesWon: 0, gamesLost: 12 });
   });
 });
+
+describe("partit no acabat a les 23:00 (super tie-break a 10)", () => {
+  const tl = (partial: [number, number] | null, stb: [number, number]) => ({
+    ...(partial ? { partialSet: { a: partial[0], b: partial[1] } } : {}),
+    superTieBreak: { a: stb[0], b: stb[1] },
+  });
+
+  it("valida sets acabats + set en joc + super tie-break", () => {
+    expect(validateMatchSets(parseSets("6-4"), tl([3, 4], [10, 8])).ok).toBe(true);
+    expect(validateMatchSets(parseSets("6-4 4-6"), tl([2, 2], [12, 10])).ok).toBe(true);
+    expect(validateMatchSets(parseSets("6-4 6-4"), tl(null, [10, 8])).ok).toBe(false); // ja estava decidit
+    expect(validateMatchSets(parseSets("6-4"), tl([6, 3], [10, 8])).ok).toBe(false); // el set en joc ja era acabat
+    expect(validateMatchSets(parseSets("6-4"), tl([3, 4], [10, 9])).ok).toBe(false);
+  });
+
+  it("guanya qui guanya el super tie-break; compta com a set i com a joc 1-0", () => {
+    const m = { ...played("A", "B", "4-6"), timeLimit: tl([4, 3], [10, 7]) };
+    expect(sideTotals(m, "A")).toMatchObject({ won: true, points: 3, setsWon: 1, setsLost: 1, gamesWon: 9, gamesLost: 9 });
+    expect(sideTotals(m, "B")).toMatchObject({ won: false, points: 1, setsWon: 1 });
+  });
+});

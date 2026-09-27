@@ -2,8 +2,8 @@
 ### Club Tennis & Pàdel El Masnou · Temporada 2026/27
 
 > Document viu d'arquitectura. Abans d'escriure codi de producció, llegeix-lo sencer.
-> Estat: **decisions de domini confirmades pel coordinador (Marc)** — revisió 2 (27/09/2026).
-> Implementat i testat a `packages/domain`: Round Robin, puntuació, classificació de grup amb desempat, rànquing individual.
+> Estat: **decisions de domini confirmades pel coordinador (Marc)** — revisió 3.
+> Implementat i testat a `packages/domain`: Round Robin, puntuació (inclòs el final per límit horari), classificació amb desempat, rànquing individual, playoffs, franges i validació de reserves, cancel·lacions/WO i cobraments de partit.
 
 ---
 
@@ -49,13 +49,16 @@ Aquestes decisions **resolen** algunes de les contradiccions detectades en l'an�
 - Els **festius es juguen** (el club és obert). Només es bloquegen dies puntuals de tancament (31/12, 6/1…) → taula `blackout_date`.
 - Si hi ha endarreriments, el final de la prova es pot allargar **com a màxim 1 mes**.
 
-### Dies, franges i pistes
+### Dies, franges i pistes (`CALENDAR_2026_27`)
 
-- **Masculina i Femenina:** entre setmana — **dl, dt, dc, dv** a les **21:00**. Franja de 90 min, amb marge fins a les **23:00** (el club tanca a les 23h).
-- **Mixta:** **caps de setmana** (franges a concretar amb el club).
-- **3 pistes** per dia de lliga.
-- Com que les categories van en dies diferents, un jugador inscrit a Masculina/Femenina i a Mixta **mai pot coincidir** en dos partits. Tot i així, el motor valida igualment **"un jugador, un partit per dia"** (defensa en profunditat).
-- Un jugador només pot jugar **un partit per vespre** entre setmana (només hi ha un torn).
+| Categoria | Dies | Hora | Pistes |
+|---|---|---|---|
+| Masculina i Femenina | **dt, dc, dv** | a partir de les **21:00** (marge fins a les 23:00) | mínim **3** assegurades |
+| Mixta | **ds, dg** | a partir de les **9:00** | 3 (a confirmar) |
+| Emergència (M/F) | **dj** | 21:00 | 3, **només amb aprovació del coordinador** |
+
+- Com que les categories van en dies diferents, un jugador inscrit a Masculina/Femenina i a Mixta mai pot coincidir. El motor valida igualment **"un jugador, un partit per dia"**.
+- Entre setmana només hi ha un torn per vespre, així que cada jugador juga com a màxim un partit per vespre.
 
 ### Agenda autogestionada per les parelles
 
@@ -68,15 +71,17 @@ Aquestes decisions **resolen** algunes de les contradiccions detectades en l'an�
 - **Millor de 3 sets.** Si els dos primers sets queden 1-1, es juga un **tercer set complet**.
 - Set vàlid: 6-0…6-4, 7-5, o **7-6**. A 6-6 es juga un **super tie-break a 10 punts** (2 de diferència), que es registra i compta com a set 7-6 (7 i 6 jocs).
 - **Star Point** a tots els partits: després de dos iguals (40-40) seguits, el següent 40-40 es decideix amb punt d'or. Afecta el joc, no el registre del resultat.
-- Durada: franja de 90 min, amb marge fins a les 23:00 per acabar.
+- **Límit horari (23:00):** si el partit no ha acabat, es juga un **super tie-break a 10** que el decideix. Es registren els sets acabats, el marcador del set en joc (els seus jocs compten a la diferència de jocs, però no com a set) i el super tie-break, que compta com un set i un joc (1-0) per al guanyador.
 - **Punts:** victòria **3**; derrota amb un set a favor **1** (p. ex. 6-4 / 1-6 / 7-5 → 3 per al guanyador, 1 per al perdedor); derrota **0**.
 
-### WO
+### Cancel·lacions i WO (`evaluateCancellation`)
 
-- **No presentació** a un partit confirmat per les dues parelles → **WO** a favor de la parella present.
-- **Cancel·lacions:** una cancel·lació avisada amb **≥ 24 h** no és WO, **excepte** si és la reiterada del mateix enfrontament (vegeu la decisió pendent a §39: 2 o 3 cops).
+- Cada cancel·lació amb **≥ 24 h** d'antelació és un **avís** a la parella que cancel·la (1/3, 2/3), sense cap cobrament.
+- La **3a cancel·lació** del **mateix enfrontament** per la mateixa parella → **WO** a favor de la rival, i els jugadors que han cancel·lat **paguen el partit**.
+- **Cancel·lació amb < 24 h:** WO directe (supòsit per defecte, vegeu P2 a §39; configurable).
+- **No presentació** a un partit confirmat per les dues parelles → **WO** a favor de la parella present. Paguen el partit els jugadors absents; la parella present no paga.
 - Resultat del WO: **3 punts** per a la parella perjudicada, **0** per a la que el provoca, i marcador virtual **6-0 / 6-0**.
-- El coordinador valida o pot revertir qualsevol WO. Queda registrat a l'auditoria.
+- El coordinador rep la notificació de cada WO i el pot revertir. Tot queda a l'auditoria.
 
 ### Preus i pagament
 
@@ -85,6 +90,7 @@ Aquestes decisions **resolen** algunes de les contradiccions detectades en l'an�
 - **Per partit jugat:** 1 € (abonat) / 5 € (no abonat).
 - El pagament és **per prova**: es pot jugar 1, 2 o 3 proves sense cap restricció ni descompte obligatori entre elles.
 - **No presentació:** paguen el partit els jugadors de la parella **absent** (la pista s'hauria pogut llogar). La parella present **no paga**.
+- **Cancel·lacions:** els avisos no generen cobrament; a la 3a (WO), paguen el partit els jugadors que han cancel·lat.
 - **Suplent:** paga els partits que juga. No paga la inscripció, excepte si vol el welcome pack.
 
 ### Suplents
@@ -128,22 +134,18 @@ Aquest és el resultat estàndard del **circle method** (P1 fix, la resta roten)
 
 - 3 categories × 2 nivells (C, B) = **6 grups** de 6 parelles = **36 parelles**.
 - Round Robin: 5 jornades × 3 partits × 6 grups = **90 partits**. Playoffs: 4 partits/grup = **24**. **Total: 114.**
-- **Entre setmana (Masculina + Femenina, 4 grups):** 12 partits per jornada, i hi ha 4 dies × 3 pistes = **12 places/setmana**. **Ocupació del 100%**: no queda cap plaça lliure, i cal el dilluns cada setmana.
-- **Cap de setmana (Mixta, 2 grups):** 6 partits per jornada.
+- **Mixta (2 grups, cap de setmana):** 6 partits per jornada i 18+ franges cada cap de setmana. Sense problema de capacitat.
+- **Masculina + Femenina (4 grups, entre setmana):** 12 partits per jornada, però només hi ha **9 places regulars** per setmana (dt/dc/dv × 3 pistes).
 
-| Setmana | Fase |
-|---|---|
-| 12/10 – 18/10 | J1 |
-| 19/10 – 25/10 | J2 |
-| 26/10 – 01/11 | J3 |
-| 02/11 – 08/11 | J4 |
-| 09/11 – 15/11 | J5 |
-| 16/11 – 22/11 | Semifinals + final de consolació (12 partits entre setmana: 100%) |
-| 23/11 – 29/11 | Finals (+ desempats si cal) |
-
-Final previst: **29/11/2026**, amb tot desembre (més l'allargament d'1 mes) com a marge.
-
-> ⚠️ **Risc de capacitat:** entre setmana no hi ha cap plaça sobrant. Una pista bloquejada o una parella que no pot cap dels 4 dies deixa un partit sense lloc aquella setmana. Vegeu la decisió pendent a §39.
+> ⚠️ **Jornades setmanals i dijous només d'emergència són incompatibles** per a Masculina/Femenina: cada setmana en sobrarien 3 partits. Cal triar (P3 a §39):
+>
+> | Opció | Com funciona | Final previst M/F |
+> |---|---|---|
+> | **A. Dijous fix** | Jornada setmanal; el dijous es fa servir cada setmana | ~25/11/2026 |
+> | **B. Jornades de 10 dies** | Cada jornada té una finestra una mica més llarga que una setmana i el dijous queda per a emergències reals | ~09/12/2026 |
+> | **C. Més pistes** | El club garanteix 4 pistes algun dels 3 dies | ~25/11/2026 |
+>
+> Les tres opcions acaben abans de Nadal i dins del marge d'1 mes.
 
 ---
 
@@ -399,9 +401,9 @@ Ja no és un generador de calendari central. El motor és un **validador de rese
 
 Flux: `proposta (parella X) → confirmació (parella Y) → SCHEDULED → jugat | cancel·lat | no presentació`.
 
-- **Cancel·lació ≥ 24 h:** la reserva s'allibera i les parelles tornen a agendar dins la mateixa setmana. Es compta per **enfrontament i per parella que cancel·la**.
-- **Cancel·lació reiterada** (llindar a confirmar, §39) → WO a favor de la rival.
-- **Cancel·lació < 24 h:** a confirmar (§39).
+- **Cancel·lació ≥ 24 h:** la reserva s'allibera, la parella que cancel·la rep un avís (sense cobrament) i les parelles tornen a agendar dins la jornada. Es compta per **enfrontament i per parella que cancel·la**.
+- **3a cancel·lació** → WO a favor de la rival; paguen el partit els jugadors que han cancel·lat.
+- **Cancel·lació < 24 h:** WO directe (per defecte, P2 a §39).
 - **No presentació** a un partit confirmat → WO a favor de la parella present, i els jugadors absents paguen el partit.
 - WO = `match_result` amb `outcome=WALKOVER`, dos `set_score` 6-0 / 6-0, 3 punts / 0 punts. No requereix cap tractament especial al `RankingEngine` (implementat: `walkoverSets`).
 - El coordinador sempre pot revisar i revertir un WO; tot queda a `audit_log`.
@@ -467,7 +469,7 @@ Minimització: telèfon/email/pagaments privats; nom de parella i resultats púb
 
 ## 29. Testing Strategy
 
-- Unitaris: RoundRobin ✅, puntuació i validació de sets ✅, classificació amb desempat ✅, rànquing individual ✅; pendents: Playoff, validació de reserves, ConflictDetector, WO.
+- Unitaris ✅: RoundRobin, puntuació i validació de sets (inclòs el límit horari), classificació amb desempat, rànquing individual, playoffs, franges i validació de reserves, cancel·lacions/WO i cobraments.
 - Property-based: cap entry juga contra si mateixa, cap solapament de pista/jugador, tots els partits amb participants vàlids.
 - Integració: 6 entries → grup → RR → reserves setmanals → resultats → classificació amb desempat → playoffs.
 - Crítics: WO per no presentació i per cancel·lacions reiterades, suplent al rànquing i als cobraments, correcció de resultat post-classificació, setmana sense franges lliures.
@@ -496,24 +498,23 @@ MIT/Apache 2.0/AGPL-3.0 comparades. **Recomanació: AGPL-3.0**, per protegir con
 
 ---
 
-## 39. Decisions (revisió 2, 27/09/2026)
+## 39. Decisions (revisió 3)
 
 | # | Tema | Estat |
 |---|---|---|
-| 1 | Festius i durada | ✅ Els festius es juguen; tancaments puntuals a `blackout_date`; allargament màxim d'1 mes. |
+| 1 | Festius i durada | ✅ Els festius es juguen; tancaments puntuals (31/12, 6/1) a `blackout_date`; allargament màxim d'1 mes. |
 | 2 | Jugador en dues categories | ✅ M/F entre setmana, Mixta caps de setmana; el motor valida igualment un jugador, un partit per dia. |
 | 3 | Desempat | ✅ Implementat (§2bis). |
-| 4 | Puntuació i format | ✅ 3/1/0, millor de 3 sets, super tie-break a 10 a 6-6, Star Point. |
+| 4 | Puntuació i format | ✅ 3/1/0, millor de 3 sets, super tie-break a 10 a 6-6 i a les 23:00, Star Point. |
 | 5 | Suplents | ✅ Nivell homogeni; paguen els partits jugats. |
-| 6 | Ajornaments | ✅ No n'hi ha: jornades setmanals, agenda autogestionada amb confirmació. |
+| 6 | Ajornaments | ✅ No n'hi ha: jornades, agenda autogestionada amb confirmació. |
 | 7 | Rànquing individual | ✅ Per divisió, inclou playoffs, mai sumat entre categories. |
-| **P1** | **Llindar de WO per cancel·lacions** | ⏳ Hi ha dues versions: "dos cops seguits" i "tercer cop de cancel·lació". Cal fixar-ne una. Queda configurable a `rules`. |
-| **P2** | **Cancel·lació amb < 24 h** | ⏳ És WO directe o compta com una cancel·lació més? |
-| **P3** | **Vàlvula de capacitat entre setmana** | ⏳ 12 partits per a 12 places. Opcions: dijous, franja de les 20:30 en alguna pista, o permetre que M/F juguin algun partit el cap de setmana. |
-| **P4** | **Franges de la Mixta** | ⏳ Dies (ds, dg o tots dos), hores i pistes del cap de setmana. |
-| **P5** | **Accés de les parelles** | ⏳ Proposta: enllaç privat per parella enviat per WhatsApp, sense contrasenya. |
-| **P6** | **Partit no acabat a les 23:00** | ⏳ Compta el resultat del moment o es repeteix? |
-| **P7** | **Cobrament en un WO per cancel·lació** | ⏳ Els jugadors que cancel·len paguen el partit, com en una no presentació? |
+| 8 | WO per cancel·lacions | ✅ 3a cancel·lació del mateix enfrontament; els avisos no es cobren; a la 3a paguen els que cancel·len. |
+| 9 | Franges | ✅ M/F dt/dc/dv 21:00 (mín. 3 pistes); Mixta ds/dg des de les 9:00; dijous 21:00 d'emergència. |
+| 10 | Accés de les parelles | ✅ Enllaç privat per parella, enviat per WhatsApp. |
+| **P2** | **Cancel·lació amb < 24 h** | ⏳ Per defecte és WO directe. Cal confirmar-ho. |
+| **P3** | **Capacitat M/F** | ⏳ Opció A, B o C (§2bis). |
+| **P4** | **Franges de la Mixta** | ⏳ Última hora d'inici del cap de setmana i nombre de pistes. De moment: 9:00, 10:30 i 12:00, amb 3 pistes. |
 
 ---
 
@@ -551,7 +552,8 @@ MIT/Apache 2.0/AGPL-3.0 comparades. **Recomanació: AGPL-3.0**, per protegir con
 
 1. ✅ Estructura del monorepo i `packages/domain`.
 2. ✅ `RoundRobinEngine`, puntuació, classificació amb desempat i rànquing individual, amb tests.
-3. Tancar les decisions pendents P1–P7 (§39).
-4. `PlayoffEngine` (Main 1v4, 2v3 + final; Consolation 5v6).
-5. Validador de reserves i `ConflictDetector` (franges per categoria, un jugador un partit per dia, setmana de jornada).
-6. Base de dades (PostgreSQL + migracions) i API; després la web pública i la vista de parella.
+3. ✅ Playoffs, franges, validació de reserves, cancel·lacions/WO i cobraments de partit.
+4. Tancar P2–P4 (§39).
+5. Base de dades (PostgreSQL + migracions) i API.
+6. Vista de parella (enllaç de WhatsApp): franges lliures, proposar, confirmar, cancel·lar i resultat.
+7. Web pública (classificacions, resultats, agenda) i tauler del coordinador.
