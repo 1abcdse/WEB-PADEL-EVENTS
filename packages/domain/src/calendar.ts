@@ -12,8 +12,10 @@ export interface SlotRule {
   weekdays: readonly IsoWeekday[];
   startTimes: readonly LocalTime[];
   courts: number;
-  /** Franja d'emergència: només amb aprovació del coordinador. */
-  emergency?: boolean;
+  /** Número de la primera pista (per defecte 1). Permet afegir, p. ex., només la 5a pista. */
+  firstCourt?: number;
+  /** Franja extra (dijous d'emergència, 5a pista del cap de setmana): només amb aprovació del coordinador. */
+  extra?: boolean;
 }
 
 export interface LeagueCalendar {
@@ -27,7 +29,7 @@ export interface Slot {
   date: LocalDate;
   start: LocalTime;
   court: number;
-  emergency: boolean;
+  extra: boolean;
 }
 
 export function addDays(date: LocalDate, days: number): LocalDate {
@@ -58,8 +60,8 @@ export function slotsForWeek(calendar: LeagueCalendar, schedule: string, monday:
     for (const rule of rules) {
       if (!rule.weekdays.includes(isoWeekday(date))) continue;
       for (const start of rule.startTimes)
-        for (let court = 1; court <= rule.courts; court++)
-          slots.push({ date, start, court, emergency: rule.emergency ?? false });
+        for (let court = rule.firstCourt ?? 1; court < (rule.firstCourt ?? 1) + rule.courts; court++)
+          slots.push({ date, start, court, extra: rule.extra ?? false });
     }
   }
   return slots.sort((x, y) => (x.date + x.start).localeCompare(y.date + y.start) || x.court - y.court);
@@ -67,18 +69,18 @@ export function slotsForWeek(calendar: LeagueCalendar, schedule: string, monday:
 
 export interface WeeklyCapacity {
   regular: number;
-  emergency: number;
+  extra: number;
 }
 
 export function weeklyCapacity(calendar: LeagueCalendar, schedule: string, monday: LocalDate): WeeklyCapacity {
   const slots = slotsForWeek(calendar, schedule, monday);
-  const emergency = slots.filter((s) => s.emergency).length;
-  return { regular: slots.length - emergency, emergency };
+  const extra = slots.filter((s) => s.extra).length;
+  return { regular: slots.length - extra, extra };
 }
 
 export interface ExistingBooking {
   matchId: string;
-  slot: Omit<Slot, "emergency">;
+  slot: Omit<Slot, "extra">;
   players: readonly PlayerId[];
 }
 
@@ -90,7 +92,7 @@ export interface BookingRequest {
   roundWeek: LocalDate;
   /** Els 4 jugadors que jugaran (titulars o suplents). */
   players: readonly PlayerId[];
-  slot: Omit<Slot, "emergency">;
+  slot: Omit<Slot, "extra">;
 }
 
 export type BookingConflict =
@@ -102,7 +104,7 @@ export type BookingConflict =
 export interface BookingValidation {
   ok: boolean;
   conflicts: BookingConflict[];
-  /** La franja és d'emergència (dijous): la reserva necessita aprovació del coordinador. */
+  /** La franja és extra (dijous, 5a pista): la reserva necessita aprovació del coordinador. */
   requiresCoordinatorApproval: boolean;
 }
 
@@ -134,6 +136,6 @@ export function validateBooking(
   return {
     ok: conflicts.length === 0,
     conflicts,
-    requiresCoordinatorApproval: leagueSlot?.emergency ?? false,
+    requiresCoordinatorApproval: leagueSlot?.extra ?? false,
   };
 }

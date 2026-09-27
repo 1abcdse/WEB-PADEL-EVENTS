@@ -16,17 +16,25 @@ describe("calendari 2026/27", () => {
     expect(weekStart("2026-10-18")).toBe("2026-10-12");
   });
 
-  it("Masculina/Femenina: dt, dc, dv 21:00 × 3 pistes, dijous d'emergència", () => {
+  it("Masculina/Femenina: dt, dc, dv 21:00 × 4 pistes, dijous d'emergència", () => {
     const slots = slotsForWeek(CALENDAR_2026_27, "WEEKDAY", J1);
     expect([...new Set(slots.map((s) => s.date))]).toEqual(["2026-10-13", "2026-10-14", "2026-10-15", "2026-10-16"]);
-    expect(slots.filter((s) => s.emergency).every((s) => s.date === "2026-10-15")).toBe(true);
-    expect(weeklyCapacity(CALENDAR_2026_27, "WEEKDAY", J1)).toEqual({ regular: 9, emergency: 3 });
+    expect(slots.filter((s) => s.extra).every((s) => s.date === "2026-10-15")).toBe(true);
+    expect(weeklyCapacity(CALENDAR_2026_27, "WEEKDAY", J1)).toEqual({ regular: 12, extra: 3 }); // 12 partits de M/F per jornada: hi caben
   });
 
-  it("Mixta: dissabte i diumenge des de les 9:00", () => {
+  it("Mixta: ds i dg de 9:00 a 19:30 amb 4 pistes, 5a pista extra al migdia i a la tarda", () => {
     const slots = slotsForWeek(CALENDAR_2026_27, "WEEKEND", J1);
     expect([...new Set(slots.map((s) => s.date))]).toEqual(["2026-10-17", "2026-10-18"]);
-    expect(slots[0]).toMatchObject({ start: "09:00", court: 1 });
+    const saturday = slots.filter((s) => s.date === "2026-10-17");
+    expect([...new Set(saturday.map((s) => s.start))]).toEqual([
+      "09:00", "10:30", "12:00", "13:30", "15:00", "16:30", "18:00", "19:30",
+    ]);
+    expect(saturday.filter((s) => s.start === "09:00").map((s) => s.court)).toEqual([1, 2, 3, 4]);
+    expect(saturday.filter((s) => s.start === "12:00").map((s) => [s.court, s.extra])).toEqual([
+      [1, false], [2, false], [3, false], [4, false], [5, true],
+    ]);
+    expect(weeklyCapacity(CALENDAR_2026_27, "WEEKEND", J1)).toEqual({ regular: 64, extra: 12 });
   });
 
   it("els dies de tancament (31/12) no tenen franges; els festius (8/12) sí", () => {

@@ -27,15 +27,21 @@ describe("evaluateCancellation", () => {
     expect(r).toMatchObject({ kind: "WARNING", warningNumber: 1 });
   });
 
-  it("cancel·lació amb menys de 24 h: WO directe", () => {
-    const r = evaluateCancellation(CANCELLATION_POLICY_2026_27, match, [], cancel("B", "2026-10-14T09:00:00+02:00"));
-    expect(r).toMatchObject({ kind: "WALKOVER", reason: "LATE_CANCELLATION", winner: "A" });
+  it("2026/27: una cancel·lació amb menys de 24 h no és WO directe, compta com una més", () => {
+    const late = cancel("B", "2026-10-14T09:00:00+02:00");
+    const p = CANCELLATION_POLICY_2026_27;
+    expect(evaluateCancellation(p, match, [], late)).toMatchObject({ kind: "WARNING", warningNumber: 1 });
+    expect(evaluateCancellation(p, match, [cancel("B"), cancel("B")], late)).toMatchObject({
+      kind: "WALKOVER",
+      reason: "REPEATED_CANCELLATIONS",
+      winner: "A",
+    });
   });
 
-  it("si la política ho indica, una cancel·lació tardana compta com una més", () => {
-    const policy = { ...CANCELLATION_POLICY_2026_27, lateCancellation: "COUNTS_AS_CANCELLATION" as const };
+  it("la política també admet el WO directe per cancel·lació tardana (configurable)", () => {
+    const policy = { ...CANCELLATION_POLICY_2026_27, lateCancellation: "WALKOVER" as const };
     const r = evaluateCancellation(policy, match, [], cancel("B", "2026-10-14T09:00:00+02:00"));
-    expect(r).toMatchObject({ kind: "WARNING", warningNumber: 1 });
+    expect(r).toMatchObject({ kind: "WALKOVER", reason: "LATE_CANCELLATION", winner: "A" });
   });
 });
 

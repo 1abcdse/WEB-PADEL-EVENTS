@@ -2,7 +2,7 @@
 ### Club Tennis & Pàdel El Masnou · Temporada 2026/27
 
 > Document viu d'arquitectura. Abans d'escriure codi de producció, llegeix-lo sencer.
-> Estat: **decisions de domini confirmades pel coordinador (Marc)** — revisió 3.
+> Estat: **decisions de domini confirmades pel coordinador (Marc)** — revisió 4.
 > Implementat i testat a `packages/domain`: Round Robin, puntuació (inclòs el final per límit horari), classificació amb desempat, rànquing individual, playoffs, franges i validació de reserves, cancel·lacions/WO i cobraments de partit.
 
 ---
@@ -53,9 +53,11 @@ Aquestes decisions **resolen** algunes de les contradiccions detectades en l'an�
 
 | Categoria | Dies | Hora | Pistes |
 |---|---|---|---|
-| Masculina i Femenina | **dt, dc, dv** | a partir de les **21:00** (marge fins a les 23:00) | mínim **3** assegurades |
-| Mixta | **ds, dg** | a partir de les **9:00** | 3 (a confirmar) |
-| Emergència (M/F) | **dj** | 21:00 | 3, **només amb aprovació del coordinador** |
+| Masculina i Femenina | **dt, dc, dv** | **21:00** (marge fins a les 23:00) | **4** cada dia (opció C) |
+| Mixta | **ds, dg** | torns de 90 min de **9:00** a **19:30** (últim torn): 9:00, 10:30, 12:00, 13:30, 15:00, 16:30, 18:00, 19:30 | **4**; 5a pista opcional des de les 12:00 |
+| Emergència (M/F) | **dj** | 21:00 | 3 |
+
+Les franges **extra** (dijous i 5a pista del cap de setmana) es poden reservar, però necessiten aprovació del coordinador.
 
 - Com que les categories van en dies diferents, un jugador inscrit a Masculina/Femenina i a Mixta mai pot coincidir. El motor valida igualment **"un jugador, un partit per dia"**.
 - Entre setmana només hi ha un torn per vespre, així que cada jugador juga com a màxim un partit per vespre.
@@ -78,7 +80,7 @@ Aquestes decisions **resolen** algunes de les contradiccions detectades en l'an�
 
 - Cada cancel·lació amb **≥ 24 h** d'antelació és un **avís** a la parella que cancel·la (1/3, 2/3), sense cap cobrament.
 - La **3a cancel·lació** del **mateix enfrontament** per la mateixa parella → **WO** a favor de la rival, i els jugadors que han cancel·lat **paguen el partit**.
-- **Cancel·lació amb < 24 h:** WO directe (supòsit per defecte, vegeu P2 a §39; configurable).
+- **Cancel·lació amb < 24 h:** **no** és WO directe; compta com una cancel·lació més (avís), i només és WO si és la 3a.
 - **No presentació** a un partit confirmat per les dues parelles → **WO** a favor de la parella present. Paguen el partit els jugadors absents; la parella present no paga.
 - Resultat del WO: **3 punts** per a la parella perjudicada, **0** per a la que el provoca, i marcador virtual **6-0 / 6-0**.
 - El coordinador rep la notificació de cada WO i el pot revertir. Tot queda a l'auditoria.
@@ -134,18 +136,20 @@ Aquest és el resultat estàndard del **circle method** (P1 fix, la resta roten)
 
 - 3 categories × 2 nivells (C, B) = **6 grups** de 6 parelles = **36 parelles**.
 - Round Robin: 5 jornades × 3 partits × 6 grups = **90 partits**. Playoffs: 4 partits/grup = **24**. **Total: 114.**
-- **Mixta (2 grups, cap de setmana):** 6 partits per jornada i 18+ franges cada cap de setmana. Sense problema de capacitat.
-- **Masculina + Femenina (4 grups, entre setmana):** 12 partits per jornada, però només hi ha **9 places regulars** per setmana (dt/dc/dv × 3 pistes).
+- **Masculina + Femenina (4 grups, entre setmana):** 12 partits per jornada i **12 places** per setmana (dt/dc/dv × 4 pistes). Hi caben just, amb el dijous (3 places) com a vàlvula d'emergència.
+- **Mixta (2 grups, cap de setmana):** 6 partits per jornada i 64 places regulars per cap de setmana (+12 amb la 5a pista). Molt de marge.
 
-> ⚠️ **Jornades setmanals i dijous només d'emergència són incompatibles** per a Masculina/Femenina: cada setmana en sobrarien 3 partits. Cal triar (P3 a §39):
->
-> | Opció | Com funciona | Final previst M/F |
-> |---|---|---|
-> | **A. Dijous fix** | Jornada setmanal; el dijous es fa servir cada setmana | ~25/11/2026 |
-> | **B. Jornades de 10 dies** | Cada jornada té una finestra una mica més llarga que una setmana i el dijous queda per a emergències reals | ~09/12/2026 |
-> | **C. Més pistes** | El club garanteix 4 pistes algun dels 3 dies | ~25/11/2026 |
->
-> Les tres opcions acaben abans de Nadal i dins del marge d'1 mes.
+| Setmana | Fase |
+|---|---|
+| 12/10 – 18/10 | J1 |
+| 19/10 – 25/10 | J2 |
+| 26/10 – 01/11 | J3 |
+| 02/11 – 08/11 | J4 |
+| 09/11 – 15/11 | J5 |
+| 16/11 – 22/11 | Semifinals + final de consolació (M/F: 12 partits, 100% de places) |
+| 23/11 – 29/11 | Finals (+ desempats si cal) |
+
+Final previst: **29/11/2026**, amb desembre i l'allargament d'1 mes com a marge.
 
 ---
 
@@ -403,7 +407,7 @@ Flux: `proposta (parella X) → confirmació (parella Y) → SCHEDULED → jugat
 
 - **Cancel·lació ≥ 24 h:** la reserva s'allibera, la parella que cancel·la rep un avís (sense cobrament) i les parelles tornen a agendar dins la jornada. Es compta per **enfrontament i per parella que cancel·la**.
 - **3a cancel·lació** → WO a favor de la rival; paguen el partit els jugadors que han cancel·lat.
-- **Cancel·lació < 24 h:** WO directe (per defecte, P2 a §39).
+- **Cancel·lació < 24 h:** igual que qualsevol altra: avís, i WO només a la 3a.
 - **No presentació** a un partit confirmat → WO a favor de la parella present, i els jugadors absents paguen el partit.
 - WO = `match_result` amb `outcome=WALKOVER`, dos `set_score` 6-0 / 6-0, 3 punts / 0 punts. No requereix cap tractament especial al `RankingEngine` (implementat: `walkoverSets`).
 - El coordinador sempre pot revisar i revertir un WO; tot queda a `audit_log`.
@@ -490,7 +494,7 @@ MIT/Apache 2.0/AGPL-3.0 comparades. **Recomanació: AGPL-3.0**, per protegir con
 
 | Risc | Mitigació |
 |---|---|
-| Entre setmana, 100% d'ocupació de pistes a cada jornada | Decidir una vàlvula (§39); el tauler setmanal avisa de partits sense agendar |
+| Entre setmana, 100% d'ocupació de pistes a cada jornada (12/12) | Dijous d'emergència amb aprovació; el tauler setmanal avisa de partits sense agendar |
 | Les parelles no agenden a temps | Recordatoris i agenda forçada pel coordinador a mitja setmana |
 | Regla de WO mal interpretada pels jugadors | Reglament publicat a la web + WO revisable pel coordinador |
 | Dades personals filtrades | DTOs públics separats + tests de contracte |
@@ -512,9 +516,9 @@ MIT/Apache 2.0/AGPL-3.0 comparades. **Recomanació: AGPL-3.0**, per protegir con
 | 8 | WO per cancel·lacions | ✅ 3a cancel·lació del mateix enfrontament; els avisos no es cobren; a la 3a paguen els que cancel·len. |
 | 9 | Franges | ✅ M/F dt/dc/dv 21:00 (mín. 3 pistes); Mixta ds/dg des de les 9:00; dijous 21:00 d'emergència. |
 | 10 | Accés de les parelles | ✅ Enllaç privat per parella, enviat per WhatsApp. |
-| **P2** | **Cancel·lació amb < 24 h** | ⏳ Per defecte és WO directe. Cal confirmar-ho. |
-| **P3** | **Capacitat M/F** | ⏳ Opció A, B o C (§2bis). |
-| **P4** | **Franges de la Mixta** | ⏳ Última hora d'inici del cap de setmana i nombre de pistes. De moment: 9:00, 10:30 i 12:00, amb 3 pistes. |
+| 11 | Cancel·lació amb < 24 h | ✅ No és WO directe: compta com una cancel·lació més; WO a la 3a. |
+| 12 | Capacitat M/F | ✅ Opció C: 4 pistes dt/dc/dv (12 places); dijous d'emergència. |
+| 13 | Franges de la Mixta | ✅ ds/dg de 9:00 a 19:30 (últim torn), 4 pistes; 5a pista opcional al migdia i a la tarda. |
 
 ---
 
@@ -553,7 +557,6 @@ MIT/Apache 2.0/AGPL-3.0 comparades. **Recomanació: AGPL-3.0**, per protegir con
 1. ✅ Estructura del monorepo i `packages/domain`.
 2. ✅ `RoundRobinEngine`, puntuació, classificació amb desempat i rànquing individual, amb tests.
 3. ✅ Playoffs, franges, validació de reserves, cancel·lacions/WO i cobraments de partit.
-4. Tancar P2–P4 (§39).
-5. Base de dades (PostgreSQL + migracions) i API.
-6. Vista de parella (enllaç de WhatsApp): franges lliures, proposar, confirmar, cancel·lar i resultat.
-7. Web pública (classificacions, resultats, agenda) i tauler del coordinador.
+4. Base de dades (PostgreSQL + migracions) i API.
+5. Vista de parella (enllaç de WhatsApp): franges lliures, proposar, confirmar, cancel·lar i resultat.
+6. Web pública (classificacions, resultats, agenda) i tauler del coordinador.
