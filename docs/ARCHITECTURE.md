@@ -2,8 +2,8 @@
 ### Club Tennis & Pàdel El Masnou · Temporada 2026/27
 
 > Document viu d'arquitectura. Abans d'escriure codi de producció, llegeix-lo sencer.
-> Estat: **decisions de domini confirmades pel coordinador (Marc)** — revisió 4.
-> Implementat i testat a `packages/domain`: Round Robin, puntuació (inclòs el final per límit horari), classificació amb desempat, rànquing individual, playoffs, franges i validació de reserves, cancel·lacions/WO i cobraments de partit.
+> Estat: **decisions de domini confirmades pel coordinador (Marc)** — revisió 5.
+> Implementat i testat: API + PostgreSQL (`apps/api`) i, a `packages/domain`, Round Robin, puntuació (inclòs el final per límit horari), classificació amb desempat, rànquing individual, playoffs, franges i validació de reserves, cancel·lacions/WO i cobraments de partit.
 
 ---
 
@@ -296,37 +296,27 @@ flowchart TB
 
 ## 11. Database Architecture
 
-| Taula | Camps clau | Constraints |
-|---|---|---|
-| `club` | name, slug | |
-| `season` | club_id, name, dates | UNIQUE(club_id, name) |
-| `category`, `level` | club_id, code, name, sort_order | UNIQUE(club_id, code) |
-| `competition` | season_id, name, start/end, status, `rules jsonb`, `rules_version`, registration_deadline | CHECK(start<end) |
-| `division` | competition_id, category_id, level_id | UNIQUE(competition, category, level) |
-| `player` | club_id, first_name, last_name, phone, email, normalized keys | índex sobre email/phone normalitzats |
-| `entry` | division_id, status, seed | |
-| `entry_player` | entry_id, player_id, competition_id, category_id (desnormalitzats), is_member, price_snapshot | UNIQUE(competition_id, category_id, player_id) |
-| `entry_access` | entry_id, token_hash, expires_at, revoked_at | enllaç privat de parella |
-| `group` | division_id, code, size | UNIQUE(division_id, code) |
-| `group_member` | group_id, entry_id | UNIQUE(entry_id) |
-| `round` | group_id, number, window_start/end | UNIQUE(group_id, number) |
-| `match` | group_id, round_id, entry_a_id, entry_b_id, status, purpose | CHECK(entry_a<>entry_b) |
-| `match_lineup` | match_id, entry_id, player_id | UNIQUE(match_id, player_id) |
-| `match_result` | match_id, outcome, winner_entry_id, revision | UNIQUE(match_id, revision) |
-| `set_score` | match_result_id, set_no, games_a, games_b | CHECK |
-| `court` | club_id, name, type, priority, covered, lighting, is_league_court | |
-| `court_availability_exception` | court_id, start_ts, end_ts, reason | |
-| `booking` | match_id, court_id, starts_at, ends_at, proposed_by_entry_id, confirmed_at, status (PROPOSED/CONFIRMED/CANCELLED), cancelled_by_entry_id, cancelled_at | **EXCLUDE** (court_id WITH =, tstzrange WITH &&) WHERE status<>'CANCELLED' |
-| `blackout_date` | club_id, date, reason | UNIQUE(club_id, date) |
-| `bracket` | division_id, type (MAIN/CONSOLATION), status | |
-| `bracket_match` | bracket_id, round_no, slot_no, source_a, source_b, match_id | |
-| `charge` | entry_player_id, concept, amount_snapshot, match_id?, created_at | |
-| `payment` | charge_id, paid_at, registered_by | |
-| `welcome_pack_template/item`, `welcome_pack_delivery` | | |
-| `event` | club_id, competition_id?, title, starts_at, description, published | |
-| `audit_log` | actor, entity, entity_id, action, before jsonb, after jsonb, at | append-only |
+Implementat a `apps/api/migrations/001_init.sql` (PostgreSQL 16). Taules principals:
 
-Les constraints d'exclusió de PostgreSQL (`btree_gist`) garanteixen a nivell de BD que una pista no té dos partits reservats alhora. `bracket_match.match_id` és l'única referència entre bracket i partit (sense cicle).
+| Taula | Notes |
+|---|---|
+| `club`, `season`, `category` (amb `schedule`: WEEKDAY/WEEKEND), `level`, `court`, `blackout_date` | Catàlegs del club |
+| `competition` | `first_week` (dilluns de la J1), `end_date`, `rules jsonb` (franges, política de cancel·lació, tarifes, mida de grup) |
+| `division` | UNIQUE(competition, category, level) |
+| `player` | Únic per telèfon/email normalitzat dins el club |
+| `entry`, `entry_player` | `entry_player` porta `competition_id` i `category_id` desnormalitzats → UNIQUE(competition, category, player) |
+| `entry_access` | Enllaç privat de parella: només es guarda el hash SHA-256 del token; revocable |
+| `group`, `group_member`, `round` | `round.week_start` = setmana de la jornada |
+| `match` | `status`: UNSCHEDULED → PROPOSED → SCHEDULED → RESULT_PENDING → PLAYED, o WALKOVER (`walkover_reason`) |
+| `booking` | Dia/hora/pista, proposta i confirmació, aprovació (franges extra), cancel·lació |
+| `cancellation` | Historial per enfrontament amb el resultat de la política (avís o WO) |
+| `match_lineup` | Alineació real quan hi juga un suplent |
+| `match_result` | Revisions; `sets` i `time_limit` en `jsonb`, validats pel domini; vigent = última revisió confirmada |
+| `charge` | Inscripció (una per persona i prova) i partit; `paid_at`, `voided_at` |
+| `audit_log` | Append-only; també serveix de bústia de notificacions de WO per al coordinador |
+
+- Les franges són una **graella fixa** de torns de 90 min, així que un **índex únic parcial** (pista, data, hora) sobre les reserves actives garanteix que una pista no es reserva dos cops. No cal `EXCLUDE`/`btree_gist`.
+- Les operacions d'agenda es serialitzen per club amb un `pg_advisory_xact_lock`, perquè la validació "un jugador, un partit per dia" no tingui curses.
 
 ## 12. ER Diagram
 
@@ -452,9 +442,15 @@ Ja no hi ha versions de calendari publicades: cada reserva, confirmació i cance
 
 ## 23. API Architecture
 
-- REST, prefixos `/api/public/*` (lectura, sense dades personals), `/api/entry/*` (parella amb enllaç privat) i `/api/admin/*` (coordinador).
-- Errors uniformes `{code, message, details}`. Idempotència a generació/publicació. Paginació per cursor.
-- DTOs públics diferents dels interns (mai telèfon/email).
+REST amb Fastify (`apps/api`). Errors uniformes `{code, message, details}`.
+
+| Àmbit | Autenticació | Endpoints |
+|---|---|---|
+| `/api/public` | cap | competicions i divisions, classificació i partits de grup, rànquing individual per divisió, agenda setmanal (només reserves confirmades, sense dades personals) |
+| `/api/entry` | capçalera `X-Entry-Token` (enllaç de WhatsApp) | `me`, franges lliures, proposar, confirmar, rebutjar, cancel·lar, no presentació, resultat, confirmar/discutir resultat |
+| `/api/admin` | `Authorization: Bearer ADMIN_TOKEN` (provisional) | importar parelles, generar grups i RR, playoffs, enllaç de parella + text de WhatsApp, estat setmanal, aprovar franges extra, registrar/corregir resultats amb suplents, revertir WO, cobraments i pagaments, auditoria |
+
+**Resultats:** una parella el comunica i la rival el confirma (o el discuteix, i torna a quedar pendent). El coordinador pot registrar-lo o corregir-lo directament.
 
 ## 24-26. Frontend / Admin / Web pública
 
@@ -465,7 +461,7 @@ Ja no hi ha versions de calendari publicades: cada reserva, confirmació i cance
 
 ## 27. Security
 
-Sessions amb cookie `HttpOnly/Secure/SameSite=Lax`, Argon2, CSRF, rate limiting al login. Rols: `admin`/`coordinator`. Enllaç de parella: token aleatori (guardat com a hash), revocable i limitat a la prova; només permet actuar sobre els partits d'aquella parella. Consultes parametritzades, CSP, secrets en variables d'entorn.
+Admin provisional: token de portador (`ADMIN_TOKEN`, comparació en temps constant). Amb el panell arribaran les sessions amb cookie `HttpOnly/Secure/SameSite=Lax`, Argon2, CSRF i rate limiting al login. Rols: `admin`/`coordinator`. Enllaç de parella: token aleatori (guardat com a hash), revocable i limitat a la prova; només permet actuar sobre els partits d'aquella parella. Consultes parametritzades, CSP, secrets en variables d'entorn.
 
 ## 28. GDPR
 
@@ -528,7 +524,7 @@ MIT/Apache 2.0/AGPL-3.0 comparades. **Recomanació: AGPL-3.0**, per protegir con
 
 **Base de dades → PostgreSQL.** Constraints d'exclusió per pistes solapades, JSONB per regles versionades, transaccions.
 
-**Stack → TypeScript (Next.js + Fastify).** El scheduling proposat no necessita OR-Tools; un sol llenguatge de cap a cap. ORM: Drizzle o Kysely (control fi sobre constraints SQL).
+**Stack → TypeScript (Next.js + Fastify).** El scheduling proposat no necessita OR-Tools; un sol llenguatge de cap a cap. Accés a dades amb `pg` i SQL explícit (sense ORM): el model és petit i així es controlen bé les constraints i els bloquejos.
 
 **REST vs GraphQL → REST.** Recursos simples, cache HTTP.
 
@@ -555,8 +551,8 @@ MIT/Apache 2.0/AGPL-3.0 comparades. **Recomanació: AGPL-3.0**, per protegir con
 ## Pròxims passos
 
 1. ✅ Estructura del monorepo i `packages/domain`.
-2. ✅ `RoundRobinEngine`, puntuació, classificació amb desempat i rànquing individual, amb tests.
-3. ✅ Playoffs, franges, validació de reserves, cancel·lacions/WO i cobraments de partit.
-4. Base de dades (PostgreSQL + migracions) i API.
-5. Vista de parella (enllaç de WhatsApp): franges lliures, proposar, confirmar, cancel·lar i resultat.
-6. Web pública (classificacions, resultats, agenda) i tauler del coordinador.
+2. ✅ Motors de domini: Round Robin, puntuació, classificació amb desempat, rànquing individual, playoffs, franges i reserves, cancel·lacions/WO, cobraments.
+3. ✅ Base de dades (PostgreSQL + migracions) i API pública, de parella i d'administració, amb tests d'integració del flux complet.
+4. Vista de parella (web mòbil a `/p/<token>`): franges lliures, proposar, confirmar, cancel·lar i resultat.
+5. Web pública (classificacions, resultats, agenda) i panell del coordinador amb login.
+6. Desplegament (Docker Compose + Caddy) i còpies de seguretat.

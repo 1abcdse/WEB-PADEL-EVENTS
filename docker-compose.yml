@@ -1,0 +1,17 @@
+# Entorn de desenvolupament: només la base de dades.
+# docker compose up -d && pnpm --filter @padel/api seed && pnpm --filter @padel/api dev
+services:
+  postgres:
+    image: postgres:16
+    environment:
+      POSTGRES_USER: padel
+      POSTGRES_PASSWORD: padel
+      POSTGRES_DB: padel
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      - ./apps/api/dev/init-test-db.sql:/docker-entrypoint-initdb.d/init-test-db.sql:ro
+
+volumes:
+  pgdata:
