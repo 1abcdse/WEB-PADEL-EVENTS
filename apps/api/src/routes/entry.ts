@@ -62,10 +62,9 @@ export const entryRoutes =
       run((c) => league.confirmBooking(c, req.entryId!, matchId(req), ctx.now())),
     );
 
-    app.post("/matches/:matchId/reject", async (req) => {
-      await run((c) => league.rejectBooking(c, req.entryId!, matchId(req)));
-      return { ok: true };
-    });
+    app.post("/matches/:matchId/reject", async (req) =>
+      run((c) => league.rejectBooking(c, req.entryId!, matchId(req), ctx.now())),
+    );
 
     app.post("/matches/:matchId/cancel", async (req) =>
       run((c) => league.cancelBooking(c, req.entryId!, matchId(req), ctx.now())),

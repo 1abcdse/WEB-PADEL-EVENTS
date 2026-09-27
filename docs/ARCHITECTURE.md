@@ -79,6 +79,7 @@ Les franges **extra** (dijous i 5a pista del cap de setmana) es poden reservar, 
 ### Cancel·lacions i WO (`evaluateCancellation`)
 
 - Cada cancel·lació amb **≥ 24 h** d'antelació és un **avís** a la parella que cancel·la (1/3, 2/3), sense cap cobrament.
+- **Rebutjar la proposta d'horari de la rival compta com una cancel·lació** (avís, i WO a la 3a). Retirar la pròpia proposta no compta.
 - La **3a cancel·lació** del **mateix enfrontament** per la mateixa parella → **WO** a favor de la rival, i els jugadors que han cancel·lat **paguen el partit**.
 - **Cancel·lació amb < 24 h:** **no** és WO directe; compta com una cancel·lació més (avís), i només és WO si és la 3a.
 - **No presentació** a un partit confirmat per les dues parelles → **WO** a favor de la parella present. Paguen el partit els jugadors absents; la parella present no paga.
@@ -515,6 +516,9 @@ MIT/Apache 2.0/AGPL-3.0 comparades. **Recomanació: AGPL-3.0**, per protegir con
 | 11 | Cancel·lació amb < 24 h | ✅ No és WO directe: compta com una cancel·lació més; WO a la 3a. |
 | 12 | Capacitat M/F | ✅ Opció C: 4 pistes dt/dc/dv (12 places); dijous d'emergència. |
 | 13 | Franges de la Mixta | ✅ ds/dg de 9:00 a 19:30 (últim torn), 4 pistes; 5a pista opcional al migdia i a la tarda. |
+| 14 | Confirmació de resultats | ✅ Una parella el comunica i la rival el confirma o el discuteix; el coordinador el pot corregir. |
+| 15 | Rebuig de propostes | ✅ Rebutjar la proposta de la rival compta com a cancel·lació. |
+| 16 | Accés del coordinador | ✅ Clau secreta ara; login amb usuari i contrasenya amb el panell. |
 
 ---
 

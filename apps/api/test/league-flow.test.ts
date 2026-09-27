@@ -289,6 +289,28 @@ describe("Lliga Social: flux complet d'una divisió", () => {
     expect(suplent).toMatchObject({ played: 1, won: 1, points: 3, setsWon: 1, setsLost: 1, gamesWon: 9, gamesLost: 9 });
   });
 
+  it("rebutjar la proposta de la rival compta com a cancel·lació; retirar la pròpia no", async () => {
+    now = new Date("2026-10-17T10:00:00+02:00");
+    const m = await matchBetween(1, 2); // P2 vs P3, jornada 2
+    expect(m.week).toBe("2026-10-19");
+    const propose = (i: number, date: string) =>
+      call("POST", `/api/entry/matches/${m.id}/proposal`, { headers: asPair(i), body: { date, start: "21:00", court: 2 } });
+    const reject = (i: number) => call("POST", `/api/entry/matches/${m.id}/reject`, { headers: asPair(i) });
+
+    await propose(1, "2026-10-20");
+    expect((await reject(2)).body).toEqual({ kind: "WARNING", warningNumber: 1, of: 3 });
+    await propose(1, "2026-10-21");
+    expect((await reject(1)).body).toEqual({ kind: "WITHDRAWN" }); // P2 retira la seva: no compta
+    await propose(1, "2026-10-21");
+    expect((await reject(2)).body).toEqual({ kind: "WARNING", warningNumber: 2, of: 3 });
+    await propose(1, "2026-10-23");
+    expect((await reject(2)).body).toMatchObject({ kind: "WALKOVER", winner: entries[1], chargedEntry: entries[2] });
+    expect((await matchBetween(1, 2)).status).toBe("WALKOVER");
+
+    const { rows } = await pool.query("SELECT kind FROM cancellation WHERE match_id = $1 ORDER BY cancelled_at", [m.id]);
+    expect(rows.map((r) => r.kind)).toEqual(["REJECT", "REJECT", "REJECT"]);
+  });
+
   it("playoffs: calen tots els partits de lliga; després semis 1v4, 2v3 i consolació 5v6, i la final", async () => {
     const me = await call("GET", "/api/entry/me", { headers: asPair(0) });
     const groupId = me.body.group_id;

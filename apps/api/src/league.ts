@@ -270,15 +270,22 @@ export async function confirmBooking(c: Client, entryId: string, matchId: string
   return { status };
 }
 
-/** La rival rebutja la proposta, o qui l'ha feta la retira. No compta com a cancel·lació. */
-export async function rejectBooking(c: Client, entryId: string, matchId: string) {
+/**
+ * Retirar la pròpia proposta no té cap efecte. Rebutjar la proposta de la rival compta com una
+ * cancel·lació d'aquell enfrontament: avís, i WO per a la rival a la 3a.
+ */
+export async function rejectBooking(c: Client, entryId: string, matchId: string, now: Date) {
   const match = await loadMatch(c, matchId, true);
   sideOf(match, entryId);
   const booking = await activeBooking(c, matchId);
   if (!booking || booking.status !== "PROPOSED") throw conflict("NO_PROPOSAL", "There is no proposal to reject");
-  await c.query("UPDATE booking SET status = 'REJECTED' WHERE id = $1", [booking.id]);
-  await c.query("UPDATE match SET status = 'UNSCHEDULED' WHERE id = $1", [matchId]);
-  await audit(c, { kind: "entry", entryId }, "booking", booking.id, "REJECT");
+  if (booking.proposed_by_entry_id === entryId) {
+    await c.query("UPDATE booking SET status = 'REJECTED' WHERE id = $1", [booking.id]);
+    await c.query("UPDATE match SET status = 'UNSCHEDULED' WHERE id = $1", [matchId]);
+    await audit(c, { kind: "entry", entryId }, "booking", booking.id, "WITHDRAW");
+    return { kind: "WITHDRAWN" as const };
+  }
+  return recordCancellation(c, match, booking, entryId, now, "REJECT");
 }
 
 export async function approveBooking(c: Client, bookingId: string, now: Date) {
@@ -356,13 +363,24 @@ export async function cancelBooking(c: Client, entryId: string, matchId: string,
   if (!booking || booking.status !== "CONFIRMED")
     throw conflict("NOTHING_TO_CANCEL", "Only a confirmed booking can be cancelled (reject a proposal instead)");
   if (booking.starts_at <= now) throw conflict("MATCH_STARTED", "The match has already started");
+  return recordCancellation(c, match, booking, entryId, now, "CANCEL");
+}
 
+/** Registra una cancel·lació (o rebuig) i n'aplica l'efecte segons la política: avís o WO per a la rival. */
+async function recordCancellation(
+  c: Client,
+  match: MatchRow,
+  booking: BookingRow,
+  entryId: string,
+  now: Date,
+  kind: "CANCEL" | "REJECT",
+) {
   const { rows: previous } = await c.query<{ cancelled_by_entry_id: string; cancelled_at: Date; match_starts_at: Date }>(
     "SELECT cancelled_by_entry_id, cancelled_at, match_starts_at FROM cancellation WHERE match_id = $1 ORDER BY cancelled_at",
-    [matchId],
+    [match.id],
   );
   const toDomain = (r: { cancelled_by_entry_id: string; cancelled_at: Date; match_starts_at: Date }) => ({
-    matchId,
+    matchId: match.id,
     cancelledBy: r.cancelled_by_entry_id,
     cancelledAt: r.cancelled_at.toISOString(),
     matchStartsAt: r.match_starts_at.toISOString(),
@@ -370,24 +388,25 @@ export async function cancelBooking(c: Client, entryId: string, matchId: string,
   const current = { cancelled_by_entry_id: entryId, cancelled_at: now, match_starts_at: booking.starts_at };
   const outcome = evaluateCancellation(
     match.rules.cancellation,
-    { id: matchId, entryA: match.entry_a_id, entryB: match.entry_b_id },
+    { id: match.id, entryA: match.entry_a_id, entryB: match.entry_b_id },
     previous.map(toDomain),
     toDomain(current),
   );
 
-  await c.query("UPDATE booking SET status = 'CANCELLED', cancelled_by_entry_id = $2, cancelled_at = $3 WHERE id = $1", [
+  await c.query("UPDATE booking SET status = $4, cancelled_by_entry_id = $2, cancelled_at = $3 WHERE id = $1", [
     booking.id,
     entryId,
     now,
+    kind === "CANCEL" ? "CANCELLED" : "REJECTED",
   ]);
   await c.query(
-    `INSERT INTO cancellation (match_id, booking_id, cancelled_by_entry_id, cancelled_at, match_starts_at, outcome)
-     VALUES ($1, $2, $3, $4, $5, $6)`,
-    [matchId, booking.id, entryId, now, booking.starts_at, JSON.stringify(outcome)],
+    `INSERT INTO cancellation (match_id, booking_id, cancelled_by_entry_id, cancelled_at, match_starts_at, outcome, kind)
+     VALUES ($1, $2, $3, $4, $5, $6, $7)`,
+    [match.id, booking.id, entryId, now, booking.starts_at, JSON.stringify(outcome), kind],
   );
-  await audit(c, { kind: "entry", entryId }, "booking", booking.id, "CANCEL", outcome);
+  await audit(c, { kind: "entry", entryId }, "booking", booking.id, kind, outcome);
 
-  if (outcome.kind === "WARNING") await c.query("UPDATE match SET status = 'UNSCHEDULED' WHERE id = $1", [matchId]);
+  if (outcome.kind === "WARNING") await c.query("UPDATE match SET status = 'UNSCHEDULED' WHERE id = $1", [match.id]);
   else
     await applyWalkover(
       c,
