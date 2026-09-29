@@ -17,6 +17,7 @@ export interface MatchView {
   playoffCode: string | null;
   round: number | null;
   week: string;
+  divisionId: string;
   group: string;
   status: MatchStatus;
   walkoverReason: string | null;

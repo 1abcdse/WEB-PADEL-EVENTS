@@ -2,6 +2,7 @@ import type { FastifyPluginAsync } from "fastify";
 import { z } from "zod";
 import type { AppContext } from "../app.js";
 import { divisionPlayerRanking, groupStandings, matchesView } from "../league.js";
+import { notFound } from "../errors.js";
 import { idParams } from "./schemas.js";
 
 export const publicRoutes =
@@ -20,11 +21,19 @@ export const publicRoutes =
 
     app.get("/competitions/:competitionId", async (req) => {
       const { competitionId } = idParams("competitionId").parse(req.params) as { competitionId: string };
-      const { rows } = await q<{ division_id: string }>(
+      const comp = await q<{ id: string; name: string; status: string; first_week: string; group_size: number }>(
+        `SELECT comp.id, comp.name, comp.status, comp.first_week, (comp.rules->>'groupSize')::int AS group_size
+           FROM competition comp WHERE comp.id = $1`,
+        [competitionId],
+      );
+      if (!comp.rows[0]) throw notFound("Competition");
+      const { rows } = await q<{ division_id: string; entries: number; groups: unknown[] }>(
         `SELECT d.id AS division_id, cat.code AS category_code, cat.name AS category, lv.code AS level_code,
                 lv.name AS level, cat.schedule,
+                (SELECT count(*)::int FROM entry e WHERE e.division_id = d.id AND e.status = 'ACTIVE') AS entries,
                 COALESCE(json_agg(json_build_object('id', g.id, 'code', g.code) ORDER BY g.code)
-                         FILTER (WHERE g.id IS NOT NULL), '[]') AS groups
+                         FILTER (WHERE g.id IS NOT NULL), '[]') AS groups,
+                (SELECT min(r.week_start) FROM round r JOIN "group" g2 ON g2.id = r.group_id WHERE g2.division_id = d.id) AS first_week
            FROM division d
            JOIN category cat ON cat.id = d.category_id
            JOIN level lv ON lv.id = d.level_id
@@ -34,7 +43,15 @@ export const publicRoutes =
           ORDER BY cat.sort_order, lv.sort_order`,
         [competitionId],
       );
-      return { divisions: rows };
+      const groupSize = comp.rows[0].group_size;
+      return {
+        ...comp.rows[0],
+        divisions: rows.map((d) => ({
+          ...d,
+          status: d.groups.length > 0 ? "OPEN" : "PENDING",
+          missingPairs: d.groups.length > 0 ? 0 : Math.max(0, groupSize - d.entries),
+        })),
+      };
     });
 
     app.get("/groups/:groupId/standings", async (req) => {

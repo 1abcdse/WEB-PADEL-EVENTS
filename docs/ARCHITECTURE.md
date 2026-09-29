@@ -571,5 +571,6 @@ MIT/Apache 2.0/AGPL-3.0 comparades. **Recomanació: AGPL-3.0**, per protegir con
 2. ✅ Motors de domini: Round Robin, puntuació, classificació amb desempat, rànquing individual, playoffs, franges i reserves, cancel·lacions/WO, cobraments.
 3. ✅ Base de dades (PostgreSQL + migracions) i API pública, de parella i d'administració, amb tests d'integració del flux complet.
 4. ✅ Vista de parella (web mòbil a `/p/<token>`): franges lliures, proposar, acceptar/rebutjar, cancel·lar, no presentació, resultat (amb super tie-break i límit horari) i confirmació.
-5. Web pública (classificacions, resultats, agenda) i panell del coordinador amb login.
-6. Desplegament (Docker Compose + Caddy) i còpies de seguretat.
+5. ✅ Web pública: portada amb divisions en joc i places que falten, divisió (classificació, partits, rànquing individual) i agenda setmanal.
+6. Panell del coordinador amb login.
+7. Desplegament (Railway o equivalent) i còpies de seguretat.
