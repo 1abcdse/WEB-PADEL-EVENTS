@@ -103,6 +103,16 @@ describe("Lliga Social: flux complet d'una divisió", () => {
     expect(charges.body).toHaveLength(12);
   });
 
+  it("una divisió amb menys de 6 parelles queda pendent i no es pot obrir", async () => {
+    await call("POST", `/api/admin/divisions/${ids.divisions["FEMENINA-B"]}/entries`, {
+      headers: admin,
+      body: { pairs: [pair(21), pair(22)] },
+    });
+    const res = await call("POST", `/api/admin/divisions/${ids.divisions["FEMENINA-B"]}/groups`, { headers: admin });
+    expect(res.status).toBe(409);
+    expect(res.body).toMatchObject({ code: "NOT_ENOUGH_ENTRIES", details: { entries: 2, required: 6 } });
+  });
+
   it("genera el grup i el Round Robin: 15 partits, una jornada per setmana des del 12/10", async () => {
     const res = await call("POST", `/api/admin/divisions/${ids.divisions["MASCULINA-C"]}/groups`, { headers: admin });
     expect(res.status).toBe(201);
@@ -116,7 +126,7 @@ describe("Lliga Social: flux complet d'una divisió", () => {
     }
 
     const me = await call("GET", "/api/entry/me", { headers: asPair(0) });
-    expect(me.body.name).toBe("Jugador1a C. / Jugador1b C.");
+    expect(me.body.name).toBe("Jugador1a Cognom1a / Jugador1b Cognom1b");
     expect(me.body.matches.map((m: { week: string }) => m.week)).toEqual([
       "2026-10-12",
       "2026-10-19",
@@ -285,7 +295,7 @@ describe("Lliga Social: flux complet d'una divisió", () => {
     expect(res.status, JSON.stringify(res.body)).toBe(200);
 
     const ranking = await call("GET", `/api/public/divisions/${ids.divisions["MASCULINA-C"]}/ranking`);
-    const suplent = ranking.body.find((r: { name: string }) => r.name === "Suplent P.");
+    const suplent = ranking.body.find((r: { name: string }) => r.name === "Suplent Prova");
     expect(suplent).toMatchObject({ played: 1, won: 1, points: 3, setsWon: 1, setsLost: 1, gamesWon: 9, gamesLost: 9 });
   });
 

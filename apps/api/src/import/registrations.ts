@@ -38,9 +38,26 @@ const strip = (s: string) =>
     .replace(/\p{Diacritic}/gu, "")
     .toLowerCase();
 
+const PARTICLES = new Set(["de", "del", "la", "las", "los", "i", "y", "da", "dos", "van", "von"]);
+
+/** Agrupa les partícules amb la paraula següent: "Aarón de la Cruz" → ["Aarón", "de la Cruz"]. */
+export function nameWords(full: string): string[] {
+  const words: string[] = [];
+  let pending = "";
+  for (const w of full.trim().split(/\s+/)) {
+    if (PARTICLES.has(w.toLowerCase())) pending += `${w} `;
+    else {
+      words.push(pending + w);
+      pending = "";
+    }
+  }
+  if (pending) words.push(pending.trim());
+  return words;
+}
+
 /** "Maria Teresa Toledo Martínez" → nom "Maria Teresa", cognoms "Toledo Martínez". */
 export function splitName(full: string): { firstName: string; lastName: string } {
-  const parts = full.trim().split(/\s+/);
+  const parts = nameWords(full);
   if (parts.length === 1) return { firstName: parts[0]!, lastName: "" };
   const firstCount = parts.length >= 4 ? 2 : 1;
   return { firstName: parts.slice(0, firstCount).join(" "), lastName: parts.slice(firstCount).join(" ") };

@@ -3,6 +3,7 @@
  *
  *   pnpm --filter @padel/api import-registrations <fitxer.md> <CATEGORIA-NIVELL>          # només revisa
  *   pnpm --filter @padel/api import-registrations <fitxer.md> <CATEGORIA-NIVELL> --apply  # importa
+ *   ... --pairs=1,2,5-8   només aquestes parelles del full (p. ex. per repartir-les per nivell)
  *
  * El resum no mostra telèfons ni emails.
  */
@@ -19,7 +20,18 @@ if (!file || !divisionKey) {
   process.exit(1);
 }
 
-const { pairs, warnings } = parseRegistrations(readFileSync(file, "utf8"));
+const parsed = parseRegistrations(readFileSync(file, "utf8"));
+const only = process.argv.find((a) => a.startsWith("--pairs="))?.slice(8);
+const selected = only
+  ? new Set(
+      only.split(",").flatMap((r) => {
+        const [a, b] = r.split("-").map(Number);
+        return Array.from({ length: (b ?? a!) - a! + 1 }, (_, i) => a! + i);
+      }),
+    )
+  : null;
+const pairs = parsed.pairs.filter((p) => !selected || selected.has(p.number));
+const warnings = parsed.warnings.filter((w) => !selected || selected.has(Number(/Parella (\d+)/.exec(w)?.[1])));
 const sizes: Record<string, number> = {};
 let members = 0;
 for (const pair of pairs) {

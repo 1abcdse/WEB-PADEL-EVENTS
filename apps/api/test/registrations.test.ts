@@ -73,9 +73,20 @@ describe("splitName / emailOwner", () => {
   it("noms compostos amb 4 paraules", () => {
     expect(splitName("Maria Teresa Puig Mas")).toEqual({ firstName: "Maria Teresa", lastName: "Puig Mas" });
     expect(splitName("Joan Puig")).toEqual({ firstName: "Joan", lastName: "Puig" });
+    expect(splitName("Aarón de la Cruz")).toEqual({ firstName: "Aarón", lastName: "de la Cruz" });
+    expect(splitName("Pere de la Fuente Vila")).toEqual({ firstName: "Pere", lastName: "de la Fuente Vila" });
   });
   it("sense coincidència, l'email és de la primera jugadora", () => {
     expect(emailOwner("xyz123@example.com", [splitName("Anna Serra"), splitName("Berta Coll")])).toBe(0);
     expect(emailOwner("berta.coll@example.com", [splitName("Anna Serra"), splitName("Berta Coll")])).toBe(1);
+  });
+});
+
+describe("publicName", async () => {
+  const { publicName } = await import("../src/league.js");
+  it("nom + primer cognom, amb partícules", () => {
+    expect(publicName("Gemma", "Pou Pascual")).toBe("Gemma Pou");
+    expect(publicName("Aarón", "de la Cruz")).toBe("Aarón de la Cruz");
+    expect(publicName("Maria Teresa", "Toledo Martínez")).toBe("Maria Teresa Toledo");
   });
 });

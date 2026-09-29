@@ -51,7 +51,8 @@ export const adminRoutes =
     });
 
     app.post("/divisions/:divisionId/groups", async (req, reply) => {
-      const groups = await run((c) => league.generateGroups(c, param(req, "divisionId")));
+      const { firstWeek } = z.object({ firstWeek: z.iso.date().optional() }).parse(req.body ?? {});
+      const groups = await run((c) => league.generateGroups(c, param(req, "divisionId"), { firstWeek }));
       return reply.status(201).send({ groups });
     });
 

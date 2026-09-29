@@ -1,6 +1,7 @@
 import { createHash, randomBytes } from "node:crypto";
 import {
   addDays,
+  isoWeekday,
   evaluateCancellation,
   computePlayerRanking,
   computeStandings,
@@ -22,6 +23,7 @@ import {
 } from "@padel/domain";
 import type { Client } from "./db.js";
 import { badRequest, conflict, forbidden, notFound } from "./errors.js";
+import { nameWords } from "./import/registrations.js";
 import { localToInstant } from "./time.js";
 
 // ---------------------------------------------------------------------------
@@ -50,10 +52,11 @@ export async function audit(c: Client, actor: Actor, entity: string, entityId: s
 }
 
 // ---------------------------------------------------------------------------
-// Noms públics (RGPD: "Marc L. / Joan P.")
+// Noms públics (RGPD: només nom i primer cognom; mai telèfon ni email)
 // ---------------------------------------------------------------------------
 
-export const publicName = (first: string, last: string) => `${first} ${last.trim().charAt(0).toUpperCase()}.`;
+/** Nom públic: nom + primer cognom ("Gemma Pou"), decisió del coordinador per evitar ambigüitats. */
+export const publicName = (first: string, last: string) => [first.trim(), nameWords(last)[0]].filter(Boolean).join(" ");
 
 export async function entryNames(c: Client, entryIds: readonly string[]): Promise<Map<string, string>> {
   const { rows } = await c.query<{ entry_id: string; first_name: string; last_name: string }>(
@@ -722,15 +725,28 @@ export async function importEntries(
 }
 
 /** Reparteix les parelles en grups (serpentí per cap de sèrie) i genera el Round Robin amb una jornada per setmana. */
-export async function generateGroups(c: Client, divisionId: string) {
+/**
+ * Obre una divisió: grups de `groupSize` parelles (decisió del coordinador: només s'obren divisions
+ * amb un mínim de 6 parelles; la resta queden inscrites i pendents). `firstWeek` permet obrir-la més
+ * tard que la resta de la prova (per defecte, la setmana de la J1 de la prova).
+ */
+export async function generateGroups(c: Client, divisionId: string, opts: { firstWeek?: string | undefined } = {}) {
   const division = await loadDivision(c, divisionId);
+  const firstWeek = opts.firstWeek ?? division.first_week;
+  if (isoWeekday(firstWeek) !== 1) throw badRequest("NOT_A_MONDAY", "firstWeek must be a Monday");
+  if (firstWeek < division.first_week) throw badRequest("BEFORE_COMPETITION", "firstWeek is before the competition starts");
   const existing = await c.query('SELECT 1 FROM "group" WHERE division_id = $1', [divisionId]);
   if (existing.rowCount) throw conflict("GROUPS_EXIST", "Groups already generated for this division");
   const { rows: entries } = await c.query<{ id: string }>(
     "SELECT id FROM entry WHERE division_id = $1 AND status = 'ACTIVE' ORDER BY seed NULLS LAST, created_at, id",
     [divisionId],
   );
-  if (entries.length < 2) throw badRequest("NOT_ENOUGH_ENTRIES", "At least 2 pairs are needed");
+  if (entries.length < division.rules.groupSize)
+    throw conflict(
+      "NOT_ENOUGH_ENTRIES",
+      `This division has ${entries.length} pairs; at least ${division.rules.groupSize} are needed to open it`,
+      { entries: entries.length, required: division.rules.groupSize },
+    );
 
   const groupCount = Math.ceil(entries.length / division.rules.groupSize);
   const buckets: string[][] = Array.from({ length: groupCount }, () => []);
@@ -753,7 +769,7 @@ export async function generateGroups(c: Client, divisionId: string) {
 
     let matchCount = 0;
     for (const round of generateRoundRobin(members)) {
-      const week = addDays(division.first_week, (round.number - 1) * 7);
+      const week = addDays(firstWeek, (round.number - 1) * 7);
       const r = await c.query<{ id: string }>(
         "INSERT INTO round (group_id, number, week_start) VALUES ($1, $2, $3) RETURNING id",
         [groupId, round.number, week],

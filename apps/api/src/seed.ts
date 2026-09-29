@@ -9,7 +9,7 @@ export const RULES_2026_27: CompetitionRules = {
   groupSize: 6,
 };
 
-/** Dades base: club, temporada 2026/27, Prova 1 i les 6 divisions (3 categories × nivells C i B). Idempotent. */
+/** Dades base: club, temporada 2026/27, Prova 1 i les divisions (3 categories × nivells C, B i únic). Idempotent. */
 export async function seed(pool: Pool) {
   return tx(pool, async (c) => {
     const one = async (sql: string, params: unknown[]) => (await c.query<{ id: string }>(sql, params)).rows[0]!.id;
@@ -47,11 +47,15 @@ export async function seed(pool: Pool) {
         [clubId, code, name, schedule, i],
       );
     const levels: Record<string, string> = {};
-    for (const [i, code] of ["C", "B"].entries())
-      levels[code] = await one(
+    for (const [i, [code, name]] of [
+      ["C", "Nivell C"],
+      ["B", "Nivell B"],
+      ["U", "Nivell únic"],
+    ].entries())
+      levels[code!] = await one(
         `INSERT INTO level (club_id, code, name, sort_order) VALUES ($1, $2, $3, $4)
          ON CONFLICT (club_id, code) DO UPDATE SET name = EXCLUDED.name RETURNING id`,
-        [clubId, code, `Nivell ${code}`, i],
+        [clubId, code, name, i],
       );
 
     const seasonId = await one(

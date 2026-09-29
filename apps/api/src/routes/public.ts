@@ -29,7 +29,7 @@ export const publicRoutes =
            JOIN category cat ON cat.id = d.category_id
            JOIN level lv ON lv.id = d.level_id
            LEFT JOIN "group" g ON g.division_id = d.id
-          WHERE d.competition_id = $1
+          WHERE d.competition_id = $1 AND EXISTS (SELECT 1 FROM entry e WHERE e.division_id = d.id)
           GROUP BY d.id, cat.code, cat.name, cat.sort_order, lv.code, lv.name, lv.sort_order, cat.schedule
           ORDER BY cat.sort_order, lv.sort_order`,
         [competitionId],

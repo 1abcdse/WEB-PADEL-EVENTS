@@ -466,7 +466,7 @@ Admin provisional: token de portador (`ADMIN_TOKEN`, comparació en temps consta
 
 ## 28. GDPR
 
-Minimització: telèfon/email/pagaments privats; nom de parella i resultats públics. Nom públic per defecte: **"Marc L. / Joan P."** (inicial de cognom), configurable per club.
+Minimització: telèfon/email/pagaments privats; nom de parella i resultats públics. Nom públic: **nom + primer cognom** ("Gemma Pou / Gemma Pascual"), decisió del coordinador.
 
 ## 29. Testing Strategy
 
@@ -519,6 +519,19 @@ MIT/Apache 2.0/AGPL-3.0 comparades. **Recomanació: AGPL-3.0**, per protegir con
 | 14 | Confirmació de resultats | ✅ Una parella el comunica i la rival el confirma o el discuteix; el coordinador el pot corregir. |
 | 15 | Rebuig de propostes | ✅ Rebutjar la proposta de la rival compta com a cancel·lació. |
 | 16 | Accés del coordinador | ✅ Clau secreta ara; login amb usuari i contrasenya amb el panell. |
+| 17 | Obertura de divisions | ✅ Només s'obren divisions amb **6 parelles o més** (grups de 6). Les altres queden inscrites i pendents; es poden obrir més tard amb la seva pròpia setmana d'inici. |
+| 18 | Nom públic | ✅ Nom + primer cognom ("Gemma Pou", "Aarón de la Cruz"), per evitar ambigüitats. |
+| 19 | Mixta | ✅ Nivell únic (grup de 6 amb parelles C, C+ i B). |
+
+### Estat de les inscripcions (29/09/2026)
+
+| Divisió | Parelles | Estat |
+|---|---|---|
+| Femenina C | 6 | S'obre el 12/10 |
+| Mixta (nivell únic) | 6 | S'obre el 12/10 |
+| Masculina C | 4 | Pendent (falten 2) |
+| Masculina B | 2 | Pendent (falten 4) |
+| Femenina B | 2 | Pendent (falten 4) |
 
 ---
 
