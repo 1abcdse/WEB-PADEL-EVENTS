@@ -12,6 +12,8 @@ const playerBody = z.object({
   phone: z.string().optional(),
   email: z.email().optional(),
   isMember: z.boolean(),
+  declaredLevel: z.string().trim().max(8).optional(),
+  shirtSize: z.string().trim().max(8).optional(),
 });
 
 const importBody = z.object({

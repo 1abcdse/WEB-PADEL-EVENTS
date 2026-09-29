@@ -627,6 +627,8 @@ export interface PlayerInput {
   phone?: string | undefined;
   email?: string | undefined;
   isMember: boolean;
+  declaredLevel?: string | undefined;
+  shirtSize?: string | undefined;
 }
 
 const normalizePhone = (p?: string) => {
@@ -694,9 +696,10 @@ export async function importEntries(
       try {
         await c.query("SAVEPOINT ep");
         await c.query(
-          `INSERT INTO entry_player (entry_id, player_id, competition_id, category_id, is_member, registration_fee_cents)
-           VALUES ($1, $2, $3, $4, $5, $6)`,
-          [entryId, playerId, division.competition_id, division.category_id, p.isMember, fee],
+          `INSERT INTO entry_player
+             (entry_id, player_id, competition_id, category_id, is_member, registration_fee_cents, declared_level, shirt_size)
+           VALUES ($1, $2, $3, $4, $5, $6, $7, $8)`,
+          [entryId, playerId, division.competition_id, division.category_id, p.isMember, fee, p.declaredLevel ?? null, p.shirtSize ?? null],
         );
         await c.query("RELEASE SAVEPOINT ep");
       } catch (err) {
