@@ -30,7 +30,8 @@ const cancellationNotice = (o: CancellationOutcome): Notice => {
   return { kind: "warn", text: "Aquesta era la 3a cancel·lació d'aquest partit: WO per a la parella rival." };
 };
 
-export function PairApp({ token }: { token: string }) {
+/** `now` permet fixar el rellotge (demo); per defecte, l'hora real. */
+export function PairApp({ token, now = () => new Date() }: { token: string; now?: () => Date }) {
   const api = useMemo(() => entryApi(token), [token]);
   const [me, setMe] = useState<Me | null>(null);
   const [fatal, setFatal] = useState<string | null>(null);
@@ -100,12 +101,12 @@ export function PairApp({ token }: { token: string }) {
       <h2 className="section-title">Partits per jugar</h2>
       {open.length === 0 && <p className="card muted">No teniu cap partit pendent.</p>}
       {open.map((m) => (
-        <MatchCard key={m.id} match={m} me={me.entryId} api={api} busy={busy} act={act} setSheet={setSheet} />
+        <MatchCard key={m.id} match={m} me={me.entryId} api={api} busy={busy} act={act} setSheet={setSheet} now={now} />
       ))}
 
       {done.length > 0 && <h2 className="section-title">Jugats</h2>}
       {done.map((m) => (
-        <MatchCard key={m.id} match={m} me={me.entryId} api={api} busy={busy} act={act} setSheet={setSheet} />
+        <MatchCard key={m.id} match={m} me={me.entryId} api={api} busy={busy} act={act} setSheet={setSheet} now={now} />
       ))}
 
       <p className="muted small">
@@ -157,13 +158,14 @@ interface CardProps {
   busy: boolean;
   act: (fn: () => Promise<Notice>) => Promise<void>;
   setSheet: (s: Sheet) => void;
+  now: () => Date;
 }
 
-function MatchCard({ match: m, me, api, busy, act, setSheet }: CardProps) {
+function MatchCard({ match: m, me, api, busy, act, setSheet, now }: CardProps) {
   const iAmA = m.entryA.id === me;
   const rival = iAmA ? m.entryB : m.entryA;
   const b = m.booking;
-  const started = b ? startsAt(b.date, b.start) <= new Date() : false;
+  const started = b ? startsAt(b.date, b.start) <= now() : false;
   const when = b ? `${shortDay(b.date)} · ${b.start} · Pista ${b.court}` : null;
 
   const confirmSheet = (s: Omit<Extract<Sheet, { type: "confirm" }>, "type">) => setSheet({ type: "confirm", ...s });

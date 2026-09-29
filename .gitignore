@@ -10,3 +10,4 @@ next-env.d.ts
 # Dades personals d'inscrits: mai al repositori
 data/
 *.inscrits.*
+demo-dist/

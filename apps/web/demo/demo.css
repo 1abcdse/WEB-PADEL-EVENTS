@@ -1,0 +1,21 @@
+/* Barra de control de la demo (no forma part de la web real) */
+.demo-bar {
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  box-shadow: var(--shadow);
+  padding: 10px 16px;
+  display: grid;
+  gap: 8px;
+}
+.demo-row { display: flex; flex-wrap: wrap; gap: 8px 12px; align-items: end; max-width: 640px; margin: 0 auto; width: 100%; }
+.demo-tag { background: var(--accent); color: #1b2400; border-radius: 6px; padding: 2px 8px; font-size: 0.78rem; letter-spacing: 0.05em; text-transform: uppercase; }
+.seg { display: inline-flex; border: 1px solid var(--border); border-radius: 10px; overflow: hidden; }
+.seg button { appearance: none; border: 0; background: var(--surface); color: var(--text); font: inherit; font-size: 0.9rem; font-weight: 600; padding: 6px 12px; cursor: pointer; }
+.seg button[aria-selected="true"] { background: var(--primary); color: var(--primary-text); }
+.demo-field { display: grid; gap: 2px; font-size: 0.75rem; font-weight: 700; color: var(--muted); flex: 1 1 150px; min-width: 0; }
+.demo-field select { font: inherit; font-size: 0.95rem; font-weight: 500; color: var(--text); background: var(--surface-2); border: 1px solid var(--border); border-radius: 8px; padding: 6px 8px; width: 100%; }
+.demo-actions { gap: 4px 12px; }
+.demo-actions .btn.link { font-size: 0.85rem; padding: 4px 0; }
+.demo-guide { max-width: 640px; width: 100%; box-sizing: border-box; margin: 0 auto; padding: 8px 12px 8px 30px; background: var(--info-bg); border-radius: 10px; font-size: 0.9rem; display: grid; gap: 4px; }
+.demo-foot { max-width: 640px; margin: 0 auto; padding: 0 16px 32px; font-size: 0.8rem; color: var(--muted); }
+:focus-visible { outline: 2px solid var(--primary); outline-offset: 2px; }

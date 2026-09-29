@@ -1,6 +1,6 @@
-import Link from "next/link";
+import type { LinkComponent } from "./types";
 
-export function SiteHeader({ title, subtitle }: { title: string; subtitle?: string }) {
+export function SiteHeader({ title, subtitle, Link }: { title: string; subtitle?: string; Link: LinkComponent }) {
   return (
     <header className="hero">
       <nav className="topnav">
