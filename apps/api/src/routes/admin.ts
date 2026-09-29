@@ -120,6 +120,35 @@ export const adminRoutes =
       return { ok: true };
     });
 
+    /** Welcome packs: un per persona i prova. Resum de talles i llista per lliurar. */
+    app.get("/competitions/:competitionId/welcome-packs", async (req) => {
+      const { rows } = await ctx.pool.query<{
+        player_id: string;
+        first_name: string;
+        last_name: string;
+        shirt_size: string | null;
+        delivered_at: Date | null;
+      }>(
+        `SELECT wp.player_id, p.first_name, p.last_name, wp.shirt_size, wp.delivered_at
+           FROM welcome_pack wp JOIN player p ON p.id = wp.player_id
+          WHERE wp.competition_id = $1 ORDER BY p.last_name, p.first_name`,
+        [param(req, "competitionId")],
+      );
+      const sizes: Record<string, number> = {};
+      for (const r of rows) sizes[r.shirt_size ?? "?"] = (sizes[r.shirt_size ?? "?"] ?? 0) + 1;
+      return { total: rows.length, delivered: rows.filter((r) => r.delivered_at).length, sizes, players: rows };
+    });
+
+    app.post("/competitions/:competitionId/welcome-packs/:playerId/delivered", async (req) => {
+      const { competitionId, playerId } = z.object({ competitionId: uuid, playerId: uuid }).parse(req.params);
+      const { rowCount } = await ctx.pool.query(
+        "UPDATE welcome_pack SET delivered_at = $3 WHERE competition_id = $1 AND player_id = $2 AND delivered_at IS NULL",
+        [competitionId, playerId, ctx.now()],
+      );
+      if (!rowCount) throw new ApiError(409, "NOT_DELIVERABLE", "Welcome pack not found or already delivered");
+      return { ok: true };
+    });
+
     app.get("/audit", async (req) => {
       const { limit } = z.object({ limit: z.coerce.number().int().min(1).max(500).default(100) }).parse(req.query);
       const { rows } = await ctx.pool.query("SELECT * FROM audit_log ORDER BY id DESC LIMIT $1", [limit]);

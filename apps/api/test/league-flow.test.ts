@@ -101,6 +101,9 @@ describe("Lliga Social: flux complet d'una divisió", () => {
     // La inscripció es paga un sol cop per prova.
     const charges = await call("GET", `/api/admin/competitions/${ids.competitionId}/charges`, { headers: admin });
     expect(charges.body).toHaveLength(12);
+    // I es rep un sol welcome pack per prova.
+    const packs = await call("GET", `/api/admin/competitions/${ids.competitionId}/welcome-packs`, { headers: admin });
+    expect(packs.body.total).toBe(12);
   });
 
   it("una divisió amb menys de 6 parelles queda pendent i no es pot obrir", async () => {

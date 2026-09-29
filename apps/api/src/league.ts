@@ -711,6 +711,12 @@ export async function importEntries(
           throw conflict("PLAYER_ALREADY_IN_CATEGORY", `${p.firstName} ${p.lastName} is already registered in this category`);
         throw err;
       }
+      // Un sol welcome pack per persona i prova, encara que jugui dues categories.
+      await c.query(
+        `INSERT INTO welcome_pack (competition_id, player_id, shirt_size) VALUES ($1, $2, $3)
+         ON CONFLICT (competition_id, player_id) DO UPDATE SET shirt_size = COALESCE(welcome_pack.shirt_size, EXCLUDED.shirt_size)`,
+        [division.competition_id, playerId, p.shirtSize ?? null],
+      );
       // Un sol pagament d'inscripció per persona i prova, encara que jugui dues categories.
       await c.query(
         `INSERT INTO charge (competition_id, player_id, concept, amount_cents) VALUES ($1, $2, 'REGISTRATION', $3)
