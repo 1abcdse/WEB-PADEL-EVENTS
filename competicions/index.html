@@ -283,6 +283,7 @@ const LLIGA={
  fields:['Nom i cognoms','Telèfon','Email de contacte','Nivell (C, C+ o B)','Talla del welcome pack','Abonat/da al club']
 };
 // Parelles inscrites (només nom, primer cognom i nivell declarat: les dades de contacte no es publiquen).
+// Cada jugador/a: [nom complet, nivell, nom públic opcional si cal distingir-lo d'una altra persona].
 // null = llista encara no carregada.
 const INSCRITS={
  // Ordre d'inscripció (marca temporal del formulari)
@@ -294,7 +295,7 @@ const INSCRITS={
   [['Gemma Pou Pascual','C+'],['Gemma Pascual Grau','C+'],'2026-09-16'],
   [['Maria Teresa Toledo Martínez','C'],['Laia Rebled Volart','C'],'2026-09-18'],
   [['Elisenda López Gómez','C'],['Mireia Prunes Massaguer','C'],'2026-09-28'],
-  [['Joanne Singleton','C'],['Anna Folch','C+'],'2026-09-28'],
+  [['Joanne Singleton','C'],['Anna Folch','C'],'2026-09-28'],   // la parella juga a nivell C (decisió del coordinador)
   [['Marta Carmona','C+'],['Laura Soria Luque','C+'],'2026-09-30']
  ],
  // Ordre d'inscripció (marca temporal del formulari)
@@ -309,9 +310,9 @@ const INSCRITS={
   [['Diego Gimeno','C+'],['David Vicente','C+'],'2026-10-01']
  ],
  mixta:[
-  [['Eli López Gómez','C'],['Ruben Vivas Sierra','C+']],
+  [['Elisenda López Gómez','C'],['Ruben Vivas Sierra','C+']],   // «Eli» al formulari de Mixta: és la mateixa persona
   [['Rafae Girones','C'],['Isidre Bornay','C']],
-  [['Alex Cutillas Martinez','C'],['Laia Navarro Baila','C']],
+  [['Alex Cutillas Martinez','C'],['Laia Navarro Baila','C','Laia Navarro Baila']],   // nom complet: no és la Laia Navarro de la Femenina
   [['Santi Halbide','C+'],['Lisandro Murillo','C+']],
   [['Sara Torres Odena','B'],['Albert Casellas Urgelles','B']],
   [['Anna Garde','C'],['Abel Ramonet','C']]
@@ -346,7 +347,7 @@ function regHtml(c,cap){
  return `<div class="reg"><div class="reg-top"><span>Parelles inscrites</span><b>${list.length} / ${cap}</b></div>
   <div class="meter" role="img" aria-label="${list.length} de ${cap} places"><i style="width:${Math.min(100,list.length/cap*100)}%"></i></div>
   <div class="fields">${lvSummary}</div>
-  <ol class="pairs">${list.map(p=>`<li${pairLevel(p)?'':' class="undecided"'}><div>${p.slice(0,2).map(([n,lv])=>`<div class="pl"><span>${esc(publicName(n))}</span><span class="${lvClass(lv)}">${esc(lv)}</span></div>`).join('')}${p[2]?`<div class="small muted">Inscrita el ${fmtNum(p[2])}</div>`:''}${pairLevel(p)?'':`<div class="small"><span class="pill todo">Nivell per decidir: C i C+</span></div>`}</div></li>`).join('')}</ol>
+  <ol class="pairs">${list.map(p=>`<li${pairLevel(p)?'':' class="undecided"'}><div>${p.slice(0,2).map(([n,lv,pub])=>`<div class="pl"><span>${esc(pub||publicName(n))}</span><span class="${lvClass(lv)}">${esc(lv)}</span></div>`).join('')}${p[2]?`<div class="small muted">Inscrita el ${fmtNum(p[2])}</div>`:''}${pairLevel(p)?'':`<div class="small"><span class="pill todo">Nivell per decidir: C i C+</span></div>`}</div></li>`).join('')}</ol>
   <p class="muted small">Nivell declarat per cada jugador/a. Criteri actual: C+ va amb B.</p></div>`;
 }
 const MONTHS=['gen','febr','març','abr','maig','juny','jul','ag','set','oct','nov','des'];
