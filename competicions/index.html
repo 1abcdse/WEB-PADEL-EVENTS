@@ -83,10 +83,19 @@ main{padding:20px 16px 28px}
 .cat dl{margin:0;display:grid;grid-template-columns:auto 1fr;gap:6px 12px;font-size:14px}
 .cat dt{color:var(--muted);font-size:13px}
 .cat dd{margin:0;min-width:0}
-.slots{display:grid;grid-template-columns:1fr 1fr;gap:8px}
-.slot-lv{border:1px dashed var(--field-line);border-radius:10px;padding:10px;text-align:center}
-.slot-lv b{display:block;font-size:20px;font-variant-numeric:tabular-nums}
-.slot-lv span{font-size:12px;color:var(--muted)}
+.reg{display:grid;gap:8px}
+.reg-top{display:flex;justify-content:space-between;align-items:baseline;gap:8px;font-size:14px}
+.reg-top b{font-size:20px;font-variant-numeric:tabular-nums}
+.meter{height:8px;border-radius:999px;background:var(--chip);overflow:hidden}
+.meter i{display:block;height:100%;background:var(--green)}
+.pairs{list-style:none;margin:0;padding:0;display:grid;gap:6px;counter-reset:pp}
+.pairs li{display:grid;grid-template-columns:22px 1fr;gap:8px;align-items:start;padding:8px 10px;border:1px solid var(--line);border-radius:10px;background:var(--soft);counter-increment:pp;font-size:14px}
+.pairs li::before{content:counter(pp);font-size:12px;font-weight:800;color:var(--muted);padding-top:1px;font-variant-numeric:tabular-nums}
+.pairs .pl{display:flex;align-items:center;gap:6px;min-width:0}
+.pairs .pl span:first-child{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.lv{flex:0 0 auto;font-size:11px;font-weight:800;padding:1px 6px;border-radius:5px;background:var(--seed-bg);color:var(--seed-ink)}
+.lv.B{background:var(--gold-bg);color:var(--ink);border:1px solid var(--gold)}
+.empty{border:1px dashed var(--field-line);border-radius:10px;padding:12px;text-align:center;font-size:13px;color:var(--muted)}
 .btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;border-radius:10px;padding:11px 14px;font-weight:700;text-decoration:none;background:var(--green);color:var(--on-green);min-height:44px}
 .btn.ghost{background:var(--green2);color:var(--on-green2)}
 .price{width:100%;border-collapse:collapse;font-variant-numeric:tabular-nums}
@@ -272,6 +281,41 @@ const LLIGA={
  ],
  fields:['Nom i cognoms','Telèfon','Email','Nivell (C o B)','Talla de samarreta','Abonat/da al club']
 };
+// Parelles inscrites (només nom, primer cognom i nivell declarat: les dades de contacte no es publiquen).
+// null = llista encara no carregada.
+const INSCRITS={
+ femenina:null,
+ masculina:null,
+ mixta:[
+  [['Eli López Gómez','C'],['Ruben Vivas Sierra','C+']],
+  [['Rafae Girones','C'],['Isidre Bornay','C']],
+  [['Alex Cutillas Martinez','C'],['Laia Navarro Baila','C']],
+  [['Santi Halbide','C+'],['Lisandro Murillo','C+']],
+  [['Sara Torres Odena','B'],['Albert Casellas Urgelles','B']],
+  [['Anna Garde','C'],['Abel Ramonet','C']]
+ ]
+};
+const PARTICLES=['de','del','la','las','los','i','y','da','dos','van','von'];
+// «Laia Navarro Baila» → «Laia Navarro» (nom + primer cognom, com a la resta de la web de la lliga)
+function publicName(full){
+ const w=String(full).trim().split(/\s+/);if(w.length<=2)return w.join(' ');
+ const out=[w[0]];let i=1;
+ while(i<w.length&&PARTICLES.indexOf(w[i].toLowerCase())>=0)out.push(w[i++]);
+ if(i<w.length)out.push(w[i]);
+ return out.join(' ');
+}
+function lvClass(lv){return /^B/i.test(lv)?'lv B':'lv'}
+function regHtml(c,cap){
+ const list=INSCRITS[c.k];
+ if(!list)return `<div class="reg"><div class="reg-top"><span>Parelles inscrites</span><b>– / ${cap}</b></div><div class="empty">Llista d’inscrits pendent de carregar.</div></div>`;
+ const byLv={};list.forEach(p=>{const k=[...new Set(p.map(x=>x[1].charAt(0).toUpperCase()))].sort().join('/');byLv[k]=(byLv[k]||0)+1});
+ const lvSummary=Object.keys(byLv).sort().map(k=>`<span class="pill">Nivell ${esc(k)}: ${byLv[k]} ${byLv[k]===1?'parella':'parelles'}</span>`).join(' ');
+ return `<div class="reg"><div class="reg-top"><span>Parelles inscrites</span><b>${list.length} / ${cap}</b></div>
+  <div class="meter" role="img" aria-label="${list.length} de ${cap} places"><i style="width:${Math.min(100,list.length/cap*100)}%"></i></div>
+  <div class="fields">${lvSummary}</div>
+  <ol class="pairs">${list.map(p=>`<li><div>${p.map(([n,lv])=>`<div class="pl"><span>${esc(publicName(n))}</span><span class="${lvClass(lv)}">${esc(lv)}</span></div>`).join('')}</div></li>`).join('')}</ol>
+  <p class="muted small">Nivell declarat per cada jugador/a. L’assignació final a nivell C o B es fa al pas de divisions i grups.</p></div>`;
+}
 const MONTHS=['gen','febr','març','abr','maig','juny','jul','ag','set','oct','nov','des'];
 const DAYS=['diumenge','dilluns','dimarts','dimecres','dijous','divendres','dissabte'];
 function d(iso){const [y,m,dd]=iso.split('-').map(Number);return new Date(y,m-1,dd)}
@@ -298,10 +342,9 @@ function renderLliga(){
  <ol class="timeline">${L.weeks.map(([n,w,po],i)=>`<li class="${po?'po':''}${i===cur?' now':''}"><b>${esc(n)}</b><span>${fmtShort(w)}</span></li>`).join('')}</ol>`;
 
  $('lligaCats').innerHTML=L.cats.map(c=>`<article class="cat">
-  <div class="cat-top"><h3 style="font-size:18px;margin:0">${esc(c.name)}</h3><span class="pill">${perCat} parelles</span></div>
+  <div class="cat-top"><h3 style="font-size:18px;margin:0">${esc(c.name)}</h3><span class="pill">${perCat} places</span></div>
   <dl><dt>Dies</dt><dd>${esc(c.days)}</dd><dt>Horari</dt><dd>${esc(c.time)}</dd><dt>Pistes</dt><dd>${esc(c.courts)}</dd><dt>Extra</dt><dd>${esc(c.extra)}</dd></dl>
-  <div class="slots">${L.levels.map(lv=>`<div class="slot-lv"><span>Nivell ${esc(lv)}</span><b>– / ${L.pairsPerGroup}</b><span>parelles inscrites</span></div>`).join('')}</div>
-  <p class="muted small">Llista d’inscrits: pendent de carregar.</p>
+  ${regHtml(c,perCat)}
   <a class="btn${open?'':' ghost'}" href="${esc(c.form)}" target="_blank" rel="noopener">Formulari d’inscripció ${esc(c.name)} ↗</a>
  </article>`).join('');
 
