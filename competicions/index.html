@@ -279,12 +279,23 @@ const LLIGA={
   {k:'masculina',name:'Masculina',form:'https://forms.gle/ZitC1Wxq86RdPovJ6',days:'Dimarts, dimecres i divendres',time:'21:00 (fins a les 23:00)',courts:'4 pistes cada dia',extra:'Dijous 21:00, 3 pistes (només d’emergència)'},
   {k:'mixta',name:'Mixta',form:'https://forms.gle/HbjCFzMSYbtBe4ph6',days:'Dissabte i diumenge',time:'Torns de 90 min de 9:00 a 19:30',courts:'4 pistes',extra:'5a pista opcional a partir de les 12:00'}
  ],
- fields:['Nom i cognoms','Telèfon','Email','Nivell (C o B)','Talla de samarreta','Abonat/da al club']
+ fields:['Nom i cognoms','Telèfon','Email de contacte','Nivell (C, C+ o B)','Talla del welcome pack','Abonat/da al club']
 };
 // Parelles inscrites (només nom, primer cognom i nivell declarat: les dades de contacte no es publiquen).
 // null = llista encara no carregada.
 const INSCRITS={
- femenina:null,
+ // Ordre d'inscripció (marca temporal del formulari)
+ femenina:[
+  [['Alba Egea Muñoz','C'],['Lourdes Gonzalez Villalba','C'],'2026-09-13'],
+  [['Mireia Cruz Romero','C'],['Miriam Fernández Munné','C'],'2026-09-13'],
+  [['Laia Navarro','B'],['Maria Bori','B'],'2026-09-15'],
+  [['Amaia Asenjo','B'],['Georgina Jené','B'],'2026-09-15'],
+  [['Gemma Pou Pascual','C+'],['Gemma Pascual Grau','C+'],'2026-09-16'],
+  [['Maria Teresa Toledo Martínez','C'],['Laia Rebled Volart','C'],'2026-09-18'],
+  [['Elisenda López Gómez','C'],['Mireia Prunes Massaguer','C'],'2026-09-28'],
+  [['Joanne Singleton','C'],['Anna Folch','C+'],'2026-09-28'],
+  [['Marta Carmona','C+'],['Laura Soria Luque','C+'],'2026-09-30']
+ ],
  // Ordre d'inscripció (marca temporal del formulari)
  masculina:[
   [['Marc Biosca','B'],['Juan Pinilla','B'],'2026-09-10'],
@@ -352,7 +363,7 @@ function renderLliga(){
   <div class="fact"><div class="k">Tancament inscripcions</div><div class="v">${fmtShort(L.deadline)}</div><div class="d">${fmtLong(L.deadline)}</div></div>
   <div class="fact"><div class="k">Inici de la lliga</div><div class="v">${fmtShort(L.start)}</div><div class="d">Comença el ${fmtLong(L.start)}</div></div>
   <div class="fact"><div class="k">Final previst</div><div class="v">${fmtShort(L.end)}</div><div class="d">Es pot allargar com a màxim 1 mes</div></div>
-  <div class="fact"><div class="k">Places</div><div class="v">${perCat*L.cats.length} parelles</div><div class="d">${groups} grups de ${L.pairsPerGroup} parelles</div></div>
+  <div class="fact"><div class="k">Parelles inscrites</div><div class="v">${L.cats.reduce((n,c)=>n+(INSCRITS[c.k]||[]).length,0)} / ${perCat*L.cats.length}</div><div class="d">${perCat*L.cats.length} places en ${groups} grups de ${L.pairsPerGroup} parelles</div></div>
  </div>
  <h3 style="margin-top:16px">Calendari de la Prova 1</h3>
  <p class="muted small">Una jornada per setmana (round robin de 5 jornades) i després semifinals i finals.</p>
