@@ -107,13 +107,20 @@ tr.champ-row td{background:#fbf5e7}
 <nav class="main-tabs"><button id="nav-americana" class="active" onclick="showView('americana')">Americana del dia</button><button id="nav-league" onclick="showView('league')">🏆 Lliga 100 punts</button></nav>
 </div></header>
 <main>
+<div id="jsWarn" class="notice error" style="font-size:15px;line-height:1.45">
+<strong>⚠️ L’aplicació no s’ha pogut iniciar en aquest visor.</strong><br>
+Estàs veient el fitxer amb una vista prèvia (WhatsApp, Gmail, l’app Arxius, l’app de Claude…) que no executa l’aplicació. Obre’l amb un navegador:<br>
+• <b>Android:</b> descarrega’l i obre’l amb <b>Chrome</b> (Chrome → ⋮ → Baixades → toca el fitxer).<br>
+• <b>iPhone:</b> l’app Arxius només en mostra una vista prèvia; cal obrir-lo des d’un enllaç web amb <b>Safari</b>.
+</div>
+<div id="jsError" class="notice error hidden"></div>
 <div id="view-americana">
 
 <section class="card">
 <h2>1. Configuració</h2>
 <div class="grid">
-<div><label>Pistes</label><select id="courtCount"></select></div>
-<div><label>Rondes classificatòries</label><select id="roundCount"></select></div>
+<div><label>Pistes</label><select id="courtCount"><option value="2" selected>2 pistes — 8 jugadors</option><option value="3">3 pistes — 12 jugadors</option><option value="4">4 pistes — 16 jugadors</option><option value="5">5 pistes — 20 jugadors</option><option value="6">6 pistes — 24 jugadors</option><option value="7">7 pistes — 28 jugadors</option><option value="8">8 pistes — 32 jugadors</option></select></div>
+<div><label>Rondes classificatòries</label><select id="roundCount"><option value="1">1 rondes</option><option value="2">2 rondes</option><option value="3">3 rondes</option><option value="4" selected>4 rondes</option><option value="5">5 rondes</option><option value="6">6 rondes</option><option value="7">7 rondes</option><option value="8">8 rondes</option></select></div>
 <div>
 <label>Format de parelles</label>
 <select id="pairFormat">
@@ -236,21 +243,24 @@ tr.champ-row td{background:#fbf5e7}
 
 </main>
 <script>
+// Si hi ha un error inesperat, es mostra a la pantalla en lloc de fallar en silenci
+window.onerror=function(msg,src,line){var e=document.getElementById('jsError');if(e){e.classList.remove('hidden');e.textContent='❌ Error: '+msg+' (línia '+line+'). Fes una captura i envia-la.'}};
 const COURTS=[9,8,7,6,4,3,2,1];
 // Ordre de moviment real de l'Americana:
 // 9 → 8 → 7 → 6 → 1 → 2 → 3 → 4
 // La pista 5 no existeix.
 const MOVEMENT=[9,8,7,6,1,2,3,4];
+// Pistes en joc segons el nombre de pistes (COURTS) i ordenades segons el moviment.
+// Ex.: 5 pistes → 9,8,7,6,4 · 6 pistes → 9,8,7,6,3,4 · 8 pistes → 9,8,7,6,1,2,3,4
+function ladder(n){const act=COURTS.slice(0,n);return MOVEMENT.filter(c=>act.indexOf(c)>=0)}
 
 let S={players:[],courts:2,rounds:4,rs:[],current:0,sort:'points',playoff:null,format:'fixed'};
 
 const $=id=>document.getElementById(id);
-function esc(x){return String(x??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+function esc(x){return String(x==null?'':x).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+function toObj(pairs){const o={};pairs.forEach(([k,v])=>o[k]=v);return o}
 function shuffle(a){for(let i=a.length-1;i>0;i--){let j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}}
 function init(){
- for(let i=2;i<=8;i++)$('courtCount').innerHTML+=`<option value="${i}">${i} pistes — ${i*4} jugadors</option>`;
- $('courtCount').value=2;
- for(let i=1;i<=8;i++)$('roundCount').innerHTML+=`<option value="${i}" ${i===4?'selected':''}>${i} rondes</option>`;
  $('courtCount').onchange=()=>{renderPlayers();updateCapacity()};
  $('pairFormat').onchange=updateFormatInfo;
  renderPlayers();updateCapacity();updateFormatInfo();
@@ -266,7 +276,7 @@ function init(){
 }
 function updateCapacity(){
  let n=+$('courtCount').value;
- $('capacity').innerHTML=`<strong>${n} pistes</strong> → <strong>${n*4} jugadors</strong> · pistes: <strong>${COURTS.slice(0,n).join(' → ')}</strong>`;
+ $('capacity').innerHTML=`<strong>${n} pistes</strong> → <strong>${n*4} jugadors</strong> · pistes: <strong>${ladder(n).join(' → ')}</strong>`;
 }
 function updateFormatInfo(){
  const f=$('pairFormat').value;
@@ -298,7 +308,7 @@ function makeRound(i){
  let matches=[];
  for(let c=0;c<S.courts;c++){
   let a=ids.slice(c*4,c*4+4);
-  matches.push({court:COURTS[c],players:a,teamA:[a[0],a[1]],teamB:[a[2],a[3]],a:null,b:null,done:false});
+  matches.push({court:ladder(S.courts)[c],players:a,teamA:[a[0],a[1]],teamB:[a[2],a[3]],a:null,b:null,done:false});
  }
  S.rs[i]={number:i+1,matches,done:false};
 }
@@ -351,18 +361,19 @@ function nextOrder(r){
  // 2 rep perdedors de 1 + guanyadors de 3
  // 3 rep perdedors de 2 + guanyadors de 4
  // 4 rep perdedors de 3 + perdedors de 4
- let incoming=Object.fromEntries(MOVEMENT.map(c=>[c,[]]));
- const byCourt=Object.fromEntries(r.matches.map(m=>[m.court,m]));
- for(let i=0;i<MOVEMENT.length && i<S.courts;i++){
-  const court=MOVEMENT[i],m=byCourt[court];
+ const lad=ladder(S.courts);
+ let incoming=toObj(lad.map(c=>[c,[]]));
+ const byCourt=toObj(r.matches.map(m=>[m.court,m]));
+ for(let i=0;i<lad.length;i++){
+  const court=lad[i],m=byCourt[court];
   if(!m)continue;
   const result=getResult(m);
   // Si encara no hi ha resultat, mantenim la pista per evitar una generació incoherent.
   if(!result){incoming[court].push(...m.teamA,...m.teamB);continue}
   const win=result==='A'?m.teamA:m.teamB;
   const lose=result==='A'?m.teamB:m.teamA;
-  const up= i===0 ? court : MOVEMENT[i-1];
-  const down= i===S.courts-1 ? court : MOVEMENT[i+1];
+  const up= i===0 ? court : lad[i-1];
+  const down= i===lad.length-1 ? court : lad[i+1];
   // Una parella guanyadora puja cap a la Reina; una perdedora baixa cap al Pozo.
   // En el conjunt actiu de pistes, "up/down" són les pistes disponibles.
   incoming[up].push(...win);
@@ -370,7 +381,7 @@ function nextOrder(r){
  }
  let out=[];
  for(let i=0;i<S.courts;i++){
-  const court=MOVEMENT[i];
+  const court=lad[i];
   let ids=incoming[court].slice();
   // Seguretat: cada pista ha de rebre 4 jugadors.
   if(ids.length!==4){
@@ -440,7 +451,7 @@ function setSort(k){S.sort=k;renderRanking()}
 function renderAll(){summary();tabs();round();renderRanking();renderPlayoffUI()}
 function summary(){
  let mode=S.format==='fixed'?'Parelles fixes':'Format canari';
- $('summary').innerHTML=`<span class="pill">${S.players.length} jugadors</span><span class="pill">${S.courts} pistes</span><span class="pill">${S.rounds} rondes</span><span class="pill">${mode}</span><span class="pill">Reina: 9</span><span class="pill">Pozo: ${MOVEMENT[Math.min(S.courts-1,MOVEMENT.length-1)]}</span><span class="pill">Moviment: ${MOVEMENT.slice(0,S.courts).join(' → ')}</span>`;
+ $('summary').innerHTML=`<span class="pill">${S.players.length} jugadors</span><span class="pill">${S.courts} pistes</span><span class="pill">${S.rounds} rondes</span><span class="pill">${mode}</span><span class="pill">Reina: 9</span><span class="pill">Pozo: ${ladder(S.courts)[S.courts-1]}</span><span class="pill">Moviment: ${ladder(S.courts).join(' → ')}</span>`;
 }
 function tabs(){
  let h='';for(let i=0;i<S.rounds;i++)h+=`<button class="tab ${i===S.current?'active':''}" onclick="S.current=${i};renderAll()">Ronda ${i+1}</button>`;$('roundTabs').innerHTML=h;
@@ -448,11 +459,11 @@ function tabs(){
 }
 function round(){
  let r=S.rs[S.current],h=`<div class="notice ${r.done?'success':''}"><strong>Ronda ${r.number}</strong> · ${r.done?'Resultats guardats':'pendent'}</div><div class="courts">`;
- r.matches.forEach((m,i)=>h+=`<div class="court"><div class="court-head ${m.court===9?'queen':''}"><strong>${m.court===9?'👑 ':''}Pista ${m.court}</strong><span>${m.court===9?'Pista Reina':m.court===MOVEMENT[S.courts-1]?'Pista Pozo':''}</span></div><div class="court-body"><div class="pair"><b>A</b> · ${name(m.teamA[0])} + ${name(m.teamA[1])}</div><div class="pair"><b>B</b> · ${name(m.teamB[0])} + ${name(m.teamB[1])}</div><div class="score"><div><label>Jocs A</label><input id="a${i}" type="number" inputmode="numeric" min="0" value="${m.a??''}" ${r.done?'disabled':''}></div><div><label>Jocs B</label><input id="b${i}" type="number" inputmode="numeric" min="0" value="${m.b??''}" ${r.done?'disabled':''}></div></div></div></div>`);
+ r.matches.forEach((m,i)=>h+=`<div class="court"><div class="court-head ${m.court===9?'queen':''}"><strong>${m.court===9?'👑 ':''}Pista ${m.court}</strong><span>${m.court===9?'Pista Reina':m.court===ladder(S.courts)[S.courts-1]?'Pista Pozo':''}</span></div><div class="court-body"><div class="pair"><b>A</b> · ${name(m.teamA[0])} + ${name(m.teamA[1])}</div><div class="pair"><b>B</b> · ${name(m.teamB[0])} + ${name(m.teamB[1])}</div><div class="score"><div><label>Jocs A</label><input id="a${i}" type="number" inputmode="numeric" min="0" value="${m.a==null?'':m.a}" ${r.done?'disabled':''}></div><div><label>Jocs B</label><input id="b${i}" type="number" inputmode="numeric" min="0" value="${m.b==null?'':m.b}" ${r.done?'disabled':''}></div></div></div></div>`);
  h+=`</div><div class="actions">${!r.done?`<button class="primary" onclick="saveRound()">Guardar resultats</button><button class="secondary" onclick="randomRound()">Omplir exemple</button>`:''}${S.current<S.rounds-1?`<button class="primary" onclick="nextRound()">Generar següent ronda →</button>`:''}${S.current?`<button class="secondary" onclick="S.current--;renderAll()">← Anterior</button>`:''}</div>`;
  $('roundView').innerHTML=h;
 }
-function name(id){return esc(S.players.find(p=>p.id===id)?.name||'')}
+function name(id){return esc((S.players.find(p=>p.id===id)||{}).name||'')}
 function renderRanking(){
  let a=sorted(),h='<div class="table-wrap"><table class="rank"><thead><tr><th>#</th><th>Jugador</th><th>Punts</th><th>PJ</th><th>PG</th><th>PP</th><th>JG</th><th>JP</th><th>Dif.</th><th>Playtomic</th></tr></thead><tbody>';
  a.forEach((p,i)=>{let s=p.stats;h+=`<tr><td>${i+1}</td><td><b>${esc(p.name)}</b></td><td><b>${s.points}</b></td><td>${s.pj}</td><td>${s.pg}</td><td>${s.pp}</td><td>${s.gamesWon}</td><td>${s.gamesLost}</td><td>${s.diff>0?'+':''}${s.diff}</td><td>${p.playtomic?`<a target="_blank" href="${esc(p.playtomic)}">Obrir</a>`:'—'}</td></tr>`});
@@ -546,7 +557,7 @@ function refreshBracket(){
    let id=`${k}-${r}-${i}-${side}`,pn=$('pn-'+id),ps=$('ps-'+id),sl=$('sl-'+id);if(!pn)return;
    let score=side==='a'?m.sa:m.sb;
    if(document.activeElement!==pn&&pn.value!==m[side])pn.value=m[side];
-   if(document.activeElement!==ps)ps.value=score??'';
+   if(document.activeElement!==ps)ps.value=score==null?'':score;
    sl.classList.toggle('win',!!m.winner&&m.winner===m[side]);
   })));
   let fin=rounds[rounds.length-1][0];
@@ -771,6 +782,7 @@ function resetLeague(){
  $('lgDataMsg').innerHTML='<div class="notice">Lliga esborrada.</div>';
 }
 init();
+$('jsWarn').classList.add('hidden');
 </script>
 </body>
 </html>
