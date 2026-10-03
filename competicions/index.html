@@ -285,7 +285,17 @@ const LLIGA={
 // null = llista encara no carregada.
 const INSCRITS={
  femenina:null,
- masculina:null,
+ // Ordre d'inscripció (marca temporal del formulari)
+ masculina:[
+  [['Marc Biosca','B'],['Juan Pinilla','B'],'2026-09-10'],
+  [['Oscar Ventosa','C+'],['David Botello','C+'],'2026-09-14'],
+  [['Juan Antonio Espadas Fernandez','C'],['Sergio López Ballesteros','C'],'2026-09-16'],
+  [['Francisco Ramírez','C+'],['Guillermo Garcia','C+'],'2026-09-18'],
+  [['Tirso Olazábal Biosca','C+'],['David Navarro Vicho','C+'],'2026-09-24'],
+  [['Pau Feliu','B'],['Aarón de la Cruz','B'],'2026-09-25'],
+  [['Alex Cutillas Martinez','C'],['Alberto Signes Aramendia','C'],'2026-10-01'],
+  [['Diego Gimeno','C+'],['David Vicente','C+'],'2026-10-01']
+ ],
  mixta:[
   [['Eli López Gómez','C'],['Ruben Vivas Sierra','C+']],
   [['Rafae Girones','C'],['Isidre Bornay','C']],
@@ -296,24 +306,30 @@ const INSCRITS={
  ]
 };
 const PARTICLES=['de','del','la','las','los','i','y','da','dos','van','von'];
-// «Laia Navarro Baila» → «Laia Navarro» (nom + primer cognom, com a la resta de la web de la lliga)
+// Nom públic = nom + primer cognom, com a la resta de la web de la lliga.
+// Les partícules van amb el cognom («Aarón de la Cruz») i amb 4 paraules o més el nom és compost
+// («Juan Antonio Espadas Fernandez» → «Juan Antonio Espadas»).
+function nameWords(full){
+ const out=[];let pend='';
+ String(full).trim().split(/\s+/).forEach(w=>{if(PARTICLES.indexOf(w.toLowerCase())>=0)pend+=w+' ';else{out.push(pend+w);pend=''}});
+ if(pend)out.push(pend.trim());
+ return out;
+}
 function publicName(full){
- const w=String(full).trim().split(/\s+/);if(w.length<=2)return w.join(' ');
- const out=[w[0]];let i=1;
- while(i<w.length&&PARTICLES.indexOf(w[i].toLowerCase())>=0)out.push(w[i++]);
- if(i<w.length)out.push(w[i]);
- return out.join(' ');
+ const w=nameWords(full);if(w.length<=2)return w.join(' ');
+ const first=w.length>=4?2:1;
+ return w.slice(0,first+1).join(' ');
 }
 function lvClass(lv){return /^B/i.test(lv)?'lv B':'lv'}
 function regHtml(c,cap){
  const list=INSCRITS[c.k];
  if(!list)return `<div class="reg"><div class="reg-top"><span>Parelles inscrites</span><b>– / ${cap}</b></div><div class="empty">Llista d’inscrits pendent de carregar.</div></div>`;
- const byLv={};list.forEach(p=>{const k=[...new Set(p.map(x=>x[1].charAt(0).toUpperCase()))].sort().join('/');byLv[k]=(byLv[k]||0)+1});
+ const byLv={};list.forEach(p=>{const k=[...new Set(p.slice(0,2).map(x=>x[1].charAt(0).toUpperCase()))].sort().join('/');byLv[k]=(byLv[k]||0)+1});
  const lvSummary=Object.keys(byLv).sort().map(k=>`<span class="pill">Nivell ${esc(k)}: ${byLv[k]} ${byLv[k]===1?'parella':'parelles'}</span>`).join(' ');
  return `<div class="reg"><div class="reg-top"><span>Parelles inscrites</span><b>${list.length} / ${cap}</b></div>
   <div class="meter" role="img" aria-label="${list.length} de ${cap} places"><i style="width:${Math.min(100,list.length/cap*100)}%"></i></div>
   <div class="fields">${lvSummary}</div>
-  <ol class="pairs">${list.map(p=>`<li><div>${p.map(([n,lv])=>`<div class="pl"><span>${esc(publicName(n))}</span><span class="${lvClass(lv)}">${esc(lv)}</span></div>`).join('')}</div></li>`).join('')}</ol>
+  <ol class="pairs">${list.map(p=>`<li><div>${p.slice(0,2).map(([n,lv])=>`<div class="pl"><span>${esc(publicName(n))}</span><span class="${lvClass(lv)}">${esc(lv)}</span></div>`).join('')}${p[2]?`<div class="small muted">Inscrita el ${fmtNum(p[2])}</div>`:''}</div></li>`).join('')}</ol>
   <p class="muted small">Nivell declarat per cada jugador/a. L’assignació final a nivell C o B es fa al pas de divisions i grups.</p></div>`;
 }
 const MONTHS=['gen','febr','març','abr','maig','juny','jul','ag','set','oct','nov','des'];
@@ -321,6 +337,7 @@ const DAYS=['diumenge','dilluns','dimarts','dimecres','dijous','divendres','diss
 function d(iso){const [y,m,dd]=iso.split('-').map(Number);return new Date(y,m-1,dd)}
 function fmtShort(iso){const x=d(iso);return `${x.getDate()} ${MONTHS[x.getMonth()]}`}
 function fmtLong(iso){const x=d(iso);return `${DAYS[x.getDay()]} ${x.getDate()}/${x.getMonth()+1}/${x.getFullYear()}`}
+function fmtNum(iso){const x=d(iso);return `${x.getDate()}/${x.getMonth()+1}/${x.getFullYear()}`}
 function todayLocal(){const t=new Date();return new Date(t.getFullYear(),t.getMonth(),t.getDate())}
 function renderLliga(){
  const L=LLIGA,today=todayLocal(),dl=d(L.deadline),left=Math.round((dl-today)/864e5);
