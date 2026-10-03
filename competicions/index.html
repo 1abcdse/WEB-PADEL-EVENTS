@@ -95,6 +95,7 @@ main{padding:20px 16px 28px}
 .pairs .pl span:first-child{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .lv{flex:0 0 auto;font-size:11px;font-weight:800;padding:1px 6px;border-radius:5px;background:var(--seed-bg);color:var(--seed-ink)}
 .lv.B{background:var(--gold-bg);color:var(--ink);border:1px solid var(--gold)}
+.pairs li.undecided{border-color:var(--gold);border-style:dashed}
 .empty{border:1px dashed var(--field-line);border-radius:10px;padding:12px;text-align:center;font-size:13px;color:var(--muted)}
 .btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;border-radius:10px;padding:11px 14px;font-weight:700;text-decoration:none;background:var(--green);color:var(--on-green);min-height:44px}
 .btn.ghost{background:var(--green2);color:var(--on-green2)}
@@ -331,17 +332,22 @@ function publicName(full){
  const first=w.length>=4?2:1;
  return w.slice(0,first+1).join(' ');
 }
-function lvClass(lv){return /^B/i.test(lv)?'lv B':'lv'}
+// Criteri de nivell de la lliga: de moment C+ va amb B.
+function lvGroup(lv){return /^B|^C\+/i.test(String(lv).trim())?'B':'C'}
+function lvClass(lv){return lvGroup(lv)==='B'?'lv B':'lv'}
+// Nivell de la parella: B o C si les dues persones hi coincideixen; si no, queda per decidir.
+function pairLevel(p){const g=[...new Set(p.slice(0,2).map(x=>lvGroup(x[1])))];return g.length===1?g[0]:null}
 function regHtml(c,cap){
  const list=INSCRITS[c.k];
  if(!list)return `<div class="reg"><div class="reg-top"><span>Parelles inscrites</span><b>– / ${cap}</b></div><div class="empty">Llista d’inscrits pendent de carregar.</div></div>`;
- const byLv={};list.forEach(p=>{const k=[...new Set(p.slice(0,2).map(x=>x[1].charAt(0).toUpperCase()))].sort().join('/');byLv[k]=(byLv[k]||0)+1});
- const lvSummary=Object.keys(byLv).sort().map(k=>`<span class="pill">Nivell ${esc(k)}: ${byLv[k]} ${byLv[k]===1?'parella':'parelles'}</span>`).join(' ');
+ const byLv={B:0,C:0,X:0};list.forEach(p=>{byLv[pairLevel(p)||'X']++});
+ const pl=n=>`${n} ${n===1?'parella':'parelles'}`;
+ const lvSummary=`<span class="pill">Nivell B (B i C+): ${pl(byLv.B)}</span> <span class="pill">Nivell C: ${pl(byLv.C)}</span>${byLv.X?` <span class="pill todo">Per decidir: ${pl(byLv.X)}</span>`:''}`;
  return `<div class="reg"><div class="reg-top"><span>Parelles inscrites</span><b>${list.length} / ${cap}</b></div>
   <div class="meter" role="img" aria-label="${list.length} de ${cap} places"><i style="width:${Math.min(100,list.length/cap*100)}%"></i></div>
   <div class="fields">${lvSummary}</div>
-  <ol class="pairs">${list.map(p=>`<li><div>${p.slice(0,2).map(([n,lv])=>`<div class="pl"><span>${esc(publicName(n))}</span><span class="${lvClass(lv)}">${esc(lv)}</span></div>`).join('')}${p[2]?`<div class="small muted">Inscrita el ${fmtNum(p[2])}</div>`:''}</div></li>`).join('')}</ol>
-  <p class="muted small">Nivell declarat per cada jugador/a. L’assignació final a nivell C o B es fa al pas de divisions i grups.</p></div>`;
+  <ol class="pairs">${list.map(p=>`<li${pairLevel(p)?'':' class="undecided"'}><div>${p.slice(0,2).map(([n,lv])=>`<div class="pl"><span>${esc(publicName(n))}</span><span class="${lvClass(lv)}">${esc(lv)}</span></div>`).join('')}${p[2]?`<div class="small muted">Inscrita el ${fmtNum(p[2])}</div>`:''}${pairLevel(p)?'':`<div class="small"><span class="pill todo">Nivell per decidir: C i C+</span></div>`}</div></li>`).join('')}</ol>
+  <p class="muted small">Nivell declarat per cada jugador/a. Criteri actual: C+ va amb B.</p></div>`;
 }
 const MONTHS=['gen','febr','març','abr','maig','juny','jul','ag','set','oct','nov','des'];
 const DAYS=['diumenge','dilluns','dimarts','dimecres','dijous','divendres','dissabte'];
