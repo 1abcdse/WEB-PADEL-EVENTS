@@ -385,16 +385,6 @@ function randomScore(){
 function randomRound(){
  S.rs[S.current].matches.forEach((m,i)=>{const [x,y]=randomScore();$('a'+i).value=x;$('b'+i).value=y});
 }
-function simulateAll(){
- while(true){
-  if(!S.rs[S.current].done){randomRound();if(!saveRound())return}
-  if(S.current>=S.rounds-1)break;
-  S.current++;
-  if(!S.rs[S.current])makeRound(S.current);
-  renderAll();
- }
- renderAll();
-}
 function nextRound(){
  if(!S.rs[S.current].done&&!saveRound())return;
  if(S.current>=S.rounds-1){alert('Has arribat a l’última ronda configurada.');return}
@@ -432,7 +422,7 @@ function tabs(){
 function round(){
  let r=S.rs[S.current],h=`<div class="notice ${r.done?'success':''}"><strong>Ronda ${r.number}</strong> · ${r.done?'Resultats guardats':'pendent'}</div><div class="courts">`;
  r.matches.forEach((m,i)=>h+=`<div class="court"><div class="court-head ${m.court===9?'queen':''}"><strong>${m.court===9?'👑 ':''}Pista ${m.court}</strong><span>${m.court===9?'Pista Reina':m.court===MOVEMENT[S.courts-1]?'Pista Pozo':''}</span></div><div class="court-body"><div class="pair"><b>A</b> · ${name(m.teamA[0])} + ${name(m.teamA[1])}</div><div class="pair"><b>B</b> · ${name(m.teamB[0])} + ${name(m.teamB[1])}</div><div class="score"><div><label>Jocs A</label><input id="a${i}" type="number" inputmode="numeric" min="0" value="${m.a??''}" ${r.done?'disabled':''}></div><div><label>Jocs B</label><input id="b${i}" type="number" inputmode="numeric" min="0" value="${m.b??''}" ${r.done?'disabled':''}></div></div></div></div>`);
- h+=`</div>${!r.done?`<div class="actions"><button class="secondary" onclick="randomRound()">🎲 Resultats aleatoris (aquesta ronda)</button><button class="secondary" onclick="simulateAll()">⚡ Simular totes les rondes pendents</button></div><p class="muted small" style="margin:6px 0 0">Per fer proves: «Resultats aleatoris» omple els marcadors i els pots retocar abans de guardar; «Simular» guarda totes les rondes que falten.</p>`:''}<div class="actions">${!r.done?`<button class="primary" onclick="saveRound()">Guardar resultats</button>`:''}${S.current<S.rounds-1?`<button class="primary" onclick="nextRound()">Generar següent ronda →</button>`:''}${S.current?`<button class="secondary" onclick="S.current--;renderAll()">← Anterior</button>`:''}</div>`;
+ h+=`</div><div class="actions">${!r.done?`<button class="primary" onclick="saveRound()">Guardar resultats</button><button class="secondary" onclick="randomRound()">Omplir exemple</button>`:''}${S.current<S.rounds-1?`<button class="primary" onclick="nextRound()">Generar següent ronda →</button>`:''}${S.current?`<button class="secondary" onclick="S.current--;renderAll()">← Anterior</button>`:''}</div>`;
  $('roundView').innerHTML=h;
 }
 function name(id){return esc(S.players.find(p=>p.id===id)?.name||'')}
