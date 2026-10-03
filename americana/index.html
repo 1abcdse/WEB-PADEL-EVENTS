@@ -5,74 +5,106 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#273127">
 <meta name="format-detection" content="telephone=no">
-<title>Americana Pàdel — Tennis & Pàdel El Masnou</title>
+<title>Americana Pàdel El Masnou</title>
 <style>
-:root{--bg:#f3f5f1;--card:#fff;--ink:#202720;--muted:#707970;--green:#65745b;--green2:#e9eee6;--line:#dce2da;--gold:#c49a45;--red:#a64b4b;--shadow:0 8px 24px #0000000d}
-*{box-sizing:border-box}html{-webkit-text-size-adjust:100%;text-size-adjust:100%}body{margin:0;background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;overflow-x:hidden}
+/* Club de pàdel: verds de pista, or per a la Reina i el campió. Mateixa estructura en clar i fosc. */
+:root{
+ --bg:#f3f5f1;--card:#fff;--ink:#202720;--muted:#66705f;--green:#65745b;--on-green:#fff;--green2:#e9eee6;--on-green2:#293127;
+ --line:#dce2da;--field:#fff;--field-line:#cbd3c9;--soft:#fafbf9;--soft2:#edf1eb;--chip:#e5eae3;--win:#eef3ea;
+ --gold:#c49a45;--gold-bg:#fbf5e7;--gold-bg2:#fdfaf2;--queen:#f4ecd8;
+ --danger-bg:#f4dfdf;--danger-ink:#8c3535;--error-bg:#fae6e6;--error-ink:#8e3636;--ok-bg:#e5f1e3;--ok-ink:#355e36;--note-bg:#eef2ec;
+ --head:#273127;--on-head:#fff;--head-btn:#ffffff1f;--shadow:0 8px 24px #0000000d;--shadow2:0 3px 10px #0000000a;--scrim:#0c120c99
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+ --bg:#121612;--card:#1b211b;--ink:#e6ebe3;--muted:#9ea89a;--green:#7f9472;--on-green:#0f140f;--green2:#283128;--on-green2:#dfe7da;
+ --line:#2f382e;--field:#141914;--field-line:#3a4539;--soft:#171c17;--soft2:#222a21;--chip:#283128;--win:#24301f;
+ --gold:#d4ad5e;--gold-bg:#2c2617;--gold-bg2:#221e14;--queen:#3a311c;
+ --danger-bg:#3a2020;--danger-ink:#f0b3b3;--error-bg:#3a2020;--error-ink:#f0b3b3;--ok-bg:#1f3320;--ok-ink:#a9d8a6;--note-bg:#202820;
+ --head:#0b0f0b;--on-head:#e6ebe3;--head-btn:#ffffff1a;--shadow:0 8px 24px #00000040;--shadow2:0 3px 10px #00000033;--scrim:#000000b3;color-scheme:dark}}
+:root[data-theme="dark"]{
+ --bg:#121612;--card:#1b211b;--ink:#e6ebe3;--muted:#9ea89a;--green:#7f9472;--on-green:#0f140f;--green2:#283128;--on-green2:#dfe7da;
+ --line:#2f382e;--field:#141914;--field-line:#3a4539;--soft:#171c17;--soft2:#222a21;--chip:#283128;--win:#24301f;
+ --gold:#d4ad5e;--gold-bg:#2c2617;--gold-bg2:#221e14;--queen:#3a311c;
+ --danger-bg:#3a2020;--danger-ink:#f0b3b3;--error-bg:#3a2020;--error-ink:#f0b3b3;--ok-bg:#1f3320;--ok-ink:#a9d8a6;--note-bg:#202820;
+ --head:#0b0f0b;--on-head:#e6ebe3;--head-btn:#ffffff1a;--shadow:0 8px 24px #00000040;--shadow2:0 3px 10px #00000033;--scrim:#000000b3;color-scheme:dark}
+*{box-sizing:border-box}html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;overflow-x:hidden}
 button,input,select,a{touch-action:manipulation;-webkit-tap-highlight-color:transparent;font-family:inherit}
+a{color:var(--green)}
 input[type=date]{-webkit-appearance:none;appearance:none;min-height:42px;display:block}
 select{text-overflow:ellipsis}
-header{background:#273127;color:#fff;padding:22px;padding-top:max(22px,env(safe-area-inset-top))}header>div,main{max-width:1250px;margin:auto}h1{margin:0 0 5px}h2{margin:0 0 15px}h3{margin:15px 0 8px}.muted{color:var(--muted)}
-main{padding:20px 14px}.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:19px;margin-bottom:17px;box-shadow:var(--shadow)}
+:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
+header{background:var(--head);color:var(--on-head);padding:22px 16px}header>div,main{max-width:1250px;margin:auto}h1{margin:0 0 5px;text-wrap:balance}h2{margin:0 0 15px;text-wrap:balance}h3{margin:15px 0 8px}.muted{color:var(--muted)}
+main{padding:20px 16px}.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:19px;margin-bottom:17px;box-shadow:var(--shadow);min-width:0}
 .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(210px,100%),1fr));gap:12px}
 label{display:block;font-size:12px;font-weight:700;color:var(--muted);margin-bottom:5px}
-input,select{width:100%;padding:10px;border:1px solid #cbd3c9;border-radius:9px;background:#fff}
-button{border:0;border-radius:9px;padding:10px 15px;font-weight:700;cursor:pointer}.primary{background:var(--green);color:#fff}.secondary{background:var(--green2);color:#293127}.danger{background:#f4dfdf;color:#8c3535}
-.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:15px}.notice{padding:11px 13px;background:#eef2ec;border-radius:10px;margin:10px 0}.error{background:#fae6e6;color:#8e3636}.success{background:#e5f1e3;color:#355e36}
+input,select{width:100%;padding:10px;border:1px solid var(--field-line);border-radius:9px;background:var(--field);color:var(--ink)}
+input::placeholder{color:var(--muted);opacity:.8}
+button{border:0;border-radius:9px;padding:10px 15px;font-weight:700;cursor:pointer;color:var(--ink);background:var(--chip)}.primary{background:var(--green);color:var(--on-green)}.secondary{background:var(--green2);color:var(--on-green2)}.danger{background:var(--danger-bg);color:var(--danger-ink)}
+.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:15px}.notice{padding:11px 13px;background:var(--note-bg);border-radius:10px;margin:10px 0}.error{background:var(--error-bg);color:var(--error-ink)}.success{background:var(--ok-bg);color:var(--ok-ink)}
 .player-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(245px,100%),1fr));gap:9px}.player-box{border:1px solid var(--line);padding:11px;border-radius:10px}.player-box h4{margin:0 0 8px}
-.tabs{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:15px}.tab{background:#e5eae3}.tab.active{background:var(--green);color:white}
-.courts{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(320px,100%),1fr));gap:13px}.court{border:1px solid var(--line);border-radius:13px;overflow:hidden}.court-head{padding:11px 13px;background:#edf1eb;display:flex;justify-content:space-between}.queen{background:#f4ecd8}.court-body{padding:12px}
-.pair{padding:8px;background:#fafbf9;border:1px solid var(--line);border-radius:8px;margin:6px 0}.score{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}.score input{text-align:center}
-table{width:100%;border-collapse:collapse}th,td{padding:8px;border-bottom:1px solid var(--line);font-size:13px;text-align:left}th{font-size:11px;color:var(--muted)}
-.hidden{display:none}.pill{display:inline-block;padding:6px 9px;background:#edf0eb;border-radius:999px;font-size:12px;margin:2px}
-.format-info{padding:10px 12px;border:1px solid var(--line);border-radius:10px;background:#fafbf9;margin-top:10px;font-size:13px}
+.tabs{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:15px}.tab{background:var(--chip);color:var(--ink)}.tab.active{background:var(--green);color:var(--on-green)}
+.courts{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(320px,100%),1fr));gap:13px}.court{border:1px solid var(--line);border-radius:13px;overflow:hidden}.court-head{padding:11px 13px;background:var(--soft2);display:flex;justify-content:space-between;gap:8px}.queen{background:var(--queen)}.court-body{padding:12px}
+.pair{padding:8px;background:var(--soft);border:1px solid var(--line);border-radius:8px;margin:6px 0}.score{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}.score input{text-align:center}
+table{width:100%;border-collapse:collapse;font-variant-numeric:tabular-nums}th,td{padding:8px;border-bottom:1px solid var(--line);font-size:13px;text-align:left}th{font-size:11px;color:var(--muted);letter-spacing:.02em}
+.hidden{display:none!important}.pill{display:inline-block;padding:6px 9px;background:var(--soft2);border-radius:999px;font-size:12px;margin:2px}
+.format-info{padding:10px 12px;border:1px solid var(--line);border-radius:10px;background:var(--soft);margin-top:10px;font-size:13px}
 .bracket-wrap{overflow:auto;padding:10px 0}
 .bracket{display:flex;gap:26px;align-items:stretch}
 .round-col{display:flex;flex-direction:column;flex:1 0 235px;min-width:235px}
 .round-title{text-align:center;font-weight:800;margin-bottom:10px}
 .round-matches{flex:1;display:flex;flex-direction:column;justify-content:space-around;gap:14px}
-.match{border:1px solid #cfd6cd;border-radius:12px;background:#fff;padding:9px 10px;box-shadow:0 3px 10px #0000000a}
+.match{border:1px solid var(--field-line);border-radius:12px;background:var(--card);padding:9px 10px;box-shadow:var(--shadow2)}
 .match-head{font-size:11px;color:var(--muted);font-weight:700;margin-bottom:6px}
 .slot{display:flex;gap:6px;align-items:center}
 .slot .pair-name{flex:1;min-width:0;padding:7px 8px;font-size:13px}
 .slot .pair-score{width:52px;flex:0 0 52px;padding:7px 4px;text-align:center;font-weight:700}
-.slot.win .pair-name{border-color:var(--green);background:#eef3ea;font-weight:700}
+.slot.win .pair-name{border-color:var(--green);background:var(--win);font-weight:700}
 .vs{text-align:center;font-size:11px;color:var(--muted);margin:3px 0}
-.champ{border:2px solid var(--gold);background:#fbf5e7}
+.champ{border:2px solid var(--gold);background:var(--gold-bg)}
 #bracket{margin-top:16px}
 .bracket-block+.bracket-block{margin-top:26px;padding-top:18px;border-top:2px dashed var(--line)}
 .bracket-block h3{margin:0 0 4px}
-.cons .match{background:#fbfcfa}
-.champion{margin-top:12px;padding:12px 14px;border:2px solid var(--gold);border-radius:12px;background:#fbf5e7;text-align:center;font-weight:800}
+.cons .match{background:var(--soft)}
+.champion{margin-top:12px;padding:12px 14px;border:2px solid var(--gold);border-radius:12px;background:var(--gold-bg);text-align:center;font-weight:800}
 .small{font-size:12px}
 .table-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch}
 .table-wrap td{white-space:nowrap}
 .rank th:nth-child(1),.rank td:nth-child(1){position:sticky;left:0;width:34px;min-width:34px;background:var(--card);z-index:1}
 .rank th:nth-child(2),.rank td:nth-child(2){position:sticky;left:34px;background:var(--card);z-index:1;box-shadow:2px 0 0 var(--line)}
-.rank tr.champ-row td{background:#fbf5e7}
 .rank td:nth-child(3){font-size:14px}
+tr.champ-row td,.rank tr.champ-row td{background:var(--gold-bg)}
 .swipe-hint{display:none;font-size:12px;color:var(--muted);margin:6px 0 0}
 .scroll-row{display:flex;gap:7px;flex-wrap:wrap}
 .main-tabs{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}
-.main-tabs button{background:#ffffff1f;color:#fff}
-.main-tabs button.active{background:#fff;color:#273127}
-.league-box{margin-top:16px;padding:14px;border:2px dashed var(--gold);border-radius:12px;background:#fdfaf2}
+.main-tabs button{background:var(--head-btn);color:var(--on-head)}
+.main-tabs button.active{background:var(--on-head);color:var(--head)}
+.league-box{margin-top:16px;padding:14px;border:2px dashed var(--gold);border-radius:12px;background:var(--gold-bg2)}
 .league-box h3{margin-top:0}
-.bar{height:9px;min-width:90px;background:#e5eae3;border-radius:999px;overflow:hidden}
+.bar{height:9px;min-width:90px;background:var(--chip);border-radius:999px;overflow:hidden}
 .bar>i{display:block;height:100%;background:var(--green)}
 .bar.full>i{background:var(--gold)}
-.goal{padding:16px;border:2px solid var(--gold);border-radius:14px;background:#fbf5e7;text-align:center}
+.goal{padding:16px;border:2px solid var(--gold);border-radius:14px;background:var(--gold-bg);text-align:center}
 .goal .big{font-size:22px;font-weight:800;margin:4px 0}
-.leader{padding:14px;border:1px solid var(--line);border-radius:12px;background:#fafbf9}
-tr.champ-row td{background:#fbf5e7}
+.leader{padding:14px;border:1px solid var(--line);border-radius:12px;background:var(--soft)}
 .linkish{background:none;padding:0;color:var(--ink);font-weight:700;text-align:left;cursor:pointer;min-height:0;text-decoration:underline dotted}
 .ev-list .ev{display:flex;gap:10px;align-items:center;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--line);flex-wrap:wrap}
+.ev-list .ev>div{min-width:0}
 .round-tabs-mobile{display:none;gap:6px;overflow-x:auto;margin:16px 0 12px}
-.round-tabs-mobile button{flex:1 0 auto;background:#e5eae3;white-space:nowrap}
-.round-tabs-mobile button.active{background:var(--green);color:#fff}
+.round-tabs-mobile button{flex:1 0 auto;background:var(--chip);color:var(--ink);white-space:nowrap}
+.round-tabs-mobile button.active{background:var(--green);color:var(--on-green)}
+.sync{display:inline-flex;align-items:center;gap:6px;font-size:13px;padding:6px 10px;border-radius:999px;background:var(--soft2)}
+.sync::before{content:"";width:8px;height:8px;border-radius:50%;background:var(--muted)}
+.sync.on::before{background:var(--green)}
+/* Finestra de confirmació pròpia (els avisos del navegador no funcionen dins la pàgina web) */
+.dlg{position:fixed;inset:0;background:var(--scrim);display:flex;align-items:center;justify-content:center;padding:16px;z-index:50}
+.dlg-box{background:var(--card);color:var(--ink);border:1px solid var(--line);border-radius:16px;padding:20px;max-width:440px;width:100%;box-shadow:var(--shadow)}
+.dlg-box p{margin:0 0 6px;font-size:16px;line-height:1.45}
+.dlg-box .actions{justify-content:flex-end}
+@media (prefers-reduced-motion:no-preference){.dlg-box{animation:pop .14s ease-out}@keyframes pop{from{transform:translateY(8px)}to{transform:none}}}
 @media(max-width:700px){
- header{padding:16px 14px}h1{font-size:24px}
- main{padding:12px 8px}.card{padding:14px;border-radius:14px}
+ header{padding:16px}h1{font-size:24px}
+ main{padding:12px 16px 16px}.card{padding:14px;border-radius:14px}
  .courts{grid-template-columns:1fr}
  input,select{font-size:16px}
  button{padding:12px 15px;min-height:44px}
@@ -86,10 +118,9 @@ tr.champ-row td{background:#fbf5e7}
  .slot .pair-name{font-size:16px;padding:10px}
  .slot .pair-score{width:62px;flex-basis:62px;font-size:18px;padding:10px 4px}
  th,td{padding:7px 6px;font-size:12px}
- main{padding-left:max(8px,env(safe-area-inset-left));padding-right:max(8px,env(safe-area-inset-right));padding-bottom:max(12px,env(safe-area-inset-bottom))}
  h2{font-size:20px}
  .muted{font-size:14px}
- .tabs,.scroll-row{flex-wrap:nowrap;overflow-x:auto;-webkit-overflow-scrolling:touch;padding-bottom:4px;margin-right:-14px;padding-right:14px}
+ .tabs,.scroll-row{flex-wrap:nowrap;overflow-x:auto;-webkit-overflow-scrolling:touch;padding-bottom:4px}
  .tabs button,.scroll-row button{flex:0 0 auto;min-height:38px;padding:8px 13px;font-size:14px;white-space:nowrap}
  .main-tabs button{flex:1 1 0;min-height:42px;padding:9px 10px}
  .swipe-hint{display:block}
@@ -99,6 +130,8 @@ tr.champ-row td{background:#fbf5e7}
  .ev-list .ev button{flex:0 0 auto;min-height:38px}
  .pill{font-size:11px;padding:5px 8px}
  .goal .big{font-size:20px}
+ .dlg{align-items:flex-end}
+ .dlg-box .actions button{flex:1 1 0}
 }
 </style>
 </head>
@@ -229,7 +262,8 @@ Estàs veient el fitxer amb una vista prèvia (WhatsApp, Gmail, l’app Arxius, 
 
 <section class="card">
 <h2>Dades</h2>
-<p class="muted">La lliga es guarda en aquest navegador. Exporta una còpia de seguretat per no perdre-la o per passar-la a un altre dispositiu.</p>
+<div id="syncState"></div>
+<p class="muted">Exporta una còpia de seguretat de tant en tant. També serveix per passar la lliga a un altre lloc amb «Importar còpia».</p>
 <div class="actions">
 <button class="secondary" onclick="exportLeague()">Exportar còpia (JSON)</button>
 <button class="secondary" onclick="$('lgImport').click()">Importar còpia</button>
@@ -272,7 +306,11 @@ function init(){
   const link=e.target.closest('.player-box').querySelector('.plink');
   if(known&&known.playtomic&&!link.value)link.value=known.playtomic;
  });
- renderLeague();
+ $('players').addEventListener('input',saveNames);
+ ['courtCount','roundCount','pairFormat'].forEach(id=>$(id).addEventListener('change',saveNames));
+ restoreSession();
+ renderLeague();renderSync();
+ connectCloud();
 }
 function updateCapacity(){
  let n=+$('courtCount').value;
@@ -297,6 +335,7 @@ function createTournament(){
  S={players:names.map((name,i)=>({id:i+1,name,playtomic:links[i],stats:{pj:0,pg:0,pp:0,gamesWon:0,gamesLost:0,diff:0,points:0},partners:new Set()})),courts:+$('courtCount').value,rounds:+$('roundCount').value,rs:[],current:0,sort:'points',playoff:null,format:$('pairFormat').value};
  makeRound(0);
  $('app').classList.remove('hidden');$('rankCard').classList.remove('hidden');$('playoffCard').classList.remove('hidden');
+ $('msg').innerHTML='';
  renderAll();
 }
 function makeRound(i){
@@ -411,7 +450,7 @@ function saveRound(){
    else{m.a=x;m.b=y;m.done=true}
   }
  });
- if(!ok){alert('Introdueix un resultat vàlid i diferent per a tots els partits.');return false}
+ if(!ok){uiAlert('Introdueix un resultat vàlid per a tots els partits (sense empats).');return false}
  r.done=true;rememberPartners(r.matches);stats();renderAll();return true;
 }
 // Resultats de prova: marcadors de pàdel realistes i sempre amb guanyador
@@ -424,7 +463,7 @@ function randomRound(){
 }
 function nextRound(){
  if(!S.rs[S.current].done&&!saveRound())return;
- if(S.current>=S.rounds-1){alert('Has arribat a l’última ronda configurada.');return}
+ if(S.current>=S.rounds-1){uiAlert('Has arribat a l’última ronda configurada.');return}
  S.current++;
  if(!S.rs[S.current])makeRound(S.current);
  renderAll();
@@ -448,7 +487,7 @@ function sorted(){
  return a;
 }
 function setSort(k){S.sort=k;renderRanking()}
-function renderAll(){summary();tabs();round();renderRanking();renderPlayoffUI()}
+function renderAll(){summary();tabs();round();renderRanking();renderPlayoffUI();saveDraft()}
 function summary(){
  let mode=S.format==='fixed'?'Parelles fixes':'Format canari';
  $('summary').innerHTML=`<span class="pill">${S.players.length} jugadors</span><span class="pill">${S.courts} pistes</span><span class="pill">${S.rounds} rondes</span><span class="pill">${mode}</span><span class="pill">Reina: 9</span><span class="pill">Pozo: ${ladder(S.courts)[S.courts-1]}</span><span class="pill">Moviment: ${ladder(S.courts).join(' → ')}</span>`;
@@ -561,6 +600,7 @@ function refreshBracket(){
    sl.classList.toggle('win',!!m.winner&&m.winner===m[side]);
   })));
   let fin=rounds[rounds.length-1][0];
+  saveDraft();
   $('champ-'+k).innerHTML=fin.winner?`<div class="champion">🏆 ${BRACKETS[k].champ}: ${esc(fin.winner)}</div>`:'';
  });
 }
@@ -599,23 +639,136 @@ function playoffScore(k,r,i,side,val){
  resolveMatch(k,r,i);
  refreshBracket();
 }
-function clearPlayoffs(){S.playoff=null;$('bracket').innerHTML='';$('playoffMsg').innerHTML=''}
-function resetApp(){if(!confirm('Esborrar tota l’Americana? La lliga acumulada no s’esborra.'))return;location.reload()}
+function clearPlayoffs(){S.playoff=null;$('bracket').innerHTML='';$('playoffMsg').innerHTML='';saveDraft()}
+async function resetApp(){
+ if(!await uiConfirm('Esborrar tota l’Americana? La lliga acumulada no s’esborra.','Esborrar','danger'))return;
+ try{localStorage.removeItem(DKEY);localStorage.removeItem(NKEY)}catch(e){}
+ S={players:[],courts:2,rounds:4,rs:[],current:0,sort:'points',playoff:null,format:'fixed'};
+ $('courtCount').value=2;$('roundCount').value=4;$('pairFormat').value='fixed';
+ document.querySelectorAll('.pname,.plink').forEach(x=>x.value='');renderPlayers([]);
+ document.querySelectorAll('.pname,.plink').forEach(x=>x.value='');
+ updateCapacity();updateFormatInfo();
+ $('app').classList.add('hidden');$('rankCard').classList.add('hidden');
+ clearPlayoffs();$('msg').innerHTML='';$('leagueAddMsg').innerHTML='';$('evTitle').value='';
+ window.scrollTo(0,0);
+}
+
+/* ---------------- FINESTRES DE CONFIRMACIÓ ---------------- */
+// Pròpies de la pàgina: dins d'una pàgina web incrustada (i en molts mòbils)
+// els avisos propis del navegador no es mostren.
+function uiDialog(msg,okText,cancelText,okClass){
+ return new Promise(res=>{
+  const d=document.createElement('div');d.className='dlg';
+  d.innerHTML=`<div class="dlg-box" role="dialog" aria-modal="true"><p></p><div class="actions">${cancelText?`<button class="secondary" data-v="0">${esc(cancelText)}</button>`:''}<button class="${okClass||'primary'}" data-v="1">${esc(okText)}</button></div></div>`;
+  d.querySelector('p').textContent=msg;
+  const done=v=>{d.remove();document.removeEventListener('keydown',key);res(v)};
+  const key=e=>{if(e.key==='Escape')done(cancelText?false:true)};
+  d.addEventListener('click',e=>{const b=e.target.closest('button');if(b)done(b.dataset.v==='1');else if(e.target===d&&cancelText)done(false)});
+  document.addEventListener('keydown',key);
+  document.body.appendChild(d);d.querySelector('[data-v="1"]').focus();
+ });
+}
+function uiConfirm(msg,okText,okClass){return uiDialog(msg,okText||'Sí, continuar','Cancel·lar',okClass)}
+function uiAlert(msg){return uiDialog(msg,'D’acord')}
+
+/* ---------------- AMERICANA EN CURS ---------------- */
+// Es guarda al dispositiu perquè no es perdi si el mòbil recarrega la pàgina.
+const DKEY='padel-americana-draft-v1',NKEY='padel-americana-names-v1';
+function saveDraft(){
+ try{
+  if(!S.players.length){localStorage.removeItem(DKEY);return}
+  localStorage.setItem(DKEY,JSON.stringify(Object.assign({},S,{players:S.players.map(p=>Object.assign({},p,{partners:[...p.partners]}))})));
+ }catch(e){}
+}
+function loadDraft(){
+ try{
+  const x=JSON.parse(localStorage.getItem(DKEY));
+  if(!x||!Array.isArray(x.players)||!x.players.length||!Array.isArray(x.rs))return false;
+  x.players.forEach(p=>p.partners=new Set(p.partners||[]));
+  S=x;return true;
+ }catch(e){return false}
+}
+function saveNames(){
+ try{localStorage.setItem(NKEY,JSON.stringify({courts:$('courtCount').value,rounds:$('roundCount').value,format:$('pairFormat').value,names:[...document.querySelectorAll('.pname')].map(x=>x.value),links:[...document.querySelectorAll('.plink')].map(x=>x.value)}))}catch(e){}
+}
+function restoreForm(f){
+ $('courtCount').value=f.courts;$('roundCount').value=f.rounds;$('pairFormat').value=f.format;
+ renderPlayers(f.names||[]);
+ document.querySelectorAll('.plink').forEach((x,i)=>x.value=(f.links||[])[i]||'');
+ updateCapacity();updateFormatInfo();
+}
+function restoreSession(){
+ if(loadDraft()){
+  restoreForm({courts:S.courts,rounds:S.rounds,format:S.format,names:S.players.map(p=>p.name),links:S.players.map(p=>p.playtomic||'')});
+  stats();
+  $('app').classList.remove('hidden');$('rankCard').classList.remove('hidden');
+  renderAll();
+  if(S.playoff)drawBracket();
+  $('msg').innerHTML='<div class="notice success">S’ha recuperat l’Americana en curs.</div>';
+  return;
+ }
+ try{const f=JSON.parse(localStorage.getItem(NKEY));if(f&&Array.isArray(f.names)&&f.names.some(Boolean))restoreForm(f)}catch(e){}
+}
 
 /* ---------------- LLIGA 100 PUNTS ---------------- */
-// Lliga acumulada entre americanes. Es guarda al navegador (localStorage)
-// i es pot exportar/importar en JSON.
+// Lliga acumulada entre americanes. Si la pàgina s'obre com a pàgina web de Claude,
+// es guarda al núvol (capacitat db) i es veu igual a tots els dispositius.
+// Si s'obre com a fitxer, es guarda al navegador. En tots dos casos es pot exportar/importar en JSON.
 const LKEY='padel-lliga100-v1';
-let L=loadLeague(),leagueSort='points',leagueSel=null;
+let L=loadLeague(),leagueSort='points',leagueSel=null,DB=null,dbSynced=false,syncErr='';
 function defaultLeague(){return {name:'Lliga 100 punts',target:100,prize:'Descompte a la quota anual d’abonat',events:[]}}
 function validLeague(x){return x&&typeof x==='object'&&Array.isArray(x.events)&&x.events.every(e=>e&&e.id&&Array.isArray(e.players))}
+function clone(x){return JSON.parse(JSON.stringify(x))}
 function loadLeague(){
- try{const x=JSON.parse(localStorage.getItem(LKEY));if(validLeague(x))return {...defaultLeague(),...x}}catch(e){}
+ try{const x=JSON.parse(localStorage.getItem(LKEY));if(validLeague(x))return Object.assign(defaultLeague(),x)}catch(e){}
  return defaultLeague();
 }
-function saveLeague(){
- try{localStorage.setItem(LKEY,JSON.stringify(L));return true}
- catch(e){alert('No s’ha pogut guardar la lliga en aquest navegador. Exporta una còpia per no perdre les dades.');return false}
+function cacheLeague(){try{localStorage.setItem(LKEY,JSON.stringify(Object.assign({},L,{synced:!!DB})))}catch(e){}}
+function leagueConfig(){return {name:L.name,target:L.target,prize:L.prize}}
+async function dbDo(fn){
+ if(!DB)return true;
+ try{await fn(DB);syncErr='';return true}
+ catch(e){syncErr=e&&e.code==='quota_exceeded'?'S’ha omplert l’espai de la lliga al núvol.':'No s’ha pogut desar al núvol'+(e&&e.code?` (${e.code})`:'')+'. Torna-ho a provar.';renderSync();return false}
+}
+function persistConfig(){cacheLeague();return dbDo(db=>db.doc('league/config').set(leagueConfig()))}
+function persistEvent(ev){cacheLeague();return dbDo(db=>db.collection('events').doc(ev.id).set(clone(ev)))}
+function unpersistEvent(id){cacheLeague();return dbDo(db=>db.collection('events').doc(id).delete())}
+async function persistAll(oldIds){
+ cacheLeague();
+ return dbDo(async db=>{
+  const keep=new Set(L.events.map(e=>e.id));
+  for(const id of oldIds)if(!keep.has(id))await db.collection('events').doc(id).delete();
+  for(const ev of L.events)await db.collection('events').doc(ev.id).set(clone(ev));
+  await db.doc('league/config').set(leagueConfig());
+ });
+}
+async function connectCloud(){
+ if(!window.claude||typeof window.claude.use!=='function')return;
+ let db=null;try{db=await window.claude.use('db')}catch(e){db=null}
+ if(!db)return;
+ DB=db;renderSync();
+ const fail=e=>{syncErr='S’ha perdut la connexió amb el núvol'+(e&&e.code?` (${e.code})`:'')+'. Recarrega la pàgina.';renderSync()};
+ db.doc('league/config').onSnapshot(s=>{
+  if(!s.exists)return;
+  const c=s.data();
+  if(c.name)L.name=c.name;if(c.target>0)L.target=c.target;if(typeof c.prize==='string')L.prize=c.prize;
+  cacheLeague();renderLeague();
+ },fail);
+ db.collection('events').onSnapshot(q=>{
+  if(!dbSynced&&q.empty){
+   if(q.metadata.fromCache)return; // esperem la resposta definitiva del servidor
+   dbSynced=true;
+   // Primer cop al núvol: hi pugem la lliga que hi hagués en aquest dispositiu
+   if(L.events.length&&!L.synced){persistAll([]);return}
+  }
+  dbSynced=true;
+  L.events=q.docs.map(d=>clone(d.data())).filter(e=>e&&e.id&&Array.isArray(e.players));
+  cacheLeague();renderLeague();
+ },fail);
+}
+function renderSync(){
+ const el=$('syncState');if(!el)return;
+ el.innerHTML=(DB?'<span class="sync on">Al núvol: la lliga es veu igual a tots els teus dispositius</span>':'<span class="sync">Guardada només en aquest dispositiu</span>')+(syncErr?`<div class="notice error">${esc(syncErr)}</div>`:'');
 }
 function today(){const d=new Date();return new Date(d.getTime()-d.getTimezoneOffset()*60000).toISOString().slice(0,10)}
 function fmtDate(d){if(!d)return '—';const [y,m,dd]=d.split('-');return `${dd}/${m}/${y}`}
@@ -664,7 +817,7 @@ function updateLeagueConfig(){
  L.name=$('lgName').value.trim()||'Lliga 100 punts';
  if(t>0)L.target=t;
  L.prize=$('lgPrize').value.trim();
- saveLeague();renderLeague();
+ renderLeague();persistConfig();
 }
 function setLeagueSort(k){leagueSort=k;renderLeague()}
 function showLeaguePlayer(k){leagueSel=leagueSel===k?null:k;renderLeague();if(leagueSel)$('lgPlayer').scrollIntoView({behavior:'smooth',block:'start'})}
@@ -722,12 +875,12 @@ function renderAddState(){
  const ev=S.leagueEventId&&L.events.find(e=>e.id===S.leagueEventId);
  $('evAddBtn').textContent=ev?'Actualitzar resultats a la lliga':'Afegir resultats a la lliga';
 }
-function addToLeague(){
+async function addToLeague(){
  const msg=$('leagueAddMsg');
  if(!S.players.length){msg.innerHTML='<div class="notice error">Primer crea i juga l’Americana.</div>';return}
  const played=S.rs.filter(r=>r&&r.done).length;
  if(!played){msg.innerHTML='<div class="notice error">Encara no hi ha cap ronda amb resultats guardats.</div>';return}
- if(played<S.rounds&&!confirm(`Només hi ha ${played} de ${S.rounds} rondes amb resultats. Vols afegir-les igualment a la lliga?`))return;
+ if(played<S.rounds&&!await uiConfirm(`Només hi ha ${played} de ${S.rounds} rondes amb resultats. Vols afegir-les igualment a la lliga?`,'Afegir igualment'))return;
  // Dos jugadors amb el mateix nom es comptarien com un de sol
  const seen=new Set(),dup=S.players.find(p=>{const k=norm(p.name);if(seen.has(k))return true;seen.add(k)});
  if(dup){msg.innerHTML=`<div class="notice error">❌ Hi ha dos jugadors amb el nom «${esc(dup.name)}». Afegeix un cognom per distingir-los abans d’afegir a la lliga.</div>`;return}
@@ -737,48 +890,60 @@ function addToLeague(){
  const before=leagueTable().champion;
  let ev=S.leagueEventId&&L.events.find(e=>e.id===S.leagueEventId);
  if(ev){
-  if(!confirm('Aquesta Americana ja és a la lliga. Vols substituir-ne els resultats pels actuals?'))return;
+  if(!await uiConfirm('Aquesta Americana ja és a la lliga. Vols substituir-ne els resultats pels actuals?','Substituir'))return;
   Object.assign(ev,{date,title,players,courts:S.courts,rounds:played,format:S.format});
  }else{
   ev={id:'ev'+Date.now().toString(36)+Math.random().toString(36).slice(2,6),addedAt:Date.now(),date,title,courts:S.courts,rounds:played,format:S.format,players};
   L.events.push(ev);S.leagueEventId=ev.id;
  }
- saveLeague();
+ saveDraft();
+ const saved=await persistEvent(ev);
  const {rows,champion}=leagueTable(),lead=[...rows].sort(leagueCmp('points'))[0];
  let h=`<div class="notice success">✅ «${esc(title)}» comptabilitzada a la ${esc(L.name)}. Líder: <b>${esc(lead.name)}</b> amb ${lead.points} punts.</div>`;
  if(champion&&(!before||before.key!==champion.key||before.ev.id!==champion.ev.id))h+=`<div class="champion">🏆 ${esc(champion.name)} ha arribat als ${L.target} punts i guanya la ${esc(L.name)}!${L.prize?` 🎁 ${esc(L.prize)}`:''}</div>`;
  h+=`<div class="actions"><button class="secondary" onclick="showView('league')">Veure la classificació acumulada →</button></div>`;
+ if(!saved)h+='<div class="notice error">⚠️ No s’ha pogut desar al núvol. Torna a prémer el botó quan tinguis connexió.</div>';
  msg.innerHTML=h;
  renderLeague();
 }
-function deleteLeagueEvent(id){
+async function deleteLeagueEvent(id){
  const ev=L.events.find(e=>e.id===id);if(!ev)return;
- if(!confirm(`Treure «${ev.title}» (${fmtDate(ev.date)}) de la lliga? Els punts es recalcularan.`))return;
+ if(!await uiConfirm(`Treure «${ev.title}» (${fmtDate(ev.date)}) de la lliga? Els punts es recalcularan.`,'Treure','danger'))return;
  L.events=L.events.filter(e=>e.id!==id);
- if(S.leagueEventId===id)S.leagueEventId=null;
- saveLeague();renderLeague();
+ if(S.leagueEventId===id){S.leagueEventId=null;saveDraft()}
+ renderLeague();unpersistEvent(id);
 }
-function exportLeague(){
- const blob=new Blob([JSON.stringify(L,null,2)],{type:'application/json'});
- const a=document.createElement('a');a.href=URL.createObjectURL(blob);
- a.download=`${norm(L.name).replace(/[^a-z0-9]+/g,'-')||'lliga'}-${today()}.json`;
+async function exportLeague(){
+ const data=JSON.stringify({name:L.name,target:L.target,prize:L.prize,events:L.events},null,2);
+ const filename=`${norm(L.name).replace(/[^a-z0-9]+/g,'-')||'lliga'}-${today()}.json`;
+ let dl=null;
+ if(window.claude&&typeof window.claude.use==='function'){try{dl=await window.claude.use('downloads')}catch(e){dl=null}}
+ if(dl){
+  try{await dl.save({filename,data});$('lgDataMsg').innerHTML='<div class="notice success">✅ Còpia desada.</div>'}
+  catch(e){if(!e||e.code!=='declined')$('lgDataMsg').innerHTML='<div class="notice error">No s’ha pogut desar la còpia'+(e&&e.code?` (${esc(e.code)})`:'')+'.</div>'}
+  return;
+ }
+ const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([data],{type:'application/json'}));a.download=filename;
  document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(a.href),1000);
 }
 function importLeague(input){
  const f=input.files[0];input.value='';if(!f)return;
  const rd=new FileReader();
- rd.onload=()=>{
+ rd.onload=async()=>{
   let x;try{x=JSON.parse(rd.result)}catch(e){x=null}
   if(!validLeague(x)){$('lgDataMsg').innerHTML='<div class="notice error">❌ El fitxer no és una còpia vàlida de la lliga.</div>';return}
-  if(L.events.length&&!confirm('Importar substituirà la lliga actual d’aquest navegador. Continuar?'))return;
-  L={...defaultLeague(),...x};saveLeague();leagueSel=null;renderLeague();
+  if(L.events.length&&!await uiConfirm('Importar substituirà la lliga actual. Continuar?','Importar'))return;
+  const oldIds=L.events.map(e=>e.id);
+  L=Object.assign(defaultLeague(),{name:x.name||defaultLeague().name,target:x.target>0?x.target:100,prize:typeof x.prize==='string'?x.prize:'',events:x.events});
+  leagueSel=null;renderLeague();await persistAll(oldIds);
   $('lgDataMsg').innerHTML=`<div class="notice success">✅ Lliga importada: ${L.events.length} americanes.</div>`;
  };
  rd.readAsText(f);
 }
-function resetLeague(){
- if(!confirm('Esborrar tota la lliga acumulada? Aquesta acció no es pot desfer (exporta una còpia abans).'))return;
- L=defaultLeague();S.leagueEventId=null;leagueSel=null;saveLeague();renderLeague();
+async function resetLeague(){
+ if(!await uiConfirm('Esborrar tota la lliga acumulada? Aquesta acció no es pot desfer (exporta una còpia abans).','Esborrar la lliga','danger'))return;
+ const oldIds=L.events.map(e=>e.id);
+ L=defaultLeague();S.leagueEventId=null;saveDraft();leagueSel=null;renderLeague();await persistAll(oldIds);
  $('lgDataMsg').innerHTML='<div class="notice">Lliga esborrada.</div>';
 }
 init();
