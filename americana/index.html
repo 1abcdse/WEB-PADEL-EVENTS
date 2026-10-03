@@ -2,12 +2,17 @@
 <html lang="ca">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#273127">
+<meta name="format-detection" content="telephone=no">
 <title>Americana Pàdel — Tennis & Pàdel El Masnou</title>
 <style>
 :root{--bg:#f3f5f1;--card:#fff;--ink:#202720;--muted:#707970;--green:#65745b;--green2:#e9eee6;--line:#dce2da;--gold:#c49a45;--red:#a64b4b;--shadow:0 8px 24px #0000000d}
-*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font-family:Arial,sans-serif}
-header{background:#273127;color:#fff;padding:22px}header>div,main{max-width:1250px;margin:auto}h1{margin:0 0 5px}h2{margin:0 0 15px}h3{margin:15px 0 8px}.muted{color:var(--muted)}
+*{box-sizing:border-box}html{-webkit-text-size-adjust:100%;text-size-adjust:100%}body{margin:0;background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;overflow-x:hidden}
+button,input,select,a{touch-action:manipulation;-webkit-tap-highlight-color:transparent;font-family:inherit}
+input[type=date]{-webkit-appearance:none;appearance:none;min-height:42px;display:block}
+select{text-overflow:ellipsis}
+header{background:#273127;color:#fff;padding:22px;padding-top:max(22px,env(safe-area-inset-top))}header>div,main{max-width:1250px;margin:auto}h1{margin:0 0 5px}h2{margin:0 0 15px}h3{margin:15px 0 8px}.muted{color:var(--muted)}
 main{padding:20px 14px}.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:19px;margin-bottom:17px;box-shadow:var(--shadow)}
 .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(210px,100%),1fr));gap:12px}
 label{display:block;font-size:12px;font-weight:700;color:var(--muted);margin-bottom:5px}
@@ -40,6 +45,14 @@ table{width:100%;border-collapse:collapse}th,td{padding:8px;border-bottom:1px so
 .cons .match{background:#fbfcfa}
 .champion{margin-top:12px;padding:12px 14px;border:2px solid var(--gold);border-radius:12px;background:#fbf5e7;text-align:center;font-weight:800}
 .small{font-size:12px}
+.table-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch}
+.table-wrap td{white-space:nowrap}
+.rank th:nth-child(1),.rank td:nth-child(1){position:sticky;left:0;width:34px;min-width:34px;background:var(--card);z-index:1}
+.rank th:nth-child(2),.rank td:nth-child(2){position:sticky;left:34px;background:var(--card);z-index:1;box-shadow:2px 0 0 var(--line)}
+.rank tr.champ-row td{background:#fbf5e7}
+.rank td:nth-child(3){font-size:14px}
+.swipe-hint{display:none;font-size:12px;color:var(--muted);margin:6px 0 0}
+.scroll-row{display:flex;gap:7px;flex-wrap:wrap}
 .main-tabs{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}
 .main-tabs button{background:#ffffff1f;color:#fff}
 .main-tabs button.active{background:#fff;color:#273127}
@@ -73,6 +86,19 @@ tr.champ-row td{background:#fbf5e7}
  .slot .pair-name{font-size:16px;padding:10px}
  .slot .pair-score{width:62px;flex-basis:62px;font-size:18px;padding:10px 4px}
  th,td{padding:7px 6px;font-size:12px}
+ main{padding-left:max(8px,env(safe-area-inset-left));padding-right:max(8px,env(safe-area-inset-right));padding-bottom:max(12px,env(safe-area-inset-bottom))}
+ h2{font-size:20px}
+ .muted{font-size:14px}
+ .tabs,.scroll-row{flex-wrap:nowrap;overflow-x:auto;-webkit-overflow-scrolling:touch;padding-bottom:4px;margin-right:-14px;padding-right:14px}
+ .tabs button,.scroll-row button{flex:0 0 auto;min-height:38px;padding:8px 13px;font-size:14px;white-space:nowrap}
+ .main-tabs button{flex:1 1 0;min-height:42px;padding:9px 10px}
+ .swipe-hint{display:block}
+ .rank td:nth-child(2){max-width:42vw;overflow:hidden;text-overflow:ellipsis}
+ .rank td:nth-child(2) .linkish{white-space:nowrap}
+ .bar{min-width:60px}
+ .ev-list .ev button{flex:0 0 auto;min-height:38px}
+ .pill{font-size:11px;padding:5px 8px}
+ .goal .big{font-size:20px}
 }
 </style>
 </head>
@@ -117,7 +143,7 @@ tr.champ-row td{background:#fbf5e7}
 
 <section id="rankCard" class="card hidden">
 <h2>Classificació individual</h2>
-<div class="actions">
+<div class="actions scroll-row">
 <button class="secondary" onclick="setSort('points')">Punts</button>
 <button class="secondary" onclick="setSort('diff')">Diferència</button>
 <button class="secondary" onclick="setSort('gamesWon')">Jocs guanyats</button>
@@ -137,7 +163,7 @@ tr.champ-row td{background:#fbf5e7}
 <p class="muted">No és obligatori utilitzar playoffs. Escull el tram segons el nombre de parelles. Els noms de les parelles es poden escriure o corregir directament a cada requadre del quadre.</p>
 <div class="grid">
 <div><label>Format</label><select id="playoffFormat">
-<option value="64">Ronda de 32 — pre-prèvia (64 parelles)</option>
+<option value="64">Ronda de 32 (64 parelles)</option>
 <option value="32">Setzens de final (32 parelles)</option>
 <option value="16">Vuitens de final (16 parelles)</option>
 <option value="8" selected>Quarts de final (8 parelles)</option>
@@ -145,11 +171,11 @@ tr.champ-row td{background:#fbf5e7}
 <option value="2">Final (2 parelles)</option>
 </select></div>
 <div><label>Origen de les parelles</label><select id="seedMode">
-<option value="ranking">Classificació final — parelles principals</option>
+<option value="ranking">Segons la classificació</option>
 <option value="manual">Introducció manual</option>
 </select></div>
 <div><label>Quadre de consolació</label><select id="consolation">
-<option value="yes">Sí — els perdedors del primer partit van a consolació</option>
+<option value="yes">Sí — perdedors del 1r partit</option>
 <option value="no">No</option>
 </select></div>
 </div>
@@ -178,7 +204,7 @@ tr.champ-row td{background:#fbf5e7}
 
 <section class="card">
 <h2>Classificació acumulada</h2>
-<div class="actions">
+<div class="actions scroll-row">
 <button class="secondary" onclick="setLeagueSort('points')">Punts</button>
 <button class="secondary" onclick="setLeagueSort('diff')">Diferència</button>
 <button class="secondary" onclick="setLeagueSort('gamesWon')">Jocs guanyats</button>
@@ -418,6 +444,7 @@ function summary(){
 }
 function tabs(){
  let h='';for(let i=0;i<S.rounds;i++)h+=`<button class="tab ${i===S.current?'active':''}" onclick="S.current=${i};renderAll()">Ronda ${i+1}</button>`;$('roundTabs').innerHTML=h;
+ const act=$('roundTabs').querySelector('.active');if(act)$('roundTabs').scrollLeft=act.offsetLeft-$('roundTabs').offsetLeft-20;
 }
 function round(){
  let r=S.rs[S.current],h=`<div class="notice ${r.done?'success':''}"><strong>Ronda ${r.number}</strong> · ${r.done?'Resultats guardats':'pendent'}</div><div class="courts">`;
@@ -427,9 +454,9 @@ function round(){
 }
 function name(id){return esc(S.players.find(p=>p.id===id)?.name||'')}
 function renderRanking(){
- let a=sorted(),h='<div style="overflow:auto"><table><thead><tr><th>#</th><th>Jugador</th><th>PJ</th><th>PG</th><th>PP</th><th>JG</th><th>JP</th><th>Dif.</th><th>Punts</th><th>Playtomic</th></tr></thead><tbody>';
- a.forEach((p,i)=>{let s=p.stats;h+=`<tr><td>${i+1}</td><td><b>${esc(p.name)}</b></td><td>${s.pj}</td><td>${s.pg}</td><td>${s.pp}</td><td>${s.gamesWon}</td><td>${s.gamesLost}</td><td>${s.diff>0?'+':''}${s.diff}</td><td><b>${s.points}</b></td><td>${p.playtomic?`<a target="_blank" href="${esc(p.playtomic)}">Obrir</a>`:'—'}</td></tr>`});
- h+='</tbody></table></div>';$('ranking').innerHTML=h;
+ let a=sorted(),h='<div class="table-wrap"><table class="rank"><thead><tr><th>#</th><th>Jugador</th><th>Punts</th><th>PJ</th><th>PG</th><th>PP</th><th>JG</th><th>JP</th><th>Dif.</th><th>Playtomic</th></tr></thead><tbody>';
+ a.forEach((p,i)=>{let s=p.stats;h+=`<tr><td>${i+1}</td><td><b>${esc(p.name)}</b></td><td><b>${s.points}</b></td><td>${s.pj}</td><td>${s.pg}</td><td>${s.pp}</td><td>${s.gamesWon}</td><td>${s.gamesLost}</td><td>${s.diff>0?'+':''}${s.diff}</td><td>${p.playtomic?`<a target="_blank" href="${esc(p.playtomic)}">Obrir</a>`:'—'}</td></tr>`});
+ h+='</tbody></table></div><p class="swipe-hint">↔ Llisca la taula per veure totes les columnes</p>';$('ranking').innerHTML=h;
 }
 
 /* ---------------- PLAYOFFS ---------------- */
@@ -653,19 +680,19 @@ function renderLeague(){
 
  // Classificació
  const a=[...rows].sort(leagueCmp(leagueSort));
- let h='<div style="overflow:auto"><table><thead><tr><th>#</th><th>Jugador</th><th>Am.</th><th>PJ</th><th>PG</th><th>PP</th><th>JG</th><th>JP</th><th>Dif.</th><th>Punts</th><th>Progrés</th><th>Falten</th><th>Playtomic</th></tr></thead><tbody>';
+ let h='<div class="table-wrap"><table class="rank"><thead><tr><th>#</th><th>Jugador</th><th>Punts</th><th>Progrés</th><th>Falten</th><th>Am.</th><th>PJ</th><th>PG</th><th>PP</th><th>JG</th><th>JP</th><th>Dif.</th><th>Playtomic</th></tr></thead><tbody>';
  a.forEach((p,i)=>{
   const isCh=champion&&champion.key===p.key,full=p.points>=T;
-  h+=`<tr class="${isCh?'champ-row':''}"><td>${i+1}</td><td>${isCh?'🏆 ':''}<button class="linkish" data-key="${esc(p.key)}" onclick="showLeaguePlayer(this.dataset.key)">${esc(p.name)}</button></td><td>${p.am}</td><td>${p.pj}</td><td>${p.pg}</td><td>${p.pp}</td><td>${p.gamesWon}</td><td>${p.gamesLost}</td><td>${p.diff>0?'+':''}${p.diff}</td><td><b>${p.points}</b></td><td><div class="bar ${full?'full':''}"><i style="width:${Math.min(100,p.points/T*100)}%"></i></div></td><td>${full?'✔':T-p.points}</td><td>${p.playtomic?`<a target="_blank" href="${esc(p.playtomic)}">Obrir</a>`:'—'}</td></tr>`;
+  h+=`<tr class="${isCh?'champ-row':''}"><td>${i+1}</td><td>${isCh?'🏆 ':''}<button class="linkish" data-key="${esc(p.key)}" onclick="showLeaguePlayer(this.dataset.key)">${esc(p.name)}</button></td><td><b>${p.points}</b></td><td><div class="bar ${full?'full':''}"><i style="width:${Math.min(100,p.points/T*100)}%"></i></div></td><td>${full?'✔':T-p.points}</td><td>${p.am}</td><td>${p.pj}</td><td>${p.pg}</td><td>${p.pp}</td><td>${p.gamesWon}</td><td>${p.gamesLost}</td><td>${p.diff>0?'+':''}${p.diff}</td><td>${p.playtomic?`<a target="_blank" href="${esc(p.playtomic)}">Obrir</a>`:'—'}</td></tr>`;
  });
  if(!a.length)h+='<tr><td colspan="13" class="muted">Sense dades.</td></tr>';
- h+='</tbody></table></div><p class="muted small">Am. = americanes jugades · Prem el nom d’un jugador per veure’n el detall.</p>';
+ h+='</tbody></table></div><p class="swipe-hint">↔ Llisca la taula per veure totes les columnes</p><p class="muted small">Am. = americanes jugades · Prem el nom d’un jugador per veure’n el detall.</p>';
  $('lgRanking').innerHTML=h;
 
  // Detall d'un jugador
  const sel=rows.find(p=>p.key===leagueSel);
  if(sel){
-  let d=`<h3>${esc(sel.name)} — detall per Americana</h3><div style="overflow:auto"><table><thead><tr><th>Data</th><th>Americana</th><th>PJ</th><th>PG</th><th>PP</th><th>JG</th><th>JP</th><th>Dif.</th><th>Punts</th><th>Acumulat</th></tr></thead><tbody>`;
+  let d=`<h3>${esc(sel.name)} — detall per Americana</h3><div class="table-wrap"><table><thead><tr><th>Data</th><th>Americana</th><th>PJ</th><th>PG</th><th>PP</th><th>JG</th><th>JP</th><th>Dif.</th><th>Punts</th><th>Acumulat</th></tr></thead><tbody>`;
   sel.history.forEach(({ev,r,total})=>{const df=r.gamesWon-r.gamesLost;d+=`<tr><td>${fmtDate(ev.date)}</td><td>${esc(ev.title)}</td><td>${r.pj}</td><td>${r.pg}</td><td>${r.pp}</td><td>${r.gamesWon}</td><td>${r.gamesLost}</td><td>${df>0?'+':''}${df}</td><td>${r.points}</td><td><b>${total}</b></td></tr>`});
   d+='</tbody></table></div>';
   $('lgPlayer').innerHTML=d;
