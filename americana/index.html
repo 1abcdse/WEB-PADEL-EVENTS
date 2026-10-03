@@ -40,6 +40,20 @@ table{width:100%;border-collapse:collapse}th,td{padding:8px;border-bottom:1px so
 .cons .match{background:#fbfcfa}
 .champion{margin-top:12px;padding:12px 14px;border:2px solid var(--gold);border-radius:12px;background:#fbf5e7;text-align:center;font-weight:800}
 .small{font-size:12px}
+.main-tabs{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}
+.main-tabs button{background:#ffffff1f;color:#fff}
+.main-tabs button.active{background:#fff;color:#273127}
+.league-box{margin-top:16px;padding:14px;border:2px dashed var(--gold);border-radius:12px;background:#fdfaf2}
+.league-box h3{margin-top:0}
+.bar{height:9px;min-width:90px;background:#e5eae3;border-radius:999px;overflow:hidden}
+.bar>i{display:block;height:100%;background:var(--green)}
+.bar.full>i{background:var(--gold)}
+.goal{padding:16px;border:2px solid var(--gold);border-radius:14px;background:#fbf5e7;text-align:center}
+.goal .big{font-size:22px;font-weight:800;margin:4px 0}
+.leader{padding:14px;border:1px solid var(--line);border-radius:12px;background:#fafbf9}
+tr.champ-row td{background:#fbf5e7}
+.linkish{background:none;padding:0;color:var(--ink);font-weight:700;text-align:left;cursor:pointer;min-height:0;text-decoration:underline dotted}
+.ev-list .ev{display:flex;gap:10px;align-items:center;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--line);flex-wrap:wrap}
 .round-tabs-mobile{display:none;gap:6px;overflow-x:auto;margin:16px 0 12px}
 .round-tabs-mobile button{flex:1 0 auto;background:#e5eae3;white-space:nowrap}
 .round-tabs-mobile button.active{background:var(--green);color:#fff}
@@ -63,8 +77,11 @@ table{width:100%;border-collapse:collapse}th,td{padding:8px;border-bottom:1px so
 </style>
 </head>
 <body>
-<header><div><h1>Americana Pàdel</h1><div>Tennis &amp; Pàdel El Masnou · rondes classificatòries + playoffs opcionals</div></div></header>
+<header><div><h1>Americana Pàdel</h1><div>Tennis &amp; Pàdel El Masnou · rondes classificatòries + playoffs opcionals + lliga acumulada</div>
+<nav class="main-tabs"><button id="nav-americana" class="active" onclick="showView('americana')">Americana del dia</button><button id="nav-league" onclick="showView('league')">🏆 Lliga 100 punts</button></nav>
+</div></header>
 <main>
+<div id="view-americana">
 
 <section class="card">
 <h2>1. Configuració</h2>
@@ -106,6 +123,13 @@ table{width:100%;border-collapse:collapse}th,td{padding:8px;border-bottom:1px so
 <button class="secondary" onclick="setSort('gamesWon')">Jocs guanyats</button>
 </div>
 <div id="ranking"></div>
+<div class="league-box">
+<h3>🏆 Afegir a la <span class="leagueName">Lliga 100 punts</span></h3>
+<p class="muted small" style="margin-top:0">Quan l’Americana s’acabi, suma els jocs, partits i punts de cada jugador a la classificació acumulada. Els jugadors s’identifiquen pel nom (sense distingir majúscules ni accents).</p>
+<div class="grid"><div><label>Data</label><input type="date" id="evDate"></div><div><label>Nom de l’Americana</label><input id="evTitle" placeholder="Americana de dissabte"></div></div>
+<div class="actions"><button class="primary" id="evAddBtn" onclick="addToLeague()">Afegir resultats a la lliga</button></div>
+<div id="leagueAddMsg"></div>
+</div>
 </section>
 
 <section id="playoffCard" class="card">
@@ -134,6 +158,55 @@ table{width:100%;border-collapse:collapse}th,td{padding:8px;border-bottom:1px so
 <div id="playoffMsg"></div>
 <div id="bracket"></div>
 </section>
+</div>
+
+<div id="view-league" class="hidden">
+<section class="card">
+<h2>Lliga acumulada</h2>
+<p class="muted">Cada Americana suma a aquesta classificació. El primer jugador que arriba a l’objectiu guanya la lliga i el premi.</p>
+<div class="grid">
+<div><label>Nom de la lliga</label><input id="lgName" onchange="updateLeagueConfig()"></div>
+<div><label>Objectiu (punts)</label><input id="lgTarget" type="number" inputmode="numeric" min="1" onchange="updateLeagueConfig()"></div>
+<div><label>Premi</label><input id="lgPrize" onchange="updateLeagueConfig()" placeholder="Descompte a la quota anual d’abonat"></div>
+</div>
+<div class="format-info"><strong>Puntuació:</strong> la mateixa que l’Americana — 3 punts per partit guanyat, 1 punt per partit perdut si s’ha fet almenys un joc, 0 si es perd sense fer cap joc. <strong>Guanyador:</strong> el primer que arriba a l’objectiu. Si en una mateixa Americana hi arriben diversos jugadors, guanya qui en tingui més; en cas d’empat, millor diferència de jocs i després més jocs guanyats.</div>
+</section>
+
+<section class="card">
+<div id="lgStatus"></div>
+</section>
+
+<section class="card">
+<h2>Classificació acumulada</h2>
+<div class="actions">
+<button class="secondary" onclick="setLeagueSort('points')">Punts</button>
+<button class="secondary" onclick="setLeagueSort('diff')">Diferència</button>
+<button class="secondary" onclick="setLeagueSort('gamesWon')">Jocs guanyats</button>
+<button class="secondary" onclick="setLeagueSort('pg')">Partits guanyats</button>
+<button class="secondary" onclick="setLeagueSort('am')">Americanes jugades</button>
+</div>
+<div id="lgRanking"></div>
+<div id="lgPlayer"></div>
+</section>
+
+<section class="card">
+<h2>Americanes comptabilitzades</h2>
+<div id="lgEvents" class="ev-list"></div>
+</section>
+
+<section class="card">
+<h2>Dades</h2>
+<p class="muted">La lliga es guarda en aquest navegador. Exporta una còpia de seguretat per no perdre-la o per passar-la a un altre dispositiu.</p>
+<div class="actions">
+<button class="secondary" onclick="exportLeague()">Exportar còpia (JSON)</button>
+<button class="secondary" onclick="$('lgImport').click()">Importar còpia</button>
+<button class="danger" onclick="resetLeague()">Esborrar la lliga</button>
+<input type="file" id="lgImport" accept="application/json,.json" class="hidden" onchange="importLeague(this)">
+</div>
+<div id="lgDataMsg"></div>
+</section>
+</div>
+<datalist id="leaguePlayers"></datalist>
 
 </main>
 <script>
@@ -155,6 +228,15 @@ function init(){
  $('courtCount').onchange=()=>{renderPlayers();updateCapacity()};
  $('pairFormat').onchange=updateFormatInfo;
  renderPlayers();updateCapacity();updateFormatInfo();
+ $('evDate').value=today();
+ $('players').addEventListener('change',e=>{
+  // Jugador conegut de la lliga: completa el Playtomic si està buit
+  if(!e.target.classList.contains('pname'))return;
+  const k=norm(e.target.value),known=leagueTable().rows.find(p=>p.key===k);
+  const link=e.target.closest('.player-box').querySelector('.plink');
+  if(known&&known.playtomic&&!link.value)link.value=known.playtomic;
+ });
+ renderLeague();
 }
 function updateCapacity(){
  let n=+$('courtCount').value;
@@ -169,7 +251,7 @@ function updateFormatInfo(){
 function renderPlayers(old=[]){
  let n=+$('courtCount').value, vals=old.length?old:[...document.querySelectorAll('.pname')].map(x=>x.value);
  let links=[...document.querySelectorAll('.plink')].map(x=>x.value);
- let h='';for(let i=0;i<n*4;i++)h+=`<div class="player-box"><h4>Jugador ${i+1}</h4><label>Nom i cognoms</label><input class="pname" value="${esc(vals[i]||'')}" placeholder="Nom"><label style="margin-top:7px">Playtomic (opcional)</label><input class="plink" value="${esc(links[i]||'')}" placeholder="https://playtomic.io/..."></div>`;
+ let h='';for(let i=0;i<n*4;i++)h+=`<div class="player-box"><h4>Jugador ${i+1}</h4><label>Nom i cognoms</label><input class="pname" list="leaguePlayers" autocomplete="off" value="${esc(vals[i]||'')}" placeholder="Nom"><label style="margin-top:7px">Playtomic (opcional)</label><input class="plink" value="${esc(links[i]||'')}" placeholder="https://playtomic.io/..."></div>`;
  $('players').innerHTML=h;
 }
 function demo(){document.querySelectorAll('.pname').forEach((x,i)=>x.value='Jugador '+(i+1))}
@@ -472,7 +554,187 @@ function playoffScore(k,r,i,side,val){
  refreshBracket();
 }
 function clearPlayoffs(){S.playoff=null;$('bracket').innerHTML='';$('playoffMsg').innerHTML=''}
-function resetApp(){if(!confirm('Esborrar tota l’Americana?'))return;location.reload()}
+function resetApp(){if(!confirm('Esborrar tota l’Americana? La lliga acumulada no s’esborra.'))return;location.reload()}
+
+/* ---------------- LLIGA 100 PUNTS ---------------- */
+// Lliga acumulada entre americanes. Es guarda al navegador (localStorage)
+// i es pot exportar/importar en JSON.
+const LKEY='padel-lliga100-v1';
+let L=loadLeague(),leagueSort='points',leagueSel=null;
+function defaultLeague(){return {name:'Lliga 100 punts',target:100,prize:'Descompte a la quota anual d’abonat',events:[]}}
+function validLeague(x){return x&&typeof x==='object'&&Array.isArray(x.events)&&x.events.every(e=>e&&e.id&&Array.isArray(e.players))}
+function loadLeague(){
+ try{const x=JSON.parse(localStorage.getItem(LKEY));if(validLeague(x))return {...defaultLeague(),...x}}catch(e){}
+ return defaultLeague();
+}
+function saveLeague(){
+ try{localStorage.setItem(LKEY,JSON.stringify(L));return true}
+ catch(e){alert('No s’ha pogut guardar la lliga en aquest navegador. Exporta una còpia per no perdre les dades.');return false}
+}
+function today(){const d=new Date();return new Date(d.getTime()-d.getTimezoneOffset()*60000).toISOString().slice(0,10)}
+function fmtDate(d){if(!d)return '—';const [y,m,dd]=d.split('-');return `${dd}/${m}/${y}`}
+function norm(s){return String(s||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().replace(/\s+/g,' ').trim()}
+function leagueCmp(k){return (x,y)=>{
+ for(const f of [k,'points','diff','gamesWon','pg'])if(y[f]!==x[f])return y[f]-x[f];
+ return x.name.localeCompare(y.name);
+}}
+function chronological(){return [...L.events].sort((a,b)=>(a.date||'').localeCompare(b.date||'')||a.addedAt-b.addedAt)}
+function leagueTable(){
+ // Recalcula tota la lliga a partir de les americanes, en ordre cronològic,
+ // per saber qui ha arribat primer a l'objectiu.
+ const map=new Map();let champion=null;
+ chronological().forEach(ev=>{
+  const crossed=[];
+  ev.players.forEach(r=>{
+   const k=norm(r.name);if(!k)return;
+   let p=map.get(k);
+   if(!p){p={key:k,name:r.name,playtomic:'',am:0,pj:0,pg:0,pp:0,gamesWon:0,gamesLost:0,diff:0,points:0,history:[]};map.set(k,p)}
+   const before=p.points;
+   p.name=r.name;if(r.playtomic)p.playtomic=r.playtomic;
+   p.am++;p.pj+=r.pj;p.pg+=r.pg;p.pp+=r.pp;p.gamesWon+=r.gamesWon;p.gamesLost+=r.gamesLost;p.points+=r.points;
+   p.diff=p.gamesWon-p.gamesLost;
+   p.history.push({ev,r,total:p.points});
+   if(!champion&&before<L.target&&p.points>=L.target)crossed.push(p);
+  });
+  if(crossed.length){
+   const w=crossed.sort(leagueCmp('points'))[0];
+   // Empat absolut (punts, diferència i jocs): ho ha de decidir l'organització
+   const tied=crossed.filter(p=>p!==w&&p.points===w.points&&p.diff===w.diff&&p.gamesWon===w.gamesWon).map(p=>p.name);
+   champion={key:w.key,name:w.name,points:w.points,diff:w.diff,ev,tied};
+  }
+ });
+ return {rows:[...map.values()],champion};
+}
+function showView(v){
+ $('view-americana').classList.toggle('hidden',v!=='americana');
+ $('view-league').classList.toggle('hidden',v!=='league');
+ $('nav-americana').classList.toggle('active',v==='americana');
+ $('nav-league').classList.toggle('active',v==='league');
+ if(v==='league')renderLeague();
+ window.scrollTo(0,0);
+}
+function updateLeagueConfig(){
+ const t=parseInt($('lgTarget').value,10);
+ L.name=$('lgName').value.trim()||'Lliga 100 punts';
+ if(t>0)L.target=t;
+ L.prize=$('lgPrize').value.trim();
+ saveLeague();renderLeague();
+}
+function setLeagueSort(k){leagueSort=k;renderLeague()}
+function showLeaguePlayer(k){leagueSel=leagueSel===k?null:k;renderLeague();if(leagueSel)$('lgPlayer').scrollIntoView({behavior:'smooth',block:'start'})}
+function renderLeague(){
+ const {rows,champion}=leagueTable(),T=L.target;
+ document.querySelectorAll('.leagueName').forEach(x=>x.textContent=L.name);
+ $('nav-league').textContent='🏆 '+L.name;
+ if(document.activeElement!==$('lgName'))$('lgName').value=L.name;
+ if(document.activeElement!==$('lgTarget'))$('lgTarget').value=T;
+ if(document.activeElement!==$('lgPrize'))$('lgPrize').value=L.prize;
+ $('leaguePlayers').innerHTML=rows.map(p=>`<option value="${esc(p.name)}"></option>`).join('');
+
+ // Estat: campió o líder
+ const byPts=[...rows].sort(leagueCmp('points'));
+ let st='';
+ if(champion){
+  st=`<div class="goal"><div>🏆 Guanyador de la ${esc(L.name)}</div><div class="big">${esc(champion.name)}</div><div>Ha arribat a <b>${champion.points} punts</b> (objectiu ${T}) a «${esc(champion.ev.title)}» · ${fmtDate(champion.ev.date)}</div>${champion.tied.length?`<div class="notice error" style="margin-top:8px">⚠️ Empat absolut amb ${champion.tied.map(esc).join(', ')} (mateixos punts, diferència i jocs guanyats). L’organització ha de decidir el guanyador.</div>`:''}${L.prize?`<div style="margin-top:8px">🎁 Premi: <b>${esc(L.prize)}</b></div>`:''}</div>`;
+ }else if(byPts.length){
+  const p=byPts[0];
+  st=`<div class="leader"><h2 style="margin-bottom:6px">Cursa cap als ${T} punts</h2><div>Líder: <b>${esc(p.name)}</b> amb <b>${p.points} punts</b> — li’n falten <b>${Math.max(0,T-p.points)}</b>.</div>${L.prize?`<div class="muted" style="margin-top:6px">🎁 Premi per al primer que hi arribi: ${esc(L.prize)}</div>`:''}<div style="margin-top:10px" class="bar"><i style="width:${Math.min(100,p.points/T*100)}%"></i></div></div>`;
+ }else st=`<div class="leader"><h2 style="margin-bottom:6px">Cursa cap als ${T} punts</h2><div class="muted">Encara no hi ha cap Americana comptabilitzada. Juga una Americana i, al final, prem «Afegir resultats a la lliga».</div></div>`;
+ st+=`<div style="margin-top:10px"><span class="pill">${L.events.length} americanes</span><span class="pill">${rows.length} jugadors</span><span class="pill">Objectiu: ${T} punts</span></div>`;
+ $('lgStatus').innerHTML=st;
+
+ // Classificació
+ const a=[...rows].sort(leagueCmp(leagueSort));
+ let h='<div style="overflow:auto"><table><thead><tr><th>#</th><th>Jugador</th><th>Am.</th><th>PJ</th><th>PG</th><th>PP</th><th>JG</th><th>JP</th><th>Dif.</th><th>Punts</th><th>Progrés</th><th>Falten</th><th>Playtomic</th></tr></thead><tbody>';
+ a.forEach((p,i)=>{
+  const isCh=champion&&champion.key===p.key,full=p.points>=T;
+  h+=`<tr class="${isCh?'champ-row':''}"><td>${i+1}</td><td>${isCh?'🏆 ':''}<button class="linkish" data-key="${esc(p.key)}" onclick="showLeaguePlayer(this.dataset.key)">${esc(p.name)}</button></td><td>${p.am}</td><td>${p.pj}</td><td>${p.pg}</td><td>${p.pp}</td><td>${p.gamesWon}</td><td>${p.gamesLost}</td><td>${p.diff>0?'+':''}${p.diff}</td><td><b>${p.points}</b></td><td><div class="bar ${full?'full':''}"><i style="width:${Math.min(100,p.points/T*100)}%"></i></div></td><td>${full?'✔':T-p.points}</td><td>${p.playtomic?`<a target="_blank" href="${esc(p.playtomic)}">Obrir</a>`:'—'}</td></tr>`;
+ });
+ if(!a.length)h+='<tr><td colspan="13" class="muted">Sense dades.</td></tr>';
+ h+='</tbody></table></div><p class="muted small">Am. = americanes jugades · Prem el nom d’un jugador per veure’n el detall.</p>';
+ $('lgRanking').innerHTML=h;
+
+ // Detall d'un jugador
+ const sel=rows.find(p=>p.key===leagueSel);
+ if(sel){
+  let d=`<h3>${esc(sel.name)} — detall per Americana</h3><div style="overflow:auto"><table><thead><tr><th>Data</th><th>Americana</th><th>PJ</th><th>PG</th><th>PP</th><th>JG</th><th>JP</th><th>Dif.</th><th>Punts</th><th>Acumulat</th></tr></thead><tbody>`;
+  sel.history.forEach(({ev,r,total})=>{const df=r.gamesWon-r.gamesLost;d+=`<tr><td>${fmtDate(ev.date)}</td><td>${esc(ev.title)}</td><td>${r.pj}</td><td>${r.pg}</td><td>${r.pp}</td><td>${r.gamesWon}</td><td>${r.gamesLost}</td><td>${df>0?'+':''}${df}</td><td>${r.points}</td><td><b>${total}</b></td></tr>`});
+  d+='</tbody></table></div>';
+  $('lgPlayer').innerHTML=d;
+ }else $('lgPlayer').innerHTML='';
+
+ // Americanes
+ const evs=chronological().reverse();
+ $('lgEvents').innerHTML=evs.length?evs.map(ev=>{
+  const best=[...ev.players].sort(leagueCmp('points'))[0];
+  return `<div class="ev"><div><b>${esc(ev.title)}</b> · ${fmtDate(ev.date)}<div class="muted small">${ev.players.length} jugadors · ${ev.courts} pistes · ${ev.rounds} rondes · ${ev.format==='canari'?'format canari':'parelles fixes'}${best?` · millor: ${esc(best.name)} (${best.points} p.)`:''}</div></div><button class="danger" onclick="deleteLeagueEvent('${esc(ev.id)}')">Treure</button></div>`;
+ }).join(''):'<p class="muted">Encara no s’ha afegit cap Americana.</p>';
+
+ renderAddState();
+}
+function renderAddState(){
+ const ev=S.leagueEventId&&L.events.find(e=>e.id===S.leagueEventId);
+ $('evAddBtn').textContent=ev?'Actualitzar resultats a la lliga':'Afegir resultats a la lliga';
+}
+function addToLeague(){
+ const msg=$('leagueAddMsg');
+ if(!S.players.length){msg.innerHTML='<div class="notice error">Primer crea i juga l’Americana.</div>';return}
+ const played=S.rs.filter(r=>r&&r.done).length;
+ if(!played){msg.innerHTML='<div class="notice error">Encara no hi ha cap ronda amb resultats guardats.</div>';return}
+ if(played<S.rounds&&!confirm(`Només hi ha ${played} de ${S.rounds} rondes amb resultats. Vols afegir-les igualment a la lliga?`))return;
+ // Dos jugadors amb el mateix nom es comptarien com un de sol
+ const seen=new Set(),dup=S.players.find(p=>{const k=norm(p.name);if(seen.has(k))return true;seen.add(k)});
+ if(dup){msg.innerHTML=`<div class="notice error">❌ Hi ha dos jugadors amb el nom «${esc(dup.name)}». Afegeix un cognom per distingir-los abans d’afegir a la lliga.</div>`;return}
+ stats();
+ const players=S.players.map(p=>({name:p.name,playtomic:p.playtomic||'',pj:p.stats.pj,pg:p.stats.pg,pp:p.stats.pp,gamesWon:p.stats.gamesWon,gamesLost:p.stats.gamesLost,points:p.stats.points}));
+ const date=$('evDate').value||today(),title=$('evTitle').value.trim()||`Americana ${fmtDate(date)}`;
+ const before=leagueTable().champion;
+ let ev=S.leagueEventId&&L.events.find(e=>e.id===S.leagueEventId);
+ if(ev){
+  if(!confirm('Aquesta Americana ja és a la lliga. Vols substituir-ne els resultats pels actuals?'))return;
+  Object.assign(ev,{date,title,players,courts:S.courts,rounds:played,format:S.format});
+ }else{
+  ev={id:'ev'+Date.now().toString(36)+Math.random().toString(36).slice(2,6),addedAt:Date.now(),date,title,courts:S.courts,rounds:played,format:S.format,players};
+  L.events.push(ev);S.leagueEventId=ev.id;
+ }
+ saveLeague();
+ const {rows,champion}=leagueTable(),lead=[...rows].sort(leagueCmp('points'))[0];
+ let h=`<div class="notice success">✅ «${esc(title)}» comptabilitzada a la ${esc(L.name)}. Líder: <b>${esc(lead.name)}</b> amb ${lead.points} punts.</div>`;
+ if(champion&&(!before||before.key!==champion.key||before.ev.id!==champion.ev.id))h+=`<div class="champion">🏆 ${esc(champion.name)} ha arribat als ${L.target} punts i guanya la ${esc(L.name)}!${L.prize?` 🎁 ${esc(L.prize)}`:''}</div>`;
+ h+=`<div class="actions"><button class="secondary" onclick="showView('league')">Veure la classificació acumulada →</button></div>`;
+ msg.innerHTML=h;
+ renderLeague();
+}
+function deleteLeagueEvent(id){
+ const ev=L.events.find(e=>e.id===id);if(!ev)return;
+ if(!confirm(`Treure «${ev.title}» (${fmtDate(ev.date)}) de la lliga? Els punts es recalcularan.`))return;
+ L.events=L.events.filter(e=>e.id!==id);
+ if(S.leagueEventId===id)S.leagueEventId=null;
+ saveLeague();renderLeague();
+}
+function exportLeague(){
+ const blob=new Blob([JSON.stringify(L,null,2)],{type:'application/json'});
+ const a=document.createElement('a');a.href=URL.createObjectURL(blob);
+ a.download=`${norm(L.name).replace(/[^a-z0-9]+/g,'-')||'lliga'}-${today()}.json`;
+ document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(a.href),1000);
+}
+function importLeague(input){
+ const f=input.files[0];input.value='';if(!f)return;
+ const rd=new FileReader();
+ rd.onload=()=>{
+  let x;try{x=JSON.parse(rd.result)}catch(e){x=null}
+  if(!validLeague(x)){$('lgDataMsg').innerHTML='<div class="notice error">❌ El fitxer no és una còpia vàlida de la lliga.</div>';return}
+  if(L.events.length&&!confirm('Importar substituirà la lliga actual d’aquest navegador. Continuar?'))return;
+  L={...defaultLeague(),...x};saveLeague();leagueSel=null;renderLeague();
+  $('lgDataMsg').innerHTML=`<div class="notice success">✅ Lliga importada: ${L.events.length} americanes.</div>`;
+ };
+ rd.readAsText(f);
+}
+function resetLeague(){
+ if(!confirm('Esborrar tota la lliga acumulada? Aquesta acció no es pot desfer (exporta una còpia abans).'))return;
+ L=defaultLeague();S.leagueEventId=null;leagueSel=null;saveLeague();renderLeague();
+ $('lgDataMsg').innerHTML='<div class="notice">Lliga esborrada.</div>';
+}
 init();
 </script>
 </body>
