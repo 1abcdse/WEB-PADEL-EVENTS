@@ -45,7 +45,7 @@ Aquestes decisions **resolen** algunes de les contradiccions detectades en l'an�
 
 ### Calendari de la Prova 1 (Oct–Des 2026)
 
-- Tancament d'inscripcions: **dijous 9/10/2026**. Inici: **setmana del dilluns 12/10/2026**.
+- Tancament d'inscripcions: **divendres 9/10/2026**. Inici: **setmana del dilluns 12/10/2026**.
 - Els **festius es juguen** (el club és obert). Només es bloquegen dies puntuals de tancament (31/12, 6/1…) → taula `blackout_date`.
 - Si hi ha endarreriments, el final de la prova es pot allargar **com a màxim 1 mes**.
 
