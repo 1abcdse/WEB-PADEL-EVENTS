@@ -12,19 +12,19 @@
  --bg:#f3f5f1;--card:#fff;--ink:#202720;--muted:#66705f;--green:#65745b;--on-green:#fff;--green2:#e9eee6;--on-green2:#293127;
  --line:#dce2da;--field:#fff;--field-line:#cbd3c9;--soft:#fafbf9;--soft2:#edf1eb;--chip:#e5eae3;
  --gold:#c49a45;--gold-bg:#fbf5e7;--wire:#b7c2b2;--seed-bg:#e9eee6;--seed-ink:#3d4a37;
- --head:#273127;--on-head:#fff;--head-btn:#ffffff1f;--shadow:0 8px 24px #0000000d;--shadow2:0 3px 10px #0000000f;
+ --ok-bg:#e5f1e3;--ok-ink:#355e36;--head:#273127;--on-head:#fff;--head-btn:#ffffff1f;--shadow:0 8px 24px #0000000d;--shadow2:0 3px 10px #0000000f;
  --font:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif
 }
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
  --bg:#121612;--card:#1b211b;--ink:#e6ebe3;--muted:#9ea89a;--green:#7f9472;--on-green:#0f140f;--green2:#283128;--on-green2:#dfe7da;
  --line:#2f382e;--field:#141914;--field-line:#3a4539;--soft:#171c17;--soft2:#222a21;--chip:#283128;
  --gold:#d4ad5e;--gold-bg:#2c2617;--wire:#465345;--seed-bg:#2c372a;--seed-ink:#c9d6c2;
- --head:#0b0f0b;--on-head:#e6ebe3;--head-btn:#ffffff1a;--shadow:0 8px 24px #00000040;--shadow2:0 3px 10px #00000033;color-scheme:dark}}
+ --ok-bg:#1f3320;--ok-ink:#a9d8a6;--head:#0b0f0b;--on-head:#e6ebe3;--head-btn:#ffffff1a;--shadow:0 8px 24px #00000040;--shadow2:0 3px 10px #00000033;color-scheme:dark}}
 :root[data-theme="dark"]{
  --bg:#121612;--card:#1b211b;--ink:#e6ebe3;--muted:#9ea89a;--green:#7f9472;--on-green:#0f140f;--green2:#283128;--on-green2:#dfe7da;
  --line:#2f382e;--field:#141914;--field-line:#3a4539;--soft:#171c17;--soft2:#222a21;--chip:#283128;
  --gold:#d4ad5e;--gold-bg:#2c2617;--wire:#465345;--seed-bg:#2c372a;--seed-ink:#c9d6c2;
- --head:#0b0f0b;--on-head:#e6ebe3;--head-btn:#ffffff1a;--shadow:0 8px 24px #00000040;--shadow2:0 3px 10px #00000033;color-scheme:dark}
+ --ok-bg:#1f3320;--ok-ink:#a9d8a6;--head:#0b0f0b;--on-head:#e6ebe3;--head-btn:#ffffff1a;--shadow:0 8px 24px #00000040;--shadow2:0 3px 10px #00000033;color-scheme:dark}
 
 *{box-sizing:border-box}html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
 body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--font);overflow-x:hidden}
@@ -53,9 +53,50 @@ main{padding:20px 16px 28px}
 
 /* Lliga Social: seccions a desenvolupar */
 .steps{list-style:none;margin:0;padding:0;display:grid;gap:10px;counter-reset:pas}
+#lligaSteps{counter-reset:pas 1}
 .steps li{display:grid;grid-template-columns:auto 1fr auto;gap:12px;align-items:center;padding:14px;border:1px solid var(--line);border-radius:12px;background:var(--soft);counter-increment:pas}
 .steps li::before{content:counter(pas);width:30px;height:30px;border-radius:50%;display:grid;place-items:center;font-weight:800;font-size:14px;background:var(--green2);color:var(--on-green2)}
 .steps li>div{min-width:0}
+
+/* Lliga Social · Temporada i inscripcions */
+.season-head{display:flex;flex-wrap:wrap;gap:12px;align-items:flex-start;justify-content:space-between}
+.status{display:inline-flex;align-items:center;gap:7px;padding:7px 12px;border-radius:999px;font-weight:700;font-size:13px;background:var(--ok-bg);color:var(--ok-ink)}
+.status::before{content:"";width:8px;height:8px;border-radius:50%;background:currentColor}
+.status.closed{background:var(--soft2);color:var(--muted)}
+.facts{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(160px,100%),1fr));gap:10px;margin-top:14px}
+.fact{border:1px solid var(--line);border-radius:12px;padding:12px;background:var(--soft)}
+.fact .k{font-size:11px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+.fact .v{font-size:18px;font-weight:800;margin-top:4px;font-variant-numeric:tabular-nums}
+.fact .d{font-size:12px;color:var(--muted);margin-top:2px}
+.proves{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+.prova{padding:6px 11px;border-radius:999px;border:1px solid var(--line);font-size:13px;color:var(--muted)}
+.prova.now{border-color:var(--green);background:var(--green2);color:var(--on-green2);font-weight:700}
+.timeline{list-style:none;margin:12px 0 0;padding:0;display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:6px}
+.timeline li{border-radius:10px;padding:9px 6px;text-align:center;background:var(--soft2);min-width:0}
+.timeline li b{display:block;font-size:13px}
+.timeline li span{display:block;font-size:11px;color:var(--muted);font-variant-numeric:tabular-nums}
+.timeline li.po{background:var(--gold-bg);border:1px solid var(--gold)}
+.timeline li.now{outline:2px solid var(--green);outline-offset:1px}
+.cats{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(280px,100%),1fr));gap:12px}
+.cat{border:1px solid var(--line);border-radius:14px;padding:16px;background:var(--card);display:grid;gap:10px;align-content:start}
+.cat-top{display:flex;justify-content:space-between;align-items:center;gap:8px}
+.cat dl{margin:0;display:grid;grid-template-columns:auto 1fr;gap:6px 12px;font-size:14px}
+.cat dt{color:var(--muted);font-size:13px}
+.cat dd{margin:0;min-width:0}
+.slots{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.slot-lv{border:1px dashed var(--field-line);border-radius:10px;padding:10px;text-align:center}
+.slot-lv b{display:block;font-size:20px;font-variant-numeric:tabular-nums}
+.slot-lv span{font-size:12px;color:var(--muted)}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;border-radius:10px;padding:11px 14px;font-weight:700;text-decoration:none;background:var(--green);color:var(--on-green);min-height:44px}
+.btn.ghost{background:var(--green2);color:var(--on-green2)}
+.price{width:100%;border-collapse:collapse;font-variant-numeric:tabular-nums}
+.price th,.price td{padding:9px 8px;border-bottom:1px solid var(--line);text-align:left;font-size:14px}
+.price th{font-size:11px;color:var(--muted);letter-spacing:.04em;text-transform:uppercase}
+.price td:not(:first-child),.price th:not(:first-child){text-align:right}
+.fields{display:flex;flex-wrap:wrap;gap:6px}
+.sec-title{display:flex;align-items:center;gap:10px;margin:22px 0 10px}
+.sec-title .n{width:28px;height:28px;border-radius:50%;display:grid;place-items:center;font-weight:800;font-size:13px;background:var(--green);color:var(--on-green)}
+.sec-title h2{margin:0;font-size:19px}
 
 /* Tornejos: selector de format */
 .formats{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(230px,100%),1fr));gap:10px}
@@ -112,6 +153,8 @@ main{padding:20px 16px 28px}
  .main-tabs button{flex:1 0 auto;padding:12px 12px;font-size:14px}
  .steps li{grid-template-columns:auto 1fr;}
  .steps li .pill{grid-column:2;justify-self:start}
+ .timeline{grid-template-columns:repeat(4,minmax(0,1fr))}
+ .cat .btn{width:100%}
  .seg button{min-height:40px;padding:8px 14px;font-size:14px}
  .toolbar>div:last-child{width:100%}
  .toolbar .seg{flex:1 1 auto}
@@ -138,11 +181,22 @@ main{padding:20px 16px 28px}
 <!-- ============ LLIGA SOCIAL ============ -->
 <section id="view-lliga" class="view" role="tabpanel" aria-labelledby="tab-lliga">
  <div class="view-head">
-  <div><h2>Lliga Social</h2><p class="muted">Competició de temporada del club. L’anirem desglossant pas a pas; aquí hi ha l’estructura de seccions prevista.</p></div>
-  <span class="pill todo">Estructura</span>
+  <div><h2>Lliga Social</h2><p class="muted">Competició de temporada del club, per parelles. La desenvolupem pas a pas: el primer pas, temporada i inscripcions, ja és definit.</p></div>
  </div>
+
+ <div class="sec-title"><span class="n">1</span><h2>Temporada i inscripcions</h2></div>
+ <div class="stack">
+  <div class="card" id="seasonCard"></div>
+  <div class="cats" id="lligaCats"></div>
+  <div class="grid">
+   <div class="card" id="lligaPrices"></div>
+   <div class="card" id="lligaForm"></div>
+  </div>
+ </div>
+
+ <div class="sec-title"><span class="n">…</span><h2>Properes seccions</h2></div>
  <div class="card">
-  <ol class="steps" id="lligaSteps"></ol>
+  <ol class="steps" id="lligaSteps" start="2"></ol>
  </div>
 </section>
 
@@ -204,19 +258,73 @@ function showView(v){
 document.querySelectorAll('.main-tabs button').forEach(b=>b.addEventListener('click',()=>showView(b.dataset.view)));
 
 /* ---------------- LLIGA SOCIAL ---------------- */
-// Seccions previstes; cada una es desenvoluparà en una fase posterior.
+// Temporada 2026/27 · decisions confirmades pel coordinador (docs/ARCHITECTURE.md i packages/domain/src/rules-2026-27.ts).
+const LLIGA={
+ season:'2026/27',
+ proves:[{name:'Prova 1',when:'Oct–Des 2026',now:true},{name:'Prova 2',when:'Gen–Mar 2027'},{name:'Prova 3',when:'Abr–Jul 2027'}],
+ deadline:'2026-10-09',start:'2026-10-12',end:'2026-11-29',
+ weeks:[['J1','2026-10-12'],['J2','2026-10-19'],['J3','2026-10-26'],['J4','2026-11-02'],['J5','2026-11-09'],['Semis','2026-11-16',1],['Finals','2026-11-23',1]],
+ levels:['C','B'],pairsPerGroup:6,
+ cats:[
+  {k:'femenina',name:'Femenina',form:'https://forms.gle/ZitC1Wxq86RdPovJ6',days:'Dimarts, dimecres i divendres',time:'21:00 (fins a les 23:00)',courts:'4 pistes cada dia',extra:'Dijous 21:00, 3 pistes (només d’emergència)'},
+  {k:'masculina',name:'Masculina',form:'https://forms.gle/ZitC1Wxq86RdPovJ6',days:'Dimarts, dimecres i divendres',time:'21:00 (fins a les 23:00)',courts:'4 pistes cada dia',extra:'Dijous 21:00, 3 pistes (només d’emergència)'},
+  {k:'mixta',name:'Mixta',form:'https://forms.gle/HbjCFzMSYbtBe4ph6',days:'Dissabte i diumenge',time:'Torns de 90 min de 9:00 a 19:30',courts:'4 pistes',extra:'5a pista opcional a partir de les 12:00'}
+ ],
+ fields:['Nom i cognoms','Telèfon','Email','Nivell (C o B)','Talla de samarreta','Abonat/da al club']
+};
+const MONTHS=['gen','febr','març','abr','maig','juny','jul','ag','set','oct','nov','des'];
+const DAYS=['diumenge','dilluns','dimarts','dimecres','dijous','divendres','dissabte'];
+function d(iso){const [y,m,dd]=iso.split('-').map(Number);return new Date(y,m-1,dd)}
+function fmtShort(iso){const x=d(iso);return `${x.getDate()} ${MONTHS[x.getMonth()]}`}
+function fmtLong(iso){const x=d(iso);return `${DAYS[x.getDay()]} ${x.getDate()}/${x.getMonth()+1}/${x.getFullYear()}`}
+function todayLocal(){const t=new Date();return new Date(t.getFullYear(),t.getMonth(),t.getDate())}
+function renderLliga(){
+ const L=LLIGA,today=todayLocal(),dl=d(L.deadline),left=Math.round((dl-today)/864e5);
+ const open=left>=0;
+ const status=open?`<span class="status">Inscripcions obertes · ${left===0?'tanquen avui':left===1?'tanquen demà':'queden '+left+' dies'}</span>`:`<span class="status closed">Inscripcions tancades</span>`;
+ const perCat=L.levels.length*L.pairsPerGroup,groups=L.cats.length*L.levels.length;
+ // setmana en curs dins el calendari
+ const cur=L.weeks.findIndex(([,w])=>{const s=d(w),e=new Date(s.getTime()+7*864e5);return today>=s&&today<e});
+ $('seasonCard').innerHTML=`<div class="season-head"><div><h3 style="font-size:20px">Temporada ${esc(L.season)} · Prova 1</h3><p class="muted">La temporada té tres proves independents. Cada prova es paga i s’inscriu per separat.</p></div>${status}</div>
+ <div class="proves">${L.proves.map(p=>`<span class="prova${p.now?' now':''}">${esc(p.name)} · ${esc(p.when)}</span>`).join('')}</div>
+ <div class="facts">
+  <div class="fact"><div class="k">Tancament inscripcions</div><div class="v">${fmtShort(L.deadline)}</div><div class="d">${fmtLong(L.deadline)}</div></div>
+  <div class="fact"><div class="k">Inici de la lliga</div><div class="v">${fmtShort(L.start)}</div><div class="d">Setmana del ${fmtLong(L.start)}</div></div>
+  <div class="fact"><div class="k">Final previst</div><div class="v">${fmtShort(L.end)}</div><div class="d">Es pot allargar com a màxim 1 mes</div></div>
+  <div class="fact"><div class="k">Places</div><div class="v">${perCat*L.cats.length} parelles</div><div class="d">${groups} grups de ${L.pairsPerGroup} parelles</div></div>
+ </div>
+ <h3 style="margin-top:16px">Calendari de la Prova 1</h3>
+ <p class="muted small">Una jornada per setmana (round robin de 5 jornades) i després semifinals i finals.</p>
+ <ol class="timeline">${L.weeks.map(([n,w,po],i)=>`<li class="${po?'po':''}${i===cur?' now':''}"><b>${esc(n)}</b><span>${fmtShort(w)}</span></li>`).join('')}</ol>`;
+
+ $('lligaCats').innerHTML=L.cats.map(c=>`<article class="cat">
+  <div class="cat-top"><h3 style="font-size:18px;margin:0">${esc(c.name)}</h3><span class="pill">${perCat} parelles</span></div>
+  <dl><dt>Dies</dt><dd>${esc(c.days)}</dd><dt>Horari</dt><dd>${esc(c.time)}</dd><dt>Pistes</dt><dd>${esc(c.courts)}</dd><dt>Extra</dt><dd>${esc(c.extra)}</dd></dl>
+  <div class="slots">${L.levels.map(lv=>`<div class="slot-lv"><span>Nivell ${esc(lv)}</span><b>– / ${L.pairsPerGroup}</b><span>parelles inscrites</span></div>`).join('')}</div>
+  <p class="muted small">Llista d’inscrits: pendent de carregar.</p>
+  <a class="btn${open?'':' ghost'}" href="${esc(c.form)}" target="_blank" rel="noopener">Formulari d’inscripció ${esc(c.name)} ↗</a>
+ </article>`).join('');
+
+ $('lligaPrices').innerHTML=`<h3>Preus per persona</h3><p class="muted small">Es paga per persona, no per parella. La inscripció és per prova.</p>
+ <table class="price"><thead><tr><th></th><th>Abonat/da</th><th>No abonat/da</th></tr></thead><tbody>
+ <tr><td>Inscripció a la prova</td><td>10 €</td><td>20 €</td></tr>
+ <tr><td>Cada partit jugat</td><td>1 €</td><td>5 €</td></tr></tbody></table>
+ <p class="muted small" style="margin-top:8px">Els suplents només paguen els partits que juguen.</p>`;
+
+ $('lligaForm').innerHTML=`<h3>Com s’inscriu una parella</h3><p class="muted small">Cada parella omple el formulari de la seva categoria abans del ${fmtLong(L.deadline)}. Per a cada jugador/a es demana:</p>
+ <div class="fields" style="margin-top:10px">${L.fields.map(f=>`<span class="pill">${esc(f)}</span>`).join('')}</div>
+ <p class="muted small" style="margin-top:10px">Un jugador pot jugar Masculina o Femenina i també Mixta: van en dies diferents i mai coincideixen.</p>`;
+
+ $('lligaSteps').innerHTML=LLIGA_STEPS.map(([t,dsc])=>`<li><div><h3>${esc(t)}</h3><p class="muted small">${esc(dsc)}</p></div><span class="pill">Per definir</span></li>`).join('');
+}
 const LLIGA_STEPS=[
- ['Temporada i inscripcions','Dates de la temporada, període d’inscripció i parelles inscrites.'],
- ['Divisions i grups','Repartiment de les parelles per nivell i categoria.'],
+ ['Divisions i grups','Repartiment de les parelles inscrites per categoria i nivell.'],
  ['Calendari de jornades','Enfrontaments de cada jornada i reserva de pistes.'],
  ['Resultats','Introducció i validació dels resultats de cada partit.'],
- ['Classificació','Taula per divisió amb punts, partits i diferència de jocs.'],
- ['Fase final','Playoffs de final de temporada, ascensos i descensos.'],
+ ['Classificació','Taula per grup amb punts, partits i diferència de jocs.'],
+ ['Fase final','Semifinals, finals i quadre de consolació.'],
  ['Normativa','Reglament, puntuació i criteris de desempat.']
 ];
-function renderLliga(){
- $('lligaSteps').innerHTML=LLIGA_STEPS.map(([t,d])=>`<li><div><h3>${esc(t)}</h3><p class="muted small">${esc(d)}</p></div><span class="pill">Per definir</span></li>`).join('');
-}
 
 /* ---------------- TORNEJOS ---------------- */
 const TOURNEYS={
