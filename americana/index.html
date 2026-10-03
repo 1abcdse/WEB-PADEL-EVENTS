@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html lang="ca">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Americana Pàdel — Tennis & Pàdel El Masnou</title>
+<style>
+:root{--bg:#f3f5f1;--card:#fff;--ink:#202720;--muted:#707970;--green:#65745b;--green2:#e9eee6;--line:#dce2da;--gold:#c49a45;--red:#a64b4b;--shadow:0 8px 24px #0000000d}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font-family:Arial,sans-serif}
+header{background:#273127;color:#fff;padding:22px}header>div,main{max-width:1250px;margin:auto}h1{margin:0 0 5px}h2{margin:0 0 15px}h3{margin:15px 0 8px}.muted{color:var(--muted)}
+main{padding:20px 14px}.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:19px;margin-bottom:17px;box-shadow:var(--shadow)}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(210px,100%),1fr));gap:12px}
+label{display:block;font-size:12px;font-weight:700;color:var(--muted);margin-bottom:5px}
+input,select{width:100%;padding:10px;border:1px solid #cbd3c9;border-radius:9px;background:#fff}
+button{border:0;border-radius:9px;padding:10px 15px;font-weight:700;cursor:pointer}.primary{background:var(--green);color:#fff}.secondary{background:var(--green2);color:#293127}.danger{background:#f4dfdf;color:#8c3535}
+.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:15px}.notice{padding:11px 13px;background:#eef2ec;border-radius:10px;margin:10px 0}.error{background:#fae6e6;color:#8e3636}.success{background:#e5f1e3;color:#355e36}
+.player-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(245px,100%),1fr));gap:9px}.player-box{border:1px solid var(--line);padding:11px;border-radius:10px}.player-box h4{margin:0 0 8px}
+.tabs{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:15px}.tab{background:#e5eae3}.tab.active{background:var(--green);color:white}
+.courts{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(320px,100%),1fr));gap:13px}.court{border:1px solid var(--line);border-radius:13px;overflow:hidden}.court-head{padding:11px 13px;background:#edf1eb;display:flex;justify-content:space-between}.queen{background:#f4ecd8}.court-body{padding:12px}
+.pair{padding:8px;background:#fafbf9;border:1px solid var(--line);border-radius:8px;margin:6px 0}.score{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}.score input{text-align:center}
+table{width:100%;border-collapse:collapse}th,td{padding:8px;border-bottom:1px solid var(--line);font-size:13px;text-align:left}th{font-size:11px;color:var(--muted)}
+.hidden{display:none}.pill{display:inline-block;padding:6px 9px;background:#edf0eb;border-radius:999px;font-size:12px;margin:2px}
+.format-info{padding:10px 12px;border:1px solid var(--line);border-radius:10px;background:#fafbf9;margin-top:10px;font-size:13px}
+.bracket-wrap{overflow:auto;padding:10px 0}
+.bracket{display:flex;gap:26px;align-items:stretch}
+.round-col{display:flex;flex-direction:column;flex:1 0 235px;min-width:235px}
+.round-title{text-align:center;font-weight:800;margin-bottom:10px}
+.round-matches{flex:1;display:flex;flex-direction:column;justify-content:space-around;gap:14px}
+.match{border:1px solid #cfd6cd;border-radius:12px;background:#fff;padding:9px 10px;box-shadow:0 3px 10px #0000000a}
+.match-head{font-size:11px;color:var(--muted);font-weight:700;margin-bottom:6px}
+.slot{display:flex;gap:6px;align-items:center}
+.slot .pair-name{flex:1;min-width:0;padding:7px 8px;font-size:13px}
+.slot .pair-score{width:52px;flex:0 0 52px;padding:7px 4px;text-align:center;font-weight:700}
+.slot.win .pair-name{border-color:var(--green);background:#eef3ea;font-weight:700}
+.vs{text-align:center;font-size:11px;color:var(--muted);margin:3px 0}
+.champ{border:2px solid var(--gold);background:#fbf5e7}
+#bracket{margin-top:16px}
+.bracket-block+.bracket-block{margin-top:26px;padding-top:18px;border-top:2px dashed var(--line)}
+.bracket-block h3{margin:0 0 4px}
+.cons .match{background:#fbfcfa}
+.champion{margin-top:12px;padding:12px 14px;border:2px solid var(--gold);border-radius:12px;background:#fbf5e7;text-align:center;font-weight:800}
+.small{font-size:12px}
+.round-tabs-mobile{display:none;gap:6px;overflow-x:auto;margin:16px 0 12px}
+.round-tabs-mobile button{flex:1 0 auto;background:#e5eae3;white-space:nowrap}
+.round-tabs-mobile button.active{background:var(--green);color:#fff}
+@media(max-width:700px){
+ header{padding:16px 14px}h1{font-size:24px}
+ main{padding:12px 8px}.card{padding:14px;border-radius:14px}
+ .courts{grid-template-columns:1fr}
+ input,select{font-size:16px}
+ button{padding:12px 15px;min-height:44px}
+ .actions button{flex:1 1 auto}
+ .round-tabs-mobile{display:flex}
+ .bracket{flex-direction:column;gap:0}
+ .round-col{min-width:0;flex:none;display:none}
+ .round-col.active{display:flex}
+ .round-title{display:none}
+ .round-matches{justify-content:flex-start;gap:12px}
+ .slot .pair-name{font-size:16px;padding:10px}
+ .slot .pair-score{width:62px;flex-basis:62px;font-size:18px;padding:10px 4px}
+ th,td{padding:7px 6px;font-size:12px}
+}
+</style>
+</head>
+<body>
+<header><div><h1>Americana Pàdel</h1><div>Tennis &amp; Pàdel El Masnou · rondes classificatòries + playoffs opcionals</div></div></header>
+<main>
+
+<section class="card">
+<h2>1. Configuració</h2>
+<div class="grid">
+<div><label>Pistes</label><select id="courtCount"></select></div>
+<div><label>Rondes classificatòries</label><select id="roundCount"></select></div>
+<div>
+<label>Format de parelles</label>
+<select id="pairFormat">
+<option value="fixed">Parelles fixes</option>
+<option value="canari">Format canari</option>
+</select>
+</div>
+</div>
+<div id="formatInfo" class="format-info"></div>
+<div id="capacity" class="notice"></div>
+</section>
+
+<section class="card">
+<h2>2. Jugadors</h2>
+<p class="muted">La capacitat és de 4 jugadors per pista. Pots treballar des de 2 fins a 8 pistes.</p>
+<div id="players" class="player-grid"></div>
+<div class="actions"><button class="primary" onclick="createTournament()">Crear Americana</button><button class="secondary" onclick="demo()">Omplir exemple</button><button class="danger" onclick="resetApp()">Esborrar</button></div>
+<div id="msg"></div>
+</section>
+
+<section id="app" class="card hidden">
+<h2>3. Americana</h2>
+<div id="summary"></div>
+<div class="tabs" id="roundTabs"></div>
+<div id="roundView"></div>
+</section>
+
+<section id="rankCard" class="card hidden">
+<h2>Classificació individual</h2>
+<div class="actions">
+<button class="secondary" onclick="setSort('points')">Punts</button>
+<button class="secondary" onclick="setSort('diff')">Diferència</button>
+<button class="secondary" onclick="setSort('gamesWon')">Jocs guanyats</button>
+</div>
+<div id="ranking"></div>
+</section>
+
+<section id="playoffCard" class="card">
+<h2>4. Playoffs — mètode opcional</h2>
+<p class="muted">No és obligatori utilitzar playoffs. Escull el tram segons el nombre de parelles. Els noms de les parelles es poden escriure o corregir directament a cada requadre del quadre.</p>
+<div class="grid">
+<div><label>Format</label><select id="playoffFormat">
+<option value="64">Ronda de 32 — pre-prèvia (64 parelles)</option>
+<option value="32">Setzens de final (32 parelles)</option>
+<option value="16">Vuitens de final (16 parelles)</option>
+<option value="8" selected>Quarts de final (8 parelles)</option>
+<option value="4">Semifinals (4 parelles)</option>
+<option value="2">Final (2 parelles)</option>
+</select></div>
+<div><label>Origen de les parelles</label><select id="seedMode">
+<option value="ranking">Classificació final — parelles principals</option>
+<option value="manual">Introducció manual</option>
+</select></div>
+<div><label>Quadre de consolació</label><select id="consolation">
+<option value="yes">Sí — els perdedors del primer partit van a consolació</option>
+<option value="no">No</option>
+</select></div>
+</div>
+<div id="manualSeeds" class="player-grid hidden"></div>
+<div class="actions"><button class="primary" onclick="generatePlayoffs()">Generar quadre</button><button class="secondary" onclick="clearPlayoffs()">Netejar playoffs</button></div>
+<div id="playoffMsg"></div>
+<div id="bracket"></div>
+</section>
+
+</main>
+<script>
+const COURTS=[9,8,7,6,4,3,2,1];
+// Ordre de moviment real de l'Americana:
+// 9 → 8 → 7 → 6 → 1 → 2 → 3 → 4
+// La pista 5 no existeix.
+const MOVEMENT=[9,8,7,6,1,2,3,4];
+
+let S={players:[],courts:2,rounds:4,rs:[],current:0,sort:'points',playoff:null,format:'fixed'};
+
+const $=id=>document.getElementById(id);
+function esc(x){return String(x??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+function shuffle(a){for(let i=a.length-1;i>0;i--){let j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}}
+function init(){
+ for(let i=2;i<=8;i++)$('courtCount').innerHTML+=`<option value="${i}">${i} pistes — ${i*4} jugadors</option>`;
+ $('courtCount').value=2;
+ for(let i=1;i<=8;i++)$('roundCount').innerHTML+=`<option value="${i}" ${i===4?'selected':''}>${i} rondes</option>`;
+ $('courtCount').onchange=()=>{renderPlayers();updateCapacity()};
+ $('pairFormat').onchange=updateFormatInfo;
+ renderPlayers();updateCapacity();updateFormatInfo();
+}
+function updateCapacity(){
+ let n=+$('courtCount').value;
+ $('capacity').innerHTML=`<strong>${n} pistes</strong> → <strong>${n*4} jugadors</strong> · pistes: <strong>${COURTS.slice(0,n).join(' → ')}</strong>`;
+}
+function updateFormatInfo(){
+ const f=$('pairFormat').value;
+ $('formatInfo').innerHTML=f==='fixed'
+ ? '<strong>Parelles fixes:</strong> la parella inicial es manté junta durant totes les rondes. La parella es mou de pista segons guanya o perd.'
+ : '<strong>Format canari:</strong> a cada ronda les parelles es desfan i es tornen a creuar. Es prioritza no repetir parella i jugar amb persones diferents. La Pista 9 és la Reina i la Pista 4 és el Pozo.';
+}
+function renderPlayers(old=[]){
+ let n=+$('courtCount').value, vals=old.length?old:[...document.querySelectorAll('.pname')].map(x=>x.value);
+ let links=[...document.querySelectorAll('.plink')].map(x=>x.value);
+ let h='';for(let i=0;i<n*4;i++)h+=`<div class="player-box"><h4>Jugador ${i+1}</h4><label>Nom i cognoms</label><input class="pname" value="${esc(vals[i]||'')}" placeholder="Nom"><label style="margin-top:7px">Playtomic (opcional)</label><input class="plink" value="${esc(links[i]||'')}" placeholder="https://playtomic.io/..."></div>`;
+ $('players').innerHTML=h;
+}
+function demo(){document.querySelectorAll('.pname').forEach((x,i)=>x.value='Jugador '+(i+1))}
+function createTournament(){
+ let names=[...document.querySelectorAll('.pname')].map(x=>x.value.trim()),links=[...document.querySelectorAll('.plink')].map(x=>x.value.trim()),n=+$('courtCount').value*4;
+ if(names.some(x=>!x)){ $('msg').innerHTML=`<div class="notice error">❌ Cal introduir els ${n} jugadors abans de començar.</div>`;return}
+ S={players:names.map((name,i)=>({id:i+1,name,playtomic:links[i],stats:{pj:0,pg:0,pp:0,gamesWon:0,gamesLost:0,diff:0,points:0},partners:new Set()})),courts:+$('courtCount').value,rounds:+$('roundCount').value,rs:[],current:0,sort:'points',playoff:null,format:$('pairFormat').value};
+ makeRound(0);
+ $('app').classList.remove('hidden');$('rankCard').classList.remove('hidden');$('playoffCard').classList.remove('hidden');
+ renderAll();
+}
+function makeRound(i){
+ // Primera ronda: ordre estricte de la llista.
+ // Pista 9: 1+2 vs 3+4
+ // Pista 8: 5+6 vs 7+8, etc.
+ let ids=S.players.map(p=>p.id);
+ if(i>0)ids=nextOrder(S.rs[i-1]);
+ let matches=[];
+ for(let c=0;c<S.courts;c++){
+  let a=ids.slice(c*4,c*4+4);
+  matches.push({court:COURTS[c],players:a,teamA:[a[0],a[1]],teamB:[a[2],a[3]],a:null,b:null,done:false});
+ }
+ S.rs[i]={number:i+1,matches,done:false};
+}
+function pairKey(a,b){return [a,b].sort((x,y)=>x-y).join('-')}
+function rememberPartners(matches){
+ matches.forEach(m=>{
+  [[m.teamA[0],m.teamA[1]],[m.teamB[0],m.teamB[1]]].forEach(pair=>{
+   if(pair[0]&&pair[1]){
+    S.players.find(p=>p.id===pair[0]).partners.add(pairKey(pair[0],pair[1]));
+    S.players.find(p=>p.id===pair[1]).partners.add(pairKey(pair[0],pair[1]));
+   }
+  });
+ });
+}
+function getResult(m){
+ if(!m.done || m.a===null || m.b===null || m.a===m.b)return null;
+ return m.a>m.b?'A':'B';
+}
+function canaryPairFour(ids){
+ // Busca una combinació de 2 parelles que eviti repetir companys.
+ // Primer prova totes les combinacions; si alguna repetició és inevitable,
+ // escull la que en minimitza el nombre.
+ let best=null,bestRepeat=999;
+ for(let mask=0;mask<6;mask++){
+  let combos=[
+   [[ids[0],ids[1]],[ids[2],ids[3]]],
+   [[ids[0],ids[2]],[ids[1],ids[3]]],
+   [[ids[0],ids[3]],[ids[1],ids[2]]]
+  ][mask%3];
+  let rep=0;
+  combos.forEach(pair=>{if(S.players.find(p=>p.id===pair[0]).partners.has(pairKey(pair[0],pair[1])))rep++});
+  if(rep<bestRepeat || (rep===bestRepeat && Math.random()<.5)){best=combos;bestRepeat=rep}
+ }
+ // Amb format canari, aleatoritzem també l'ordre A/B quan hi ha diverses opcions.
+ if(Math.random()<.5)best.reverse();
+ return best;
+}
+function nextOrder(r){
+ // Resultat de la ronda anterior. Cada parella es mou:
+ // - guanya: una pista cap a la Reina
+ // - perd: una pista cap al Pozo
+ //
+ // MOVEMENT = [9,8,7,6,1,2,3,4]
+ // Destí:
+ // 9 rep guanyadors de 9 + guanyadors de 8
+ // 8 rep perdedors de 9 + guanyadors de 7
+ // 7 rep perdedors de 8 + guanyadors de 6
+ // 6 rep perdedors de 7 + guanyadors de 1
+ // 1 rep perdedors de 6 + guanyadors de 2
+ // 2 rep perdedors de 1 + guanyadors de 3
+ // 3 rep perdedors de 2 + guanyadors de 4
+ // 4 rep perdedors de 3 + perdedors de 4
+ let incoming=Object.fromEntries(MOVEMENT.map(c=>[c,[]]));
+ const byCourt=Object.fromEntries(r.matches.map(m=>[m.court,m]));
+ for(let i=0;i<MOVEMENT.length && i<S.courts;i++){
+  const court=MOVEMENT[i],m=byCourt[court];
+  if(!m)continue;
+  const result=getResult(m);
+  // Si encara no hi ha resultat, mantenim la pista per evitar una generació incoherent.
+  if(!result){incoming[court].push(...m.teamA,...m.teamB);continue}
+  const win=result==='A'?m.teamA:m.teamB;
+  const lose=result==='A'?m.teamB:m.teamA;
+  const up= i===0 ? court : MOVEMENT[i-1];
+  const down= i===S.courts-1 ? court : MOVEMENT[i+1];
+  // Una parella guanyadora puja cap a la Reina; una perdedora baixa cap al Pozo.
+  // En el conjunt actiu de pistes, "up/down" són les pistes disponibles.
+  incoming[up].push(...win);
+  incoming[down].push(...lose);
+ }
+ let out=[];
+ for(let i=0;i<S.courts;i++){
+  const court=MOVEMENT[i];
+  let ids=incoming[court].slice();
+  // Seguretat: cada pista ha de rebre 4 jugadors.
+  if(ids.length!==4){
+   // Això pot passar si es treballa amb menys pistes i els extrems no coincideixen
+   // amb 9/4. Recalculem mantenint els quatre jugadors de la pista anterior.
+   const m=r.matches.find(x=>x.court===court);
+   ids=m?m.players.slice():[];
+  }
+  if(S.format==='fixed'){
+   // Les parelles es mantenen. En aquest cas els dos pares entrants
+   // han d'arribar sencers a la mateixa pista.
+   out.push(...ids);
+  }else{
+   const pairs=canaryPairFour(ids);
+   out.push(...pairs[0],...pairs[1]);
+  }
+ }
+ return out;
+}
+function saveRound(){
+ let r=S.rs[S.current],ok=true;
+ r.matches.forEach((m,i)=>{
+  let a=$('a'+i),b=$('b'+i);
+  if(a&&b){
+   let x=+a.value,y=+b.value;
+   if(a.value===''||b.value===''||x<0||y<0||x===y)ok=false;
+   else{m.a=x;m.b=y;m.done=true}
+  }
+ });
+ if(!ok){alert('Introdueix un resultat vàlid i diferent per a tots els partits.');return false}
+ r.done=true;rememberPartners(r.matches);stats();renderAll();return true;
+}
+function nextRound(){
+ if(!S.rs[S.current].done&&!saveRound())return;
+ if(S.current>=S.rounds-1){alert('Has arribat a l’última ronda configurada.');return}
+ S.current++;
+ if(!S.rs[S.current])makeRound(S.current);
+ renderAll();
+}
+function stats(){
+ S.players.forEach(p=>p.stats={pj:0,pg:0,pp:0,gamesWon:0,gamesLost:0,diff:0,points:0});
+ S.rs.forEach(r=>r.matches.forEach(m=>{if(!m.done)return;
+  [m.teamA,m.teamB].forEach((team,t)=>{
+   team.forEach(id=>{
+    let p=S.players.find(x=>x.id===id),w=t===0?m.a>m.b:m.b>m.a;
+    p.stats.pj++;
+    if(w){p.stats.pg++;p.stats.points+=3}else{p.stats.pp++;if((t===0?m.b:m.a)>0)p.stats.points+=1}
+    p.stats.gamesWon+=t===0?m.a:m.b;p.stats.gamesLost+=t===0?m.b:m.a;p.stats.diff=p.stats.gamesWon-p.stats.gamesLost;
+   })
+  })
+ }))
+}
+function sorted(){
+ let a=[...S.players];
+ a.sort((x,y)=>{let k=S.sort;if(y.stats[k]!==x.stats[k])return y.stats[k]-x.stats[k];if(y.stats.diff!==x.stats.diff)return y.stats.diff-x.stats.diff;return x.name.localeCompare(y.name)});
+ return a;
+}
+function setSort(k){S.sort=k;renderRanking()}
+function renderAll(){summary();tabs();round();renderRanking();renderPlayoffUI()}
+function summary(){
+ let mode=S.format==='fixed'?'Parelles fixes':'Format canari';
+ $('summary').innerHTML=`<span class="pill">${S.players.length} jugadors</span><span class="pill">${S.courts} pistes</span><span class="pill">${S.rounds} rondes</span><span class="pill">${mode}</span><span class="pill">Reina: 9</span><span class="pill">Pozo: ${MOVEMENT[Math.min(S.courts-1,MOVEMENT.length-1)]}</span><span class="pill">Moviment: ${MOVEMENT.slice(0,S.courts).join(' → ')}</span>`;
+}
+function tabs(){
+ let h='';for(let i=0;i<S.rounds;i++)h+=`<button class="tab ${i===S.current?'active':''}" onclick="S.current=${i};renderAll()">Ronda ${i+1}</button>`;$('roundTabs').innerHTML=h;
+}
+function round(){
+ let r=S.rs[S.current],h=`<div class="notice ${r.done?'success':''}"><strong>Ronda ${r.number}</strong> · ${r.done?'Resultats guardats':'pendent'}</div><div class="courts">`;
+ r.matches.forEach((m,i)=>h+=`<div class="court"><div class="court-head ${m.court===9?'queen':''}"><strong>${m.court===9?'👑 ':''}Pista ${m.court}</strong><span>${m.court===9?'Pista Reina':m.court===MOVEMENT[S.courts-1]?'Pista Pozo':''}</span></div><div class="court-body"><div class="pair"><b>A</b> · ${name(m.teamA[0])} + ${name(m.teamA[1])}</div><div class="pair"><b>B</b> · ${name(m.teamB[0])} + ${name(m.teamB[1])}</div><div class="score"><div><label>Jocs A</label><input id="a${i}" type="number" inputmode="numeric" min="0" value="${m.a??''}" ${r.done?'disabled':''}></div><div><label>Jocs B</label><input id="b${i}" type="number" inputmode="numeric" min="0" value="${m.b??''}" ${r.done?'disabled':''}></div></div></div></div>`);
+ h+=`</div><div class="actions">${!r.done?`<button class="primary" onclick="saveRound()">Guardar resultats</button>`:''}${S.current<S.rounds-1?`<button class="primary" onclick="nextRound()">Generar següent ronda →</button>`:''}${S.current?`<button class="secondary" onclick="S.current--;renderAll()">← Anterior</button>`:''}</div>`;
+ $('roundView').innerHTML=h;
+}
+function name(id){return esc(S.players.find(p=>p.id===id)?.name||'')}
+function renderRanking(){
+ let a=sorted(),h='<div style="overflow:auto"><table><thead><tr><th>#</th><th>Jugador</th><th>PJ</th><th>PG</th><th>PP</th><th>JG</th><th>JP</th><th>Dif.</th><th>Punts</th><th>Playtomic</th></tr></thead><tbody>';
+ a.forEach((p,i)=>{let s=p.stats;h+=`<tr><td>${i+1}</td><td><b>${esc(p.name)}</b></td><td>${s.pj}</td><td>${s.pg}</td><td>${s.pp}</td><td>${s.gamesWon}</td><td>${s.gamesLost}</td><td>${s.diff>0?'+':''}${s.diff}</td><td><b>${s.points}</b></td><td>${p.playtomic?`<a target="_blank" href="${esc(p.playtomic)}">Obrir</a>`:'—'}</td></tr>`});
+ h+='</tbody></table></div>';$('ranking').innerHTML=h;
+}
+
+/* ---------------- PLAYOFFS ---------------- */
+const ROUND_NAMES={64:'Ronda de 32',32:'Setzens de final',16:'Vuitens de final',8:'Quarts de final',4:'Semifinals',2:'Final'};
+const SHORT_NAMES={64:'R32',32:'setzens',16:'vuitens',8:'quarts',4:'semis'};
+const BRACKETS={main:{title:'Quadre principal',champ:'Campions'},cons:{title:'Quadre de consolació',champ:'Campions de consolació'}};
+let mobileRound={main:0,cons:0};
+function renderPlayoffUI(){if($('seedMode').value==='manual')renderManual(+$('playoffFormat').value)}
+$('playoffFormat').onchange=()=>renderManual(+$('playoffFormat').value);
+$('seedMode').onchange=()=>{let manual=$('seedMode').value==='manual';$('manualSeeds').classList.toggle('hidden',!manual);if(manual)renderManual(+$('playoffFormat').value)}
+function renderManual(n){
+ if($('seedMode').value!=='manual'){$('manualSeeds').classList.add('hidden');return}
+ $('manualSeeds').classList.remove('hidden');
+ let old=[...document.querySelectorAll('.seed')].map(x=>x.value),h='';
+ for(let i=0;i<n;i++)h+=`<div class="player-box"><h4>Parella ${i+1}</h4><input class="seed" value="${esc(old[i]||'')}" placeholder="Jugador 1 + Jugador 2"></div>`;
+ $('manualSeeds').innerHTML=h;
+}
+function emptyRounds(n){
+ // n = parelles a la primera ronda
+ let rounds=[],size=n;
+ while(size>1){rounds.push(Array.from({length:size/2},()=>({a:'',b:'',sa:null,sb:null,winner:null})));size/=2}
+ return rounds;
+}
+function generatePlayoffs(){
+ let n=+$('playoffFormat').value,pairs=[],msg='';
+ if($('seedMode').value==='manual'){
+  pairs=[...document.querySelectorAll('.seed')].map(x=>x.value.trim()).slice(0,n);
+  if(pairs.filter(Boolean).length<n)msg='<div class="notice">Hi ha parelles sense nom. Les pots escriure directament al quadre.</div>';
+ }else{
+  if(!S.players.length){$('playoffMsg').innerHTML='<div class="notice error">Encara no hi ha classificació. Crea l’Americana o tria «Introducció manual».</div>';return}
+  let a=sorted();
+  for(let i=0;i<n;i++){let p1=a[i*2],p2=a[i*2+1];pairs.push(p1&&p2?`${p1.name} + ${p2.name}`:'')}
+  if(pairs.some(x=>!x))msg='<div class="notice">No hi ha prou jugadors per omplir tot el quadre. Escriu les parelles que falten directament al quadre.</div>';
+ }
+ while(pairs.length<n)pairs.push('');
+ let main=emptyRounds(n);
+ // Primera ronda: parella 1 vs 2, 3 vs 4, ...
+ main[0].forEach((m,i)=>{m.a=pairs[i*2];m.b=pairs[i*2+1]});
+ S.playoff={n,main};
+ // Consolació: rep els perdedors de la primera ronda (cal un mínim de 4 parelles)
+ if($('consolation').value==='yes'&&n>=4)S.playoff.cons=emptyRounds(n/2);
+ else if($('consolation').value==='yes')msg+='<div class="notice">Amb només una final no hi ha quadre de consolació.</div>';
+ mobileRound={main:0,cons:0};
+ $('playoffMsg').innerHTML=msg;
+ drawBracket();
+}
+function placeholder(k,r,i,side){
+ let rounds=S.playoff[k],pairs=rounds[r].length*2,num=i*2+(side==='a'?1:2);
+ if(r>0)return `Guanyador ${SHORT_NAMES[pairs*2]} ${num}`;
+ if(k==='cons')return `Perdedor ${SHORT_NAMES[S.playoff.n]} ${num}`;
+ return `Parella ${num}`;
+}
+function drawBracket(){
+ let p=S.playoff;if(!p){$('bracket').innerHTML='';return}
+ let h='';
+ ['main','cons'].forEach(k=>{
+  let rounds=p[k];if(!rounds)return;
+  if(mobileRound[k]>=rounds.length)mobileRound[k]=0;
+  h+=`<div class="bracket-block ${k}"><h3>${BRACKETS[k].title}</h3>${k==='cons'?'<p class="muted small" style="margin:0 0 8px">Els perdedors del primer partit del quadre principal passen aquí automàticament.</p>':''}<div class="round-tabs-mobile">`;
+  rounds.forEach((ms,r)=>h+=`<button class="${r===mobileRound[k]?'active':''}" onclick="showRound('${k}',${r})">${ROUND_NAMES[ms.length*2]}</button>`);
+  h+='</div><div class="bracket-wrap"><div class="bracket">';
+  rounds.forEach((ms,r)=>{
+   let isFinal=r===rounds.length-1;
+   h+=`<div class="round-col ${r===mobileRound[k]?'active':''}"><div class="round-title">${ROUND_NAMES[ms.length*2]}</div><div class="round-matches">`;
+   ms.forEach((m,i)=>{
+    let id=`${k}-${r}-${i}`;
+    h+=`<div class="match ${isFinal?'champ':''}"><div class="match-head">${isFinal?'Final':`Partit ${i+1}`}</div>`;
+    ['a','b'].forEach((side,j)=>{
+     if(j)h+='<div class="vs">vs</div>';
+     h+=`<div class="slot" id="sl-${id}-${side}"><input class="pair-name" id="pn-${id}-${side}" value="${esc(m[side])}" placeholder="${placeholder(k,r,i,side)}" oninput="playoffName('${k}',${r},${i},'${side}',this.value)"><input class="pair-score" id="ps-${id}-${side}" type="number" inputmode="numeric" min="0" placeholder="–" onchange="playoffScore('${k}',${r},${i},'${side}',this.value)"></div>`;
+    });
+    h+='</div>';
+   });
+   h+='</div></div>';
+  });
+  h+=`</div></div><div id="champ-${k}"></div></div>`;
+ });
+ $('bracket').innerHTML=h;
+ refreshBracket();
+}
+// Actualitza valors i guanyadors sense refer el quadre (no es perd el camp on s'està escrivint)
+function refreshBracket(){
+ let p=S.playoff;if(!p)return;
+ ['main','cons'].forEach(k=>{
+  let rounds=p[k];if(!rounds)return;
+  rounds.forEach((ms,r)=>ms.forEach((m,i)=>['a','b'].forEach(side=>{
+   let id=`${k}-${r}-${i}-${side}`,pn=$('pn-'+id),ps=$('ps-'+id),sl=$('sl-'+id);if(!pn)return;
+   let score=side==='a'?m.sa:m.sb;
+   if(document.activeElement!==pn&&pn.value!==m[side])pn.value=m[side];
+   if(document.activeElement!==ps)ps.value=score??'';
+   sl.classList.toggle('win',!!m.winner&&m.winner===m[side]);
+  })));
+  let fin=rounds[rounds.length-1][0];
+  $('champ-'+k).innerHTML=fin.winner?`<div class="champion">🏆 ${BRACKETS[k].champ}: ${esc(fin.winner)}</div>`:'';
+ });
+}
+function showRound(k,r){mobileRound[k]=r;drawBracket()}
+function setSlot(k,r,i,side,val){
+ let m=S.playoff[k][r][i];
+ if(m[side]===val)return;
+ m[side]=val;m.sa=null;m.sb=null;resolveMatch(k,r,i);
+}
+function resolveMatch(k,r,i){
+ let rounds=S.playoff[k],m=rounds[r][i];
+ let done=m.sa!==null&&m.sb!==null&&m.sa!==m.sb&&m.a&&m.b;
+ let w=done?(m.sa>m.sb?m.a:m.b):null,l=done?(m.sa>m.sb?m.b:m.a):null;
+ m.winner=w;
+ // El guanyador passa a la ronda següent
+ if(rounds[r+1])setSlot(k,r+1,i>>1,i%2===0?'a':'b',w||'');
+ // El perdedor del primer partit del principal passa a consolació
+ if(k==='main'&&r===0&&S.playoff.cons)setSlot('cons',0,i>>1,i%2===0?'a':'b',l||'');
+}
+function playoffName(k,r,i,side,val){
+ let rounds=S.playoff[k],m=rounds[r][i],old=m[side];
+ val=val.trim();m[side]=val;
+ if(m.winner&&m.winner===old){
+  // Es corregeix el nom del guanyador: s'actualitza a les rondes següents
+  m.winner=val;
+  if(rounds[r+1]){let nm=rounds[r+1][i>>1],s2=i%2===0?'a':'b';if(nm[s2]===old)playoffName(k,r+1,i>>1,s2,val)}
+ }else if(m.winner){
+  // Es corregeix el nom del perdedor: s'actualitza a consolació
+  if(k==='main'&&r===0&&S.playoff.cons){let cm=S.playoff.cons[0][i>>1],s2=i%2===0?'a':'b';if(cm[s2]===old)playoffName('cons',0,i>>1,s2,val)}
+ }else resolveMatch(k,r,i);
+ refreshBracket();
+}
+function playoffScore(k,r,i,side,val){
+ let m=S.playoff[k][r][i];
+ m[side==='a'?'sa':'sb']=val===''?null:+val;
+ resolveMatch(k,r,i);
+ refreshBracket();
+}
+function clearPlayoffs(){S.playoff=null;$('bracket').innerHTML='';$('playoffMsg').innerHTML=''}
+function resetApp(){if(!confirm('Esborrar tota l’Americana?'))return;location.reload()}
+init();
+</script>
+</body>
+</html>
