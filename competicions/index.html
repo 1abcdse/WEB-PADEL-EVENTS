@@ -262,8 +262,8 @@ document.querySelectorAll('.main-tabs button').forEach(b=>b.addEventListener('cl
 const LLIGA={
  season:'2026/27',
  proves:[{name:'Prova 1',when:'Oct–Des 2026',now:true},{name:'Prova 2',when:'Gen–Mar 2027'},{name:'Prova 3',when:'Abr–Jul 2027'}],
- deadline:'2026-10-09',start:'2026-10-12',end:'2026-11-29',
- weeks:[['J1','2026-10-12'],['J2','2026-10-19'],['J3','2026-10-26'],['J4','2026-11-02'],['J5','2026-11-09'],['Semis','2026-11-16',1],['Finals','2026-11-23',1]],
+ deadline:'2026-10-09',start:'2026-10-13',end:'2026-11-29',
+ weeks:[['J1','2026-10-13'],['J2','2026-10-19'],['J3','2026-10-26'],['J4','2026-11-02'],['J5','2026-11-09'],['Semis','2026-11-16',1],['Finals','2026-11-23',1]],
  levels:['C','B'],pairsPerGroup:6,
  cats:[
   {k:'femenina',name:'Femenina',form:'https://forms.gle/ZitC1Wxq86RdPovJ6',days:'Dimarts, dimecres i divendres',time:'21:00 (fins a les 23:00)',courts:'4 pistes cada dia',extra:'Dijous 21:00, 3 pistes (només d’emergència)'},
@@ -289,7 +289,7 @@ function renderLliga(){
  <div class="proves">${L.proves.map(p=>`<span class="prova${p.now?' now':''}">${esc(p.name)} · ${esc(p.when)}</span>`).join('')}</div>
  <div class="facts">
   <div class="fact"><div class="k">Tancament inscripcions</div><div class="v">${fmtShort(L.deadline)}</div><div class="d">${fmtLong(L.deadline)}</div></div>
-  <div class="fact"><div class="k">Inici de la lliga</div><div class="v">${fmtShort(L.start)}</div><div class="d">Setmana del ${fmtLong(L.start)}</div></div>
+  <div class="fact"><div class="k">Inici de la lliga</div><div class="v">${fmtShort(L.start)}</div><div class="d">Comença el ${fmtLong(L.start)}</div></div>
   <div class="fact"><div class="k">Final previst</div><div class="v">${fmtShort(L.end)}</div><div class="d">Es pot allargar com a màxim 1 mes</div></div>
   <div class="fact"><div class="k">Places</div><div class="v">${perCat*L.cats.length} parelles</div><div class="d">${groups} grups de ${L.pairsPerGroup} parelles</div></div>
  </div>

@@ -45,7 +45,7 @@ Aquestes decisions **resolen** algunes de les contradiccions detectades en l'an�
 
 ### Calendari de la Prova 1 (Oct–Des 2026)
 
-- Tancament d'inscripcions: **divendres 9/10/2026**. Inici: **setmana del dilluns 12/10/2026**.
+- Tancament d'inscripcions: **divendres 9/10/2026**. Inici: **dimarts 13/10/2026** (setmana del 12/10; la Mixta comença el cap de setmana 17–18/10).
 - Els **festius es juguen** (el club és obert). Només es bloquegen dies puntuals de tancament (31/12, 6/1…) → taula `blackout_date`.
 - Si hi ha endarreriments, el final de la prova es pot allargar **com a màxim 1 mes**.
 
@@ -142,7 +142,7 @@ Aquest és el resultat estàndard del **circle method** (P1 fix, la resta roten)
 
 | Setmana | Fase |
 |---|---|
-| 12/10 – 18/10 | J1 |
+| 13/10 – 18/10 | J1 |
 | 19/10 – 25/10 | J2 |
 | 26/10 – 01/11 | J3 |
 | 02/11 – 08/11 | J4 |
