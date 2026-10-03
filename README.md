@@ -6,6 +6,7 @@ Aplicació web per gestionar la Lliga Social de Pàdel (temporada 2026/27).
 - Motors de domini purs (sense BD ni UI): [`packages/domain`](packages/domain)
 - API REST + PostgreSQL: [`apps/api`](apps/api)
 - Web (Next.js): [`apps/web`](apps/web) — pantalla de parella a `/p/<token>`
+- Competicions (HTML autònom): [`competicions/index.html`](competicions/index.html) — estructura amb tres pestanyes independents: Lliga Social, Tornejos (Express, per equips Express, cap de setmana) i Playoffs (quadre gràfic de Final a Ronda de 32)
 - Americana (HTML autònom, s'obre directament al navegador): [`americana/index.html`](americana/index.html) — rondes, playoffs i **Lliga 100 punts** acumulada entre americanes (es guarda al navegador; exportable en JSON)
 
 ## Desenvolupament
