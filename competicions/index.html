@@ -393,10 +393,10 @@ function renderLliga(){
  <div class="fields" style="margin-top:10px">${L.fields.map(f=>`<span class="pill">${esc(f)}</span>`).join('')}</div>
  <p class="muted small" style="margin-top:10px">Un jugador pot jugar Masculina o Femenina i també Mixta: van en dies diferents i mai coincideixen.</p>`;
 
- $('lligaSteps').innerHTML=LLIGA_STEPS.map(([t,dsc])=>`<li><div><h3>${esc(t)}</h3><p class="muted small">${esc(dsc)}</p></div><span class="pill">Per definir</span></li>`).join('');
+ $('lligaSteps').innerHTML=LLIGA_STEPS.map(([t,dsc,st])=>`<li><div><h3>${esc(t)}</h3><p class="muted small">${esc(dsc)}</p></div><span class="pill${st?' todo':''}">${esc(st||'Per definir')}</span></li>`).join('');
 }
 const LLIGA_STEPS=[
- ['Divisions i grups','Repartiment de les parelles inscrites per categoria i nivell.'],
+ ['Divisions i grups','Es faran quan tanquin les inscripcions, per saber quantes parelles hi ha a cada categoria i nivell.','Després del 9/10'],
  ['Calendari de jornades','Enfrontaments de cada jornada i reserva de pistes.'],
  ['Resultats','Introducció i validació dels resultats de cada partit.'],
  ['Classificació','Taula per grup amb punts, partits i diferència de jocs.'],
