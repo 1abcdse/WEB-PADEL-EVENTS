@@ -108,6 +108,43 @@ main{padding:20px 16px 28px}
 .sec-title .n{width:28px;height:28px;border-radius:50%;display:grid;place-items:center;font-weight:800;font-size:13px;background:var(--green);color:var(--on-green)}
 .sec-title h2{margin:0;font-size:19px}
 
+/* Lliga Social · subpestanyes i organització d'enfrontaments */
+.subnav{display:flex;gap:6px;background:var(--soft2);padding:4px;border-radius:12px;margin:4px 0 6px;overflow-x:auto}
+.subnav button{flex:1 0 auto;border:0;background:none;color:var(--ink);padding:10px 14px;border-radius:9px;font-weight:700;font-size:14px;cursor:pointer;min-height:42px}
+.subnav button[aria-pressed="true"]{background:var(--card);box-shadow:var(--shadow2)}
+.chips{display:flex;gap:6px;overflow-x:auto;padding-bottom:2px}
+.chips button{flex:0 0 auto;border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:10px;padding:9px 13px;font-weight:700;font-size:14px;cursor:pointer;min-height:42px;display:grid;gap:1px;text-align:left}
+.chips button span{font-size:11px;font-weight:600;color:var(--muted)}
+.chips button[aria-pressed="true"]{background:var(--green);border-color:var(--green);color:var(--on-green)}
+.chips button[aria-pressed="true"] span{color:var(--on-green);opacity:.85}
+.chips button:disabled{opacity:.45;cursor:not-allowed}
+.ag-controls{display:grid;gap:10px}
+.ag-controls .lbl,.lbl{font-size:11px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);display:block;margin-bottom:4px}
+.ag-sum{display:flex;flex-wrap:wrap;gap:8px;justify-content:space-between;align-items:flex-start;margin-bottom:12px}
+.ag-sum h3{margin:0}
+.mts{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(330px,100%),1fr));gap:12px}
+.mt{border:1px solid var(--line);border-radius:14px;padding:14px;background:var(--card);display:grid;grid-template-columns:minmax(0,1fr);gap:10px;align-content:start;min-width:0}
+.mt>*{min-width:0}
+.mt.is-booked{border-color:var(--green)}
+.mt-head{display:flex;justify-content:space-between;align-items:center}
+.vs-row{display:grid;grid-template-columns:1fr auto 1fr;gap:8px;align-items:center;font-weight:700;font-size:15px}
+.vs-row>div:last-child{text-align:right}
+.vs-badge{font-size:11px;font-weight:800;color:var(--muted);background:var(--soft2);border-radius:999px;padding:4px 8px}
+.actions-row{display:flex;gap:8px;flex-wrap:wrap}
+.actions-row>*{flex:1 1 auto}
+.btn.wa{background:var(--green);color:var(--on-green)}
+.confirm-row{display:flex;gap:8px}
+.confirm-row select{flex:1;min-width:0;width:100%;text-overflow:ellipsis;padding:10px;border:1px solid var(--field-line);border-radius:10px;background:var(--field);color:var(--ink);font-size:15px;min-height:44px}
+button.primary,button.secondary,button.danger{border:0;border-radius:10px;padding:10px 14px;font-weight:700;cursor:pointer;min-height:44px;font-size:14px}
+button.primary{background:var(--green);color:var(--on-green)}
+button.secondary{background:var(--green2);color:var(--on-green2)}
+button.danger{background:var(--gold-bg);color:var(--ink);outline:2px solid var(--gold)}
+.booked{display:grid;gap:2px;padding:10px 12px;border-radius:10px;background:var(--ok-bg);color:var(--ok-ink)}
+.booked span{font-size:13px}
+.pill.ok{background:var(--ok-bg);color:var(--ok-ink)}
+.table-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch}
+.res td,.res th{text-align:left!important;white-space:nowrap}
+
 /* Tornejos: selector de format */
 .formats{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(230px,100%),1fr));gap:10px}
 .format{text-align:left;border:2px solid var(--line);background:var(--card);color:var(--ink);border-radius:14px;padding:14px;cursor:pointer;display:grid;gap:6px}
@@ -191,8 +228,14 @@ main{padding:20px 16px 28px}
 <!-- ============ LLIGA SOCIAL ============ -->
 <section id="view-lliga" class="view" role="tabpanel" aria-labelledby="tab-lliga">
  <div class="view-head">
-  <div><h2>Lliga Social</h2><p class="muted">Competició de temporada del club, per parelles. La desenvolupem pas a pas: el primer pas, temporada i inscripcions, ja és definit.</p></div>
+  <div><h2>Lliga Social</h2><p class="muted">Competició de temporada del club, per parelles. La desenvolupem pas a pas.</p></div>
  </div>
+ <nav class="subnav" id="lligaSubnav" aria-label="Apartats de la Lliga Social">
+  <button data-sub="inscripcions">Temporada i inscripcions</button>
+  <button data-sub="enfrontaments">Organització d’enfrontaments</button>
+ </nav>
+
+ <div id="lsub-inscripcions">
 
  <div class="sec-title"><span class="n">1</span><h2>Temporada i inscripcions</h2></div>
  <div class="stack">
@@ -207,6 +250,29 @@ main{padding:20px 16px 28px}
  <div class="sec-title"><span class="n">…</span><h2>Properes seccions</h2></div>
  <div class="card">
   <ol class="steps" id="lligaSteps" start="2"></ol>
+ </div>
+ </div>
+
+ <div id="lsub-enfrontaments" class="hidden">
+  <div class="sec-title"><span class="n">3</span><h2>Organització d’enfrontaments</h2></div>
+  <p class="muted" style="max-width:70ch;margin-bottom:12px">Cada jornada és una setmana i els enfrontaments surten del tots contra tots del grup. Envia a cada partit l’enquesta per WhatsApp: les dues parelles voten el dia i l’hora que els va bé, i quan es posin d’acord marques l’horari aquí. Sota hi ha el llistat de pistes que el club ha de reservar.</p>
+  <div class="stack">
+   <div id="agProvisional"></div>
+   <div class="card ag-controls">
+    <div><span class="lbl">Categoria</span><div class="chips" id="agCats"></div></div>
+    <div><span class="lbl">Grup</span><div class="chips" id="agGroups"></div></div>
+    <div><span class="lbl">Jornada</span><div class="chips" id="agWeeks"></div></div>
+   </div>
+   <div class="card" id="agMatches"></div>
+   <div class="card" id="agClub"></div>
+   <div class="card">
+    <h3>Còpia de seguretat de les reserves</h3>
+    <p class="muted small">Les confirmacions es guarden en aquest dispositiu. Fes-ne una còpia per no perdre-les o per passar-les a un altre dispositiu.</p>
+    <div class="actions-row" style="margin-top:10px"><button class="secondary" id="agExport">Exportar còpia</button><button class="secondary" id="agImportBtn">Importar còpia</button></div>
+    <input type="file" id="agImport" accept="application/json,.json" class="hidden">
+    <div id="agDataMsg"></div>
+   </div>
+  </div>
  </div>
 </section>
 
@@ -249,7 +315,7 @@ const $=id=>document.getElementById(id);
 function esc(x){return String(x==null?'':x).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
 // Preferències d'aquest dispositiu (pestanya i formats triats). Si el navegador no deixa guardar, funciona igual.
 const PKEY='competicions-prefs-v1';
-let P={view:'lliga',tourney:'express',size:16,mode:'bracket',zoom:'auto'};
+let P={view:'lliga',lsub:'inscripcions',tourney:'express',size:16,mode:'bracket',zoom:'auto'};
 try{const x=JSON.parse(localStorage.getItem(PKEY));if(x&&typeof x==='object')P=Object.assign(P,x)}catch(e){}
 function savePrefs(){try{localStorage.setItem(PKEY,JSON.stringify(P))}catch(e){}}
 
@@ -397,12 +463,188 @@ function renderLliga(){
 }
 const LLIGA_STEPS=[
  ['Divisions i grups','Es faran quan tanquin les inscripcions, per saber quantes parelles hi ha a cada categoria i nivell.','Després del 9/10'],
- ['Calendari de jornades','Enfrontaments de cada jornada i reserva de pistes.'],
+ ['Calendari de jornades','Enfrontaments de cada jornada, votació de dia i hora per WhatsApp i reserva de pistes.','En marxa'],
  ['Resultats','Introducció i validació dels resultats de cada partit.'],
  ['Classificació','Taula per grup amb punts, partits i diferència de jocs.'],
  ['Fase final','Semifinals, finals i quadre de consolació.'],
  ['Normativa','Reglament, puntuació i criteris de desempat.']
 ];
+
+/* ---------------- LLIGA SOCIAL · ORGANITZACIÓ D'ENFRONTAMENTS ---------------- */
+// Cada jornada és una setmana. Les parelles acorden dia i hora (enquesta per WhatsApp)
+// i el coordinador hi marca l'horari confirmat; el club veu quines pistes ha de reservar.
+// Les confirmacions es guarden en aquest dispositiu (el del coordinador).
+const AKEY='competicions-agenda-v1';
+let AG={bookings:{}};
+try{const x=JSON.parse(localStorage.getItem(AKEY));if(x&&x.bookings&&typeof x.bookings==='object')AG=x}catch(e){}
+function saveAgenda(){try{localStorage.setItem(AKEY,JSON.stringify(AG))}catch(e){}}
+let AS={cat:'masculina',lv:'B',j:1};
+try{const x=JSON.parse(localStorage.getItem(AKEY+'-ui'));if(x)AS=Object.assign(AS,x)}catch(e){}
+function saveAS(){try{localStorage.setItem(AKEY+'-ui',JSON.stringify(AS))}catch(e){}}
+
+// Franges de joc (rules-2026-27): dt/dc/dv 21:00 amb 4 pistes per a Masculina i Femenina (comparteixen pistes);
+// dj 21:00 3 pistes d'emergència; Mixta ds/dg en torns de 90 min amb 4 pistes i 5a pista opcional des de les 12:00.
+const WEEKEND_TIMES=['09:00','10:30','12:00','13:30','15:00','16:30','18:00','19:30'];
+const SCHEDULES={
+ WEEKDAY:[{days:[2,3,5],times:['21:00'],courts:[1,2,3,4]},{days:[4],times:['21:00'],courts:[1,2,3],extra:true}],
+ WEEKEND:[{days:[6,7],times:WEEKEND_TIMES,courts:[1,2,3,4]},{days:[6,7],times:WEEKEND_TIMES.filter(t=>t>='12:00'),courts:[5],extra:true}]
+};
+const CAT_SCHEDULE={femenina:'WEEKDAY',masculina:'WEEKDAY',mixta:'WEEKEND'};
+const DAYS_SHORT=['dg','dl','dt','dc','dj','dv','ds'];
+function iso(dt){return `${dt.getFullYear()}-${String(dt.getMonth()+1).padStart(2,'0')}-${String(dt.getDate()).padStart(2,'0')}`}
+function addDays(dt,n){const x=new Date(dt.getTime());x.setDate(x.getDate()+n);return x}
+function mondayOf(isoDate){const x=d(isoDate);return addDays(x,-((x.getDay()+6)%7))}
+// Jornades de lliga regular (sense semis ni finals)
+function rrWeeks(){return LLIGA.weeks.filter(w=>!w[2])}
+function weekRange(j){const w=rrWeeks()[j-1];if(!w)return null;const mon=mondayOf(w[1]);const from=d(w[1])>mon?d(w[1]):mon;return {from,to:addDays(mon,6),mon}}
+function fmtDM(dt){return `${dt.getDate()}/${dt.getMonth()+1}`}
+function slotLabel(sl){const x=d(sl.date);return `${DAYS[x.getDay()].replace(/^./,c=>c.toUpperCase())} ${fmtDM(x)} · ${sl.time}`}
+// Franges d'una setmana per a un horari: [{date,time,courts,extra}]
+function weekSlots(sched,j){
+ const r=weekRange(j);if(!r)return [];
+ const out=[];
+ SCHEDULES[sched].forEach(b=>b.days.forEach(day=>{
+  const dt=addDays(r.mon,day-1);if(dt<r.from||dt>r.to)return;
+  b.times.forEach(t=>out.push({date:iso(dt),time:t,courts:b.courts,extra:!!b.extra}));
+ }));
+ out.sort((a,b)=>(a.date+a.time).localeCompare(b.date+b.time)||(a.extra-b.extra));
+ return out;
+}
+function bookingsAt(date,time){return Object.keys(AG.bookings).map(k=>AG.bookings[k]).filter(b=>b.date===date&&b.time===time)}
+function freeCourts(sl){const used=bookingsAt(sl.date,sl.time).map(b=>b.court);return sl.courts.filter(c=>used.indexOf(c)<0)}
+
+// Grups (provisionals fins al tancament d'inscripcions): parelles de cada categoria i nivell en ordre d'inscripció.
+function groupPairs(cat,lv){return (INSCRITS[cat]||[]).filter(p=>pairLevel(p)===lv)}
+function pairName(p){return p.slice(0,2).map(([n,,pub])=>pub||publicName(n)).join(' i ')}
+function pairPlayers(p){return p.slice(0,2).map(([n])=>norm(n))}
+function norm(s){return String(s||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().replace(/\s+/g,' ').trim()}
+// Mètode del cercle, idèntic a packages/domain/src/round-robin.ts
+function roundRobin(n){
+ let slots=[];for(let i=0;i<n;i++)slots.push(i);
+ if(slots.length%2===1)slots.push(null);
+ const m=slots.length,rounds=[];
+ for(let r=0;r<m-1;r++){
+  const round={matches:[],bye:null};
+  for(let i=0;i<m/2;i++){const a=slots[i],b=slots[m-1-i];if(a===null||b===null)round.bye=a===null?b:a;else round.matches.push([a,b])}
+  rounds.push(round);
+  slots=[slots[0],slots[m-1]].concat(slots.slice(1,m-1));
+ }
+ return rounds;
+}
+function matchKey(cat,j,pa,pb){return [cat,'J'+j].concat(pairPlayers(pa),pairPlayers(pb)).join('|')}
+// Un jugador no pot jugar dos partits el mateix dia
+function playerClash(date,players,ignoreKey){
+ return Object.keys(AG.bookings).some(k=>{const b=AG.bookings[k];return k!==ignoreKey&&b.date===date&&b.players.some(p=>players.indexOf(p)>=0)});
+}
+function waMessage(cat,lv,j,pa,pb,slots){
+ const c=LLIGA.cats.find(x=>x.k===cat),r=weekRange(j);
+ const regular=slots.filter(s=>!s.extra&&freeCourts(s).length),extra=slots.filter(s=>s.extra&&freeCourts(s).length);
+ let t=`🎾 *Lliga Social · ${c.name} ${lv}*\n*Jornada ${j}* (${DAYS_SHORT[r.from.getDay()]} ${fmtDM(r.from)} – ${DAYS_SHORT[r.to.getDay()]} ${fmtDM(r.to)})\n\n`;
+ t+=`${pairName(pa)}\n🆚\n${pairName(pb)}\n\nOpcions disponibles. Responeu amb els números que us vagin bé (o creeu una enquesta de WhatsApp amb aquestes opcions):\n`;
+ regular.forEach((s,i)=>{t+=`${i+1}) ${slotLabel(s)}\n`});
+ if(!regular.length)t+='(Aquesta setmana ja no queden franges lliures: parleu amb el coordinador.)\n';
+ if(extra.length)t+=`\nNomés amb aprovació del club: ${cat==='mixta'?'5a pista de ds i dg a partir de les 12:00':'dijous a les 21:00'}.\n`;
+ t+=`\nQuan les dues parelles estigueu d'acord, digueu-ho al coordinador perquè el club reservi la pista.`;
+ return t;
+}
+function copyText(text,btn){
+ const done=()=>{const o=btn.textContent;btn.textContent='Copiat ✓';setTimeout(()=>btn.textContent=o,1600)};
+ const fallback=()=>{const ta=document.createElement('textarea');ta.value=text;ta.setAttribute('readonly','');ta.style.position='fixed';ta.style.opacity='0';document.body.appendChild(ta);ta.select();try{document.execCommand('copy');done()}catch(e){}ta.remove()};
+ if(navigator.clipboard&&navigator.clipboard.writeText)navigator.clipboard.writeText(text).then(done,fallback);else fallback();
+}
+function renderAgenda(){
+ const cats=LLIGA.cats;if(!cats.some(c=>c.k===AS.cat))AS.cat=cats[0].k;
+ const groups=['B','C'].filter(lv=>groupPairs(AS.cat,lv).length>=2);
+ if(groups.indexOf(AS.lv)<0)AS.lv=groups[0]||'B';
+ const pairs=groupPairs(AS.cat,AS.lv),rounds=pairs.length>=2?roundRobin(pairs.length):[];
+ const maxJ=Math.min(rounds.length,rrWeeks().length);
+ if(AS.j>maxJ||AS.j<1)AS.j=1;
+ saveAS();
+ const closed=todayLocal()>d(LLIGA.deadline);
+ $('agProvisional').innerHTML=closed?'':`<div class="notice"><b>Grups provisionals.</b> Es calculen amb les inscripcions d’ara (C+ va amb B) i es tornaran a fer quan tanquin les inscripcions el ${fmtLong(LLIGA.deadline)}. Les confirmacions es guarden amb els noms de les parelles.</div>`;
+ $('agCats').innerHTML=cats.map(c=>`<button data-cat="${c.k}" aria-pressed="${c.k===AS.cat}">${esc(c.name)}</button>`).join('');
+ $('agGroups').innerHTML=['B','C'].map(lv=>{const n=groupPairs(AS.cat,lv).length;return `<button data-lv="${lv}" aria-pressed="${lv===AS.lv}"${n<2?' disabled':''}>Nivell ${lv} <span class="small">· ${n} parelles</span></button>`}).join('');
+ $('agWeeks').innerHTML=rrWeeks().map((w,i)=>{const j=i+1,r=weekRange(j),dis=j>maxJ;return `<button data-j="${j}" aria-pressed="${j===AS.j}"${dis?' disabled':''}><b>J${j}</b><span>${fmtDM(r.from)}–${fmtDM(r.to)}</span></button>`}).join('');
+ const sel=$('agWeeks').querySelector('[aria-pressed="true"]');if(sel)$('agWeeks').scrollLeft=sel.offsetLeft-$('agWeeks').offsetLeft-20;
+
+ const sched=CAT_SCHEDULE[AS.cat],slots=weekSlots(sched,AS.j),round=rounds[AS.j-1];
+ if(!round){$('agMatches').innerHTML='<div class="empty">Aquest grup encara no té prou parelles per fer enfrontaments.</div>';renderClub();return}
+ const r=weekRange(AS.j);
+ let confirmed=0;
+ const cards=round.matches.map(([a,b],i)=>{
+  const pa=pairs[a],pb=pairs[b],key=matchKey(AS.cat,AS.j,pa,pb),bk=AG.bookings[key];
+  if(bk)confirmed++;
+  const players=pairPlayers(pa).concat(pairPlayers(pb));
+  const opts=slots.map(s=>{const free=freeCourts(s),clash=playerClash(s.date,players,key);const ok=free.length&&!clash;
+   return `<option value="${s.date}|${s.time}|${s.extra?1:0}"${ok?'':' disabled'}>${esc(slotLabel(s))}${s.extra?' · aprovació':''} — ${clash?'jugador ocupat':free.length?free.length+' '+(free.length===1?'pista lliure':'pistes lliures'):'complet'}</option>`}).join('');
+  const head=`<div class="mt-head"><span class="small muted">Partit ${i+1}</span>${bk?`<span class="pill ok">Confirmat</span>`:`<span class="pill todo">Pendent</span>`}</div>
+   <div class="vs-row"><div>${esc(pairName(pa))}</div><span class="vs-badge">vs</span><div>${esc(pairName(pb))}</div></div>`;
+  const body=bk?`<div class="booked"><b>${esc(slotLabel(bk))}</b><span>Pista ${bk.court}${bk.extra?' · cal aprovació del club':''}</span></div>
+   <div class="actions-row"><button class="secondary" data-act="undo" data-key="${esc(key)}">Anul·lar</button></div>`
+  :`<div class="actions-row"><a class="btn wa" target="_blank" rel="noopener" href="https://wa.me/?text=${encodeURIComponent(waMessage(AS.cat,AS.lv,AS.j,pa,pb,slots))}">Enviar enquesta per WhatsApp</a><button class="secondary" data-act="copy" data-i="${i}">Copiar missatge</button></div>
+   <label class="lbl" for="sl-${i}">Horari acordat per les dues parelles</label>
+   <div class="confirm-row"><select id="sl-${i}"><option value="">Tria dia i hora…</option>${opts}</select><button class="primary" data-act="book" data-i="${i}">Confirmar</button></div>`;
+  return `<article class="mt${bk?' is-booked':''}">${head}${body}</article>`;
+ });
+ const bye=round.bye!=null?`<p class="muted small">Descansa: ${esc(pairName(pairs[round.bye]))}</p>`:'';
+ $('agMatches').innerHTML=`<div class="ag-sum"><div><h3>Jornada ${AS.j} · ${DAYS_SHORT[r.from.getDay()]} ${fmtDM(r.from)} – ${DAYS_SHORT[r.to.getDay()]} ${fmtDM(r.to)}</h3>${bye}</div><span class="pill">${confirmed} de ${round.matches.length} confirmats</span></div><div class="mts">${cards.join('')}</div>`;
+ $('agMatches').dataset.ctx=JSON.stringify({cat:AS.cat,lv:AS.lv,j:AS.j});
+ renderClub();
+}
+// Totes les reserves de la setmana (totes les categories): el que el club ha de reservar
+function renderClub(){
+ const r=weekRange(AS.j);if(!r){$('agClub').innerHTML='';return}
+ const from=iso(r.from),to=iso(r.to);
+ const list=Object.keys(AG.bookings).map(k=>AG.bookings[k]).filter(b=>b.date>=from&&b.date<=to).sort((a,b)=>(a.date+a.time).localeCompare(b.date+b.time)||a.court-b.court);
+ const rows=list.map(b=>`<tr><td>${esc(slotLabel(b))}</td><td>Pista ${b.court}${b.extra?' <span class="pill todo">aprovació</span>':''}</td><td>${esc(b.catName)} ${esc(b.lv)}</td><td>${esc(b.a)} <span class="muted">vs</span> ${esc(b.b)}</td></tr>`).join('');
+ const text=`🎾 Reserves Lliga Social · Jornada ${AS.j} (${fmtDM(r.from)}–${fmtDM(r.to)})\n`+(list.length?list.map(b=>`• ${slotLabel(b)} · Pista ${b.court}${b.extra?' (aprovació)':''} · ${b.catName} ${b.lv}: ${b.a} vs ${b.b}`).join('\n'):'Encara no hi ha cap partit confirmat.');
+ $('agClub').innerHTML=`<div class="ag-sum"><div><h3>Pistes a reservar · setmana ${fmtDM(r.from)}–${fmtDM(r.to)}</h3><p class="muted small">Tots els partits confirmats d’aquesta setmana, de totes les categories.</p></div><span class="pill">${list.length} ${list.length===1?'reserva':'reserves'}</span></div>
+ ${list.length?`<div class="table-wrap"><table class="price res"><thead><tr><th>Dia i hora</th><th>Pista</th><th>Categoria</th><th>Partit</th></tr></thead><tbody>${rows}</tbody></table></div>`:'<div class="empty">Encara no hi ha cap partit confirmat aquesta setmana.</div>'}
+ <div class="actions-row"><button class="secondary" id="agCopyClub">Copiar llistat per al club</button><a class="btn ghost" target="_blank" rel="noopener" href="https://wa.me/?text=${encodeURIComponent(text)}">Enviar llistat per WhatsApp</a></div>`;
+ $('agCopyClub').onclick=e=>copyText(text,e.currentTarget);
+}
+function agendaClick(e){
+ const b=e.target.closest('button');if(!b||b.disabled)return;
+ if(b.dataset.cat){AS.cat=b.dataset.cat;AS.j=1;renderAgenda();return}
+ if(b.dataset.lv){AS.lv=b.dataset.lv;AS.j=1;renderAgenda();return}
+ if(b.dataset.j){AS.j=+b.dataset.j;renderAgenda();return}
+ const act=b.dataset.act;if(!act)return;
+ const pairs=groupPairs(AS.cat,AS.lv),round=roundRobin(pairs.length)[AS.j-1];
+ if(act==='undo'){
+  if(b.dataset.sure!=='1'){b.dataset.sure='1';b.textContent='Segur? Toca per anul·lar';b.classList.add('danger');return}
+  delete AG.bookings[b.dataset.key];saveAgenda();renderAgenda();return;
+ }
+ const [ia,ib]=round.matches[+b.dataset.i],pa=pairs[ia],pb=pairs[ib];
+ const slots=weekSlots(CAT_SCHEDULE[AS.cat],AS.j);
+ if(act==='copy'){copyText(waMessage(AS.cat,AS.lv,AS.j,pa,pb,slots),b);return}
+ if(act==='book'){
+  const v=$('sl-'+b.dataset.i).value;if(!v){$('sl-'+b.dataset.i).focus();return}
+  const [date,time,ex]=v.split('|'),sl=slots.find(s=>s.date===date&&s.time===time&&String(s.extra?1:0)===ex);
+  const key=matchKey(AS.cat,AS.j,pa,pb),players=pairPlayers(pa).concat(pairPlayers(pb));
+  const free=sl?freeCourts(sl):[];if(!free.length||playerClash(date,players,key)){renderAgenda();return}
+  const c=LLIGA.cats.find(x=>x.k===AS.cat);
+  AG.bookings[key]={date,time,court:free[0],extra:sl.extra,cat:AS.cat,catName:c.name,lv:AS.lv,j:AS.j,a:pairName(pa),b:pairName(pb),players};
+  saveAgenda();renderAgenda();
+ }
+}
+function exportAgenda(){
+ const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([JSON.stringify(AG,null,2)],{type:'application/json'}));a.download=`reserves-lliga-${iso(todayLocal())}.json`;
+ document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(a.href),1000);
+}
+function importAgenda(input){
+ const f=input.files[0];input.value='';if(!f)return;
+ const rd=new FileReader();rd.onload=()=>{let x=null;try{x=JSON.parse(rd.result)}catch(e){}
+  if(!x||!x.bookings||typeof x.bookings!=='object'){$('agDataMsg').innerHTML='<div class="notice">El fitxer no és una còpia de les reserves.</div>';return}
+  AG=x;saveAgenda();renderAgenda();$('agDataMsg').innerHTML=`<div class="notice">Còpia carregada: ${Object.keys(AG.bookings).length} partits confirmats.</div>`};
+ rd.readAsText(f);
+}
+function showLligaSub(sub){
+ P.lsub=sub==='enfrontaments'?'enfrontaments':'inscripcions';savePrefs();
+ $('lsub-inscripcions').classList.toggle('hidden',P.lsub!=='inscripcions');
+ $('lsub-enfrontaments').classList.toggle('hidden',P.lsub!=='enfrontaments');
+ document.querySelectorAll('#lligaSubnav button').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.sub===P.lsub)));
+ if(P.lsub==='enfrontaments')renderAgenda();
+}
 
 /* ---------------- TORNEJOS ---------------- */
 const TOURNEYS={
@@ -517,7 +759,12 @@ document.querySelectorAll('[data-zoom]').forEach(b=>b.addEventListener('click',(
 window.addEventListener('resize',()=>{const sc=$('bscroll');if(sc&&sc.clientWidth!==fitW)applyZoom()});
 
 /* ---------------- INICI ---------------- */
-renderLliga();renderTornejos();showView(P.view);
+document.querySelectorAll('#lligaSubnav button').forEach(b=>b.addEventListener('click',()=>showLligaSub(b.dataset.sub)));
+['agCats','agGroups','agWeeks','agMatches'].forEach(id=>$(id).addEventListener('click',agendaClick));
+$('agExport').addEventListener('click',exportAgenda);
+$('agImportBtn').addEventListener('click',()=>$('agImport').click());
+$('agImport').addEventListener('change',e=>importAgenda(e.target));
+renderLliga();renderTornejos();showLligaSub(P.lsub);showView(P.view);
 </script>
 </body>
 </html>
