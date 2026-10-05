@@ -236,6 +236,49 @@ button.pill.go{border:0;cursor:pointer;min-height:36px;padding:6px 12px;font-siz
 }
 @media(max-width:700px){.rk td.team{min-width:130px;font-size:13px}.swipe{display:block}}
 
+/* Torneig Express */
+:root{--cat-m:#5d7a8c;--cat-f:#a86a8a;--cat-x:#b38a3e}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--cat-m:#86a6ba;--cat-f:#cf96b3;--cat-x:#d9b26a}}
+:root[data-theme="dark"]{--cat-m:#86a6ba;--cat-f:#cf96b3;--cat-x:#d9b26a}
+#formatDetail input:not([type=radio]),#formatDetail select{width:100%;padding:10px;border:1px solid var(--field-line);border-radius:10px;background:var(--field);color:var(--ink);font-size:15px;min-height:44px;font-family:inherit}
+#formatDetail .sb-in{width:46px;padding:9px 0}
+#formatDetail .ko-m input.ko-name,#formatDetail .ko-m input.ko-score{min-height:0;height:28px;padding:3px 8px;font-size:13px;border-radius:7px}
+.tx-2{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(200px,100%),1fr));gap:10px}
+.tx-players{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(320px,100%),1fr));gap:12px;margin-top:12px}
+.tx-player{border:1px solid var(--line);border-radius:12px;padding:12px;margin:0;display:grid;gap:6px;min-width:0}
+.tx-player legend{font-weight:800;padding:0 6px}
+.tx-form{display:grid;gap:10px}
+.radio{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--line);border-radius:10px;padding:9px 14px;font-weight:700;cursor:pointer;min-height:42px}
+.radio input{width:auto!important;min-height:0!important;accent-color:var(--green)}
+.tx-gh{display:flex;gap:8px;align-items:center;margin:16px 0 8px;font-size:15px}
+.tx-list{list-style:none;margin:0;padding:0;display:grid;gap:6px}
+.tx-list li{display:flex;gap:10px;justify-content:space-between;align-items:center;padding:10px 12px;border:1px solid var(--line);border-radius:10px;background:var(--soft);flex-wrap:wrap}
+.tx-list li>div{display:grid;gap:2px;min-width:0;flex:1 1 220px}
+.tx-list li.ko-li{border-style:dashed}
+.tx-list details summary{cursor:pointer;color:var(--muted)}
+.tx-warn{margin-top:12px;border:1px solid var(--gold);background:var(--gold-bg);border-radius:10px;padding:10px 12px}
+.tx-warn summary{font-weight:700;cursor:pointer}
+.tx-info{margin:10px 0 0;padding-left:0;list-style:none;display:grid;gap:4px;font-size:13px;color:var(--muted)}
+.tx-warn ul{margin:8px 0 0;padding-left:18px;display:grid;gap:4px;font-size:13px}
+.grid-t{border-collapse:separate;border-spacing:4px;font-size:12px}
+.grid-t th{font-size:11px;color:var(--muted);font-weight:800;white-space:nowrap;padding:4px}
+.grid-t tbody th{position:sticky;left:0;background:var(--card);z-index:1;text-align:left}
+.grid-t td{min-width:124px;height:56px;vertical-align:top;background:var(--soft);border-radius:8px;padding:0}
+.grid-t td.urg,.grid-t th.urg{background:var(--gold-bg)}
+.chip-m{display:grid;gap:1px;padding:6px 7px;border-radius:8px;border-left:4px solid var(--cat-m);background:var(--card);height:100%;font-size:11.5px;line-height:1.25}
+.chip-m b{font-size:11px}
+.chip-m span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:150px}
+.chip-m.femenina{border-left-color:var(--cat-f)}.chip-m.mixta{border-left-color:var(--cat-x)}
+.chip-m.ko{border-style:dashed;border-left-style:solid;opacity:.85}
+.ko-scroll{margin-top:6px}
+.ko-m{position:absolute;background:var(--card);border:1px solid var(--field-line);border-radius:10px;box-shadow:var(--shadow2);padding:6px;display:grid;gap:4px;align-content:start}
+.ko-m.final{border:2px solid var(--gold);background:var(--gold-bg)}
+.ko-row{display:grid;grid-template-columns:auto minmax(0,1fr);gap:6px;align-items:center}
+.ko-row.win .ko-name{font-weight:800;border-color:var(--green);background:var(--ok-bg);color:var(--ok-ink)}
+.ko-foot{display:flex;align-items:center;min-height:30px}
+.ko-score.bad{border-color:var(--gold)!important;outline:2px solid var(--gold)}
+.ko-err{font-size:11px;line-height:1.2;color:var(--ink);background:var(--gold-bg);border-radius:6px;padding:3px 6px;position:absolute;top:100%;left:0;right:0;margin-top:3px;z-index:2}
+
 /* Tornejos: selector de format */
 .formats{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(230px,100%),1fr));gap:10px}
 .format{text-align:left;border:2px solid var(--line);background:var(--card);color:var(--ink);border-radius:14px;padding:14px;cursor:pointer;display:grid;gap:6px}
@@ -863,12 +906,14 @@ function sideStats(res){
 }
 function setsText(res){return res.wo?'WO (6-0 6-0)':res.sets.map(([a,b])=>`${a}-${b}`).join(' ')}
 // Marcador: una fila per parella i una columna per set
+// opts.stats i opts.woSets permeten fer servir el marcador amb altres formats de partit (Torneig Express)
 function scoreboardHtml(id,rows,res,opts){
  opts=opts||{};
  const editing=!res||EDIT[id];
  if(!editing){
-  const ss=sideStats(res),w=ss.A.won?0:1;
-  const sets=res.wo?(res.wo==='A'?[[6,0],[6,0]]:[[0,6],[0,6]]):res.sets;
+  const ss=(opts.stats||sideStats)(res),w=ss.A.won?0:1;
+  const wo=opts.woSets||[[6,0],[6,0]];
+  const sets=res.wo?(res.wo==='A'?wo:wo.map(([a,b])=>[b,a])):res.sets;
   return `<div class="sb done">${rows.map((r,k)=>`<div class="sb-row${k===w?' win':''}"><span class="seed-b">${esc(r.seed||'')}</span><span class="sb-name">${esc(r.name)}</span>${sets.map(st=>`<span class="sb-set">${st[k]}</span>`).join('')}<span class="sb-pts">${k===w?'✓':''}</span></div>`).join('')}
    <div class="sb-foot"><span class="small muted">${res.wo?'Partit guanyat per WO':''}${opts.points?`${res.wo?' · ':''}Punts: ${esc(rows[0].short||'A')} +${ss.A.pts} · ${esc(rows[1].short||'B')} +${ss.B.pts}`:''}</span>
    <span class="sb-actions"><button class="secondary small-btn" data-act="edit" data-id="${esc(id)}">Editar</button><button class="secondary small-btn" data-act="del" data-id="${esc(id)}">Esborrar</button></span></div></div>`;
@@ -876,12 +921,13 @@ function scoreboardHtml(id,rows,res,opts){
  const v=(k,i)=>res&&!res.wo&&res.sets[i]?res.sets[i][k]:'';
  return `<div class="sb">
   <div class="sb-row sb-hd"><span class="seed-b"></span><span class="sb-name"></span><span class="sb-set">S1</span><span class="sb-set">S2</span><span class="sb-set">S3</span></div>
-  ${rows.map((r,k)=>`<div class="sb-row"><span class="seed-b">${esc(r.seed||'')}</span>${r.input?`<input class="sb-name-in" id="${id}-n${k}" value="${esc(r.name)}" placeholder="${esc(r.placeholder||'Parella')}" aria-label="Nom de la parella">`:`<span class="sb-name">${esc(r.name)}</span>`}${[0,1,2].map(i=>`<input class="sb-in" id="${id}-${k}${i}" type="number" inputmode="numeric" min="0" max="7" value="${v(k,i)}" aria-label="Set ${i+1} ${esc(r.name)}">`).join('')}</div>`).join('')}
+  ${rows.map((r,k)=>`<div class="sb-row"><span class="seed-b">${esc(r.seed||'')}</span>${r.input?`<input class="sb-name-in" id="${id}-n${k}" value="${esc(r.name)}" placeholder="${esc(r.placeholder||'Parella')}" aria-label="Nom de la parella">`:`<span class="sb-name">${esc(r.name)}</span>`}${[0,1,2].map(i=>`<input class="sb-in" id="${id}-${k}${i}" type="number" inputmode="numeric" min="0" value="${v(k,i)}" aria-label="Set ${i+1} ${esc(r.name)}">`).join('')}</div>`).join('')}
   <div class="sb-foot"><select id="${id}-wo" aria-label="Walkover"><option value="">Partit jugat</option><option value="A"${res&&res.wo==='A'?' selected':''}>WO a favor de ${esc(rows[0].short||rows[0].name||'A')}</option><option value="B"${res&&res.wo==='B'?' selected':''}>WO a favor de ${esc(rows[1].short||rows[1].name||'B')}</option></select>
   <button class="primary" data-act="save" data-id="${esc(id)}">Guardar resultat</button></div>
   <div class="sb-err" id="${id}-err" role="alert"></div></div>`;
 }
-function readScoreboard(id){
+function readScoreboard(id,validate){
+ validate=validate||evalSets;
  const wo=$(id+'-wo').value;
  if(wo)return {res:{wo,sets:[]}};
  const sets=[];
@@ -892,7 +938,7 @@ function readScoreboard(id){
   if(sets.length<i)return {err:`Has deixat buit el set ${sets.length+1}.`};
   sets.push([+a,+b]);
  }
- const e=evalSets(sets);if(e.err)return {err:e.err};
+ const e=validate(sets);if(e.err)return {err:e.err};
  return {res:{wo:null,sets}};
 }
 function pickersHtml(prefix){
@@ -1064,6 +1110,7 @@ const TOURNEYS={
 function renderTornejos(){
  if(!TOURNEYS[P.tourney])P.tourney='express';
  $('formats').innerHTML=Object.keys(TOURNEYS).map(k=>{const t=TOURNEYS[k];return `<button class="format" data-k="${k}" aria-pressed="${k===P.tourney}"><span class="ico" aria-hidden="true">${t.ico}</span><strong>${esc(t.name)}</strong><span class="small muted">${esc(t.tag)}</span></button>`}).join('');
+ if(P.tourney==='express'){renderExpress();return}
  const t=TOURNEYS[P.tourney];
  $('formatDetail').innerHTML=`<div class="view-head" style="margin-bottom:12px"><div><h2>${t.ico} ${esc(t.name)}</h2><p class="muted">${esc(t.desc)}</p></div><span class="pill">${esc(t.tag)}</span></div>
  <div class="phases">
@@ -1072,6 +1119,607 @@ function renderTornejos(){
  </div>`;
 }
 $('formats').addEventListener('click',e=>{const b=e.target.closest('.format');if(!b)return;P.tourney=b.dataset.k;savePrefs();renderTornejos()});
+$('formatDetail').addEventListener('click',e=>{if(P.tourney==='express')txClick(e)});
+$('formatDetail').addEventListener('change',e=>{if(P.tourney==='express')txChange(e)});
+$('formatDetail').addEventListener('submit',e=>{if(P.tourney==='express')txSubmit(e)});
+
+/* ================= TORNEIG EXPRESS ================= */
+// Torneig d'1 dia per parelles. Dades al dispositiu del coordinador (clau TXKEY), amb còpia de seguretat.
+const TXKEY='torneig-express-v1';
+const TX_CATS=[{k:'masculina',name:'Masculina',short:'M'},{k:'femenina',name:'Femenina',short:'F'},{k:'mixta',name:'Mixta',short:'X'}];
+const TX_LVS=['A','B','C'];
+// Formats de partit: 2 sets + super tie-break (per defecte), millor de 3 sets complets, o 1 set
+const TX_FORMATS={stb:'2 sets i super tie-break a 10 punts',bo3:'Millor de 3 sets',set1:'1 set'};
+function txDefault(){return {config:{name:'Torneig Express',date:'',start:'09:00',end:'22:00',slot:60,format:'stb',courts:6,extra:2,allowExtra:true,rest:1,priceMember:25,priceNon:30},pairs:[],plan:null,results:{},ko:{}}}
+let TX=txDefault();
+try{const x=JSON.parse(localStorage.getItem(TXKEY));if(x&&x.config&&Array.isArray(x.pairs))TX=Object.assign(txDefault(),x,{config:Object.assign(txDefault().config,x.config)})}catch(e){}
+function txSave(){try{localStorage.setItem(TXKEY,JSON.stringify(TX))}catch(e){}}
+let TXS={sub:'normativa',cat:'masculina',lv:'B',edit:null};
+try{const x=JSON.parse(localStorage.getItem(TXKEY+'-ui'));if(x)TXS=Object.assign(TXS,x,{edit:null})}catch(e){}
+function txSaveUI(){try{localStorage.setItem(TXKEY+'-ui',JSON.stringify({sub:TXS.sub,cat:TXS.cat,lv:TXS.lv}))}catch(e){}}
+const TXCAT=k=>TX_CATS.find(c=>c.k===k)||TX_CATS[0];
+const gKey=(cat,lv)=>cat+'-'+lv;
+const toMin=t=>{const [h,m]=String(t).split(':').map(Number);return h*60+(m||0)};
+const fromMin=m=>`${String(Math.floor(m/60)).padStart(2,'0')}:${String(m%60).padStart(2,'0')}`;
+
+/* ---------- format de partit ---------- */
+function txEval(sets,fmt){
+ fmt=fmt||TX.config.format;
+ if(fmt==='bo3')return evalSets(sets);
+ if(fmt==='set1'){
+  if(sets.length!==1)return {err:'En aquest torneig es juga a 1 set: posa només el primer set.'};
+  const [a,b]=sets[0];if(!validSet(a,b))return {err:`El set (${a}-${b}) no és vàlid. Resultats possibles: 6-0 a 6-4, 7-5 o 7-6.`};
+  return {winner:a>b?'A':'B',sa:a>b?1:0,sb:a>b?0:1};
+ }
+ // stb: 2 sets; amb 1-1, super tie-break a 10 punts (diferència de 2) al lloc del 3r set
+ if(sets.length<2)return {err:'Cal posar com a mínim 2 sets.'};
+ let sa=0,sb=0;
+ for(let i=0;i<sets.length;i++){
+  const [a,b]=sets[i];
+  if(sa===2||sb===2)return {err:'Sobra el super tie-break: el partit ja estava decidit en 2 sets.'};
+  if(i<2){if(!validSet(a,b))return {err:`El set ${i+1} (${a}-${b}) no és vàlid. Resultats possibles: 6-0 a 6-4, 7-5 o 7-6.`}}
+  else{const w=Math.max(a,b),l=Math.min(a,b);if(w<10||w-l<2||(w>10&&w-l!==2))return {err:`El super tie-break (${a}-${b}) no és vàlid: es juga a 10 punts amb 2 de diferència (p. ex. 10-7 o 12-10).`}}
+  if(a>b)sa++;else sb++;
+ }
+ if(sa<2&&sb<2)return {err:'Falta el super tie-break: amb un set per banda es decideix amb un super tie-break a 10 punts (posa’l a S3).'};
+ return {winner:sa>sb?'A':'B',sa,sb};
+}
+const txWoSets=()=>TX.config.format==='set1'?[[6,0]]:[[6,0],[6,0]];
+// Totals d'una banda. El super tie-break compta com un set i un joc (1-0) per a qui el guanya.
+function txStats(res){
+ const wo=txWoSets(),sets=res.wo?(res.wo==='A'?wo:wo.map(([a,b])=>[b,a])):res.sets;
+ const e=txEval(sets),out={};
+ ['A','B'].forEach((s,k)=>{
+  let gw=0,gl=0,sw=0,sl=0;
+  sets.forEach(([a,b],i)=>{const mine=k?b:a,their=k?a:b;
+   if(TX.config.format==='stb'&&i===2){if(mine>their){gw++;sw++}else{gl++;sl++}}
+   else{gw+=mine;gl+=their;if(mine>their)sw++;else sl++}});
+  const won=e.winner===s;
+  out[s]={won,gw,gl,sw,sl,pts:won?3:(res.wo?0:(sw>0?1:0))};
+ });
+ return out;
+}
+
+/* ---------- parelles ---------- */
+const txPair=id=>TX.pairs.find(p=>p.id===id);
+const txSurname=n=>{const w=nameWords(n);return w.length>1?w[w.length>=4?2:1]:w[0]};
+const txPairName=p=>p?`${publicName(p.p1.name)} i ${publicName(p.p2.name)}`:'';
+const txPairShort=p=>p?`${txSurname(p.p1.name)}/${txSurname(p.p2.name)}`:'';
+const txPlayers=p=>[norm(p.p1.name),norm(p.p2.name)];
+const txGroupPairs=(cat,lv)=>TX.pairs.filter(p=>p.cat===cat&&p.lv===lv);
+function txGroups(){const out=[];TX_CATS.forEach(c=>TX_LVS.forEach(lv=>{const n=txGroupPairs(c.k,lv).length;if(n)out.push({cat:c.k,lv,n,key:gKey(c.k,lv)})}));return out}
+
+/* ---------- sorteig i estructura de la fase regular ---------- */
+// Generador pseudoaleatori amb llavor: el mateix sorteig es pot reproduir
+function rng(seed){let a=seed>>>0;return ()=>{a=(a+0x6D2B79F5)>>>0;let t=a;t=Math.imul(t^t>>>15,t|1);t^=t+Math.imul(t^t>>>7,t|61);return ((t^t>>>14)>>>0)/4294967296}}
+function shuffled(arr,r){const a=arr.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(r()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
+// Partit 1: aparellament aleatori. Partit 2: guanyador contra guanyador i perdedor contra perdedor
+// (dels partits 1 consecutius). Si el nombre de parelles és senar, tres parelles formen un trio
+// (A–B al partit 1; guanyador A–B contra C i perdedor A–B contra C al partit 2): tothom juga 2 partits.
+function buildGroup(g,r){
+ const ids=shuffled(txGroupPairs(g.cat,g.lv).map(p=>p.id),r),key=g.key,r1=[],r2=[],notes=[];
+ const n=ids.length;
+ if(n<2){notes.push('Grup amb una sola parella: cal moure-la a un altre nivell o categoria.');return {r1,r2,notes,trio:false}}
+ let trio=null,reg=ids;
+ if(n%2===1){trio=ids.slice(n-3);reg=ids.slice(0,n-3)}
+ for(let i=0;i<reg.length;i+=2)r1.push({id:`${key}-P1-${r1.length+1}`,a:{pair:reg[i]},b:{pair:reg[i+1]}});
+ const k=r1.length,M=i=>r1[i].id;
+ if(n===2){r2.push({id:`${key}-P2-1`,a:{pair:reg[0]},b:{pair:reg[1]}});notes.push('Només hi ha 2 parelles: el segon partit és la revenja.')}
+ else{
+  const W=[],L=[];
+  for(let i=0;i+1<k;i+=2)W.push([{w:M(i)},{w:M(i+1)}]);
+  if(k%2===1&&k>=3){W.push([{w:M(k-1)},{l:M(0)}]);for(let i=1;i+1<k;i+=2)L.push([{l:M(i)},{l:M(i+1)}])}
+  else if(k%2===1&&k===1&&trio){/* 1 partit regular + trio: es creuen amb el trio més avall */}
+  else for(let i=0;i+1<k;i+=2)L.push([{l:M(i)},{l:M(i+1)}]);
+  W.concat(L).forEach(([a,b])=>r2.push({id:`${key}-P2-${r2.length+1}`,a,b}));
+ }
+ if(trio){
+  const t=`${key}-P1-${r1.length+1}`;
+  r1.push({id:t,a:{pair:trio[0]},b:{pair:trio[1]},trio:true});
+  if(k===1){ // 5 parelles: el partit regular i el del trio es creuen, i la 3a parella del trio juga contra els dos perdedors
+   r2.push({id:`${key}-P2-${r2.length+1}`,a:{w:M(0)},b:{w:t}});
+   r2.push({id:`${key}-P2-${r2.length+1}`,a:{l:M(0)},b:{pair:trio[2]}});
+   r2.push({id:`${key}-P2-${r2.length+1}`,a:{l:t},b:{pair:trio[2]}});
+  }else{
+   r2.push({id:`${key}-P2-${r2.length+1}`,a:{w:t},b:{pair:trio[2]}});
+   r2.push({id:`${key}-P2-${r2.length+1}`,a:{l:t},b:{pair:trio[2]}});
+  }
+  notes.push('Nombre senar de parelles: una parella juga els seus 2 partits a la 2a ronda.');
+ }
+ return {r1,r2,notes,trio:!!trio};
+}
+// Resol una font: parella fixa, o guanyador/perdedor d'un partit ja jugat
+function txAllMatches(){if(!TX.plan)return [];const out=[];Object.keys(TX.plan.groups).forEach(k=>{const g=TX.plan.groups[k];g.r1.forEach(m=>out.push(Object.assign({round:1,g:k},m)));g.r2.forEach(m=>out.push(Object.assign({round:2,g:k},m)))});return out}
+function txFindMatch(id){return txAllMatches().find(m=>m.id===id)}
+function txResolve(src){
+ if(src.pair)return src.pair;
+ const mid=src.w||src.l,m=txFindMatch(mid),res=TX.results[mid];if(!m||!res)return null;
+ const a=txResolve(m.a),b=txResolve(m.b);if(!a||!b)return null;
+ const st=txStats(res),aw=st.A.won;
+ return src.w?(aw?a:b):(aw?b:a);
+}
+function txSrcLabel(src){
+ if(src.pair)return txPairName(txPair(src.pair));
+ const id=src.w||src.l,num=id.split('-P1-')[1];
+ return `${src.w?'Guanyador':'Perdedor'} partit 1·${num}`;
+}
+// Parelles que poden acabar jugant un partit (per planificar abans de saber els resultats)
+function txCandidates(src){
+ if(src.pair)return [src.pair];
+ const m=txFindMatch(src.w||src.l);return m?txCandidates(m.a).concat(txCandidates(m.b)):[];
+}
+
+/* ---------- planificador d'horaris i pistes ---------- */
+// Torns de "slot" minuts entre l'hora d'inici i la de final. Restriccions:
+// · disponibilitat de les parelles · cap jugador en dos partits alhora (també entre categories)
+// · descans mínim entre partits del mateix jugador · el partit 2 després dels partits 1 que el decideixen
+// · 6 pistes en bon estat; les pistes 7 i 8 només quan no hi ha cap altra opció (urgència).
+// Els partits més difícils de col·locar van primer, i cadascun ocupa el primer torn possible.
+function txSlots(){const c=TX.config,s=toMin(c.start),e=toMin(c.end),out=[];for(let t=s;t+c.slot<=e;t+=c.slot)out.push(t);return out}
+function plan(seed){
+ const c=TX.config,slots=txSlots(),r=rng(seed),groups={},notes=[];
+ txGroups().forEach(g=>{groups[g.key]=Object.assign(buildGroup(g,r),{cat:g.cat,lv:g.lv});groups[g.key].notes.forEach(n=>notes.push({g:g.key,text:n}))});
+ TX.plan={seed,groups,schedule:{},ko:{},warnings:[],builtAt:Date.now()};
+ const regular=[];for(let i=1;i<=c.courts;i++)regular.push(i);
+ const extra=[];for(let i=c.courts+1;i<=c.courts+c.extra;i++)extra.push(i);
+ const avail=ids=>{let lo=0,hi=Infinity;ids.forEach(id=>{const p=txPair(id);if(p){lo=Math.max(lo,toMin(p.from));hi=Math.min(hi,toMin(p.to))}});return [lo,hi]};
+ // Jugadors que poden jugar el partit. Al partit 2 hi juga el guanyador O el perdedor d'un partit 1:
+ // cada jugador porta la condició («F:w» o «F:l») i dues condicions oposades del mateix partit no es trepitgen mai.
+ const infoCache={};
+ const info=m=>infoCache[m.id]||(infoCache[m.id]=(()=>{const ids=[],players=[];
+  [m.a,m.b].forEach(src=>{const f=src.w||src.l,cond=f?f+(src.w?':w':':l'):null;
+   txCandidates(src).forEach(id=>{ids.push(id);const p=txPair(id);if(p)txPlayers(p).forEach(x=>players.push({p:x,cond}))})});
+  return {ids,players,win:avail(ids)}})());
+ const exclusive=(c1,c2)=>!!(c1&&c2&&c1.slice(0,-2)===c2.slice(0,-2)&&c1!==c2);
+ const feeders=m=>[m.a,m.b].map(s=>s.w||s.l).filter(Boolean);
+ const all=txAllMatches();
+ const width=m=>{const w=info(m).win;return Math.max(0,w[1]-w[0])};
+ const depth={};Object.keys(groups).forEach(gk=>{const g=groups[gk],n=txGroupPairs(g.cat,g.lv).length;depth[gk]=n>=2?txKoEstimate(g,n).main.length:0});
+ // Un intent de repartiment amb un ordre concret de col·locació
+ const attempt=k=>{
+  const jr=rng(seed*31+k*977+7),jit={};all.forEach(m=>jit[m.id]=k?jr()*150:0);
+  const sched={},busy={},used={},warnings=[];let score=0;
+  const fits=(m,inf,i,rest,useAvail)=>{
+   const t=slots[i];
+   if(useAvail&&(t<inf.win[0]||t+c.slot>inf.win[1]))return false;
+   // el partit 2 va després dels partits 1 que el decideixen (el descans el garanteix la comprovació de jugadors)
+   if(feeders(m).some(f=>!sched[f]||sched[f].slot>=i))return false;
+   return inf.players.every(({p,cond})=>(busy[p]||[]).every(e=>exclusive(cond,e.cond)||Math.abs(e.i-i)>rest));
+  };
+  const place=m=>{
+   const inf=info(m);
+   const tries=[[c.rest,true,regular,null],[c.rest,true,c.allowExtra?extra:[],'urgencia'],[0,true,regular,'seguits'],[0,true,c.allowExtra?extra:[],'seguits'],[c.rest,false,regular,'fora'],[0,false,regular.concat(c.allowExtra?extra:[]),'fora']];
+   for(const [rest,useAvail,courts,flag] of tries){
+    if(!courts.length)continue;
+    for(let i=0;i<slots.length;i++){
+     if(!fits(m,inf,i,rest,useAvail))continue;
+     const free=courts.filter(x=>(used[i]||[]).indexOf(x)<0);if(!free.length)continue;
+     sched[m.id]={slot:i,court:free[0],flag};
+     (used[i]=used[i]||[]).push(free[0]);inf.players.forEach(({p,cond})=>(busy[p]=busy[p]||[]).push({i,cond}));
+     if(flag==='urgencia'){score+=300;warnings.push({g:m.g,text:`${txMatchLabel(m)}: s’ha hagut de fer servir la pista ${free[0]} (urgència).`})}
+     if(flag==='seguits'){score+=1000;warnings.push({g:m.g,text:`${txMatchLabel(m)}: algun jugador juga dos partits seguits (no hi havia cap altre torn possible).`})}
+     if(flag==='fora'){score+=5000;warnings.push({g:m.g,text:`${txMatchLabel(m)}: no hi ha cap torn dins la disponibilitat de les parelles; s’ha posat a ${fromMin(slots[i])}. Cal parlar-ho amb elles.`})}
+     score+=i;return;
+    }
+   }
+   score+=100000;warnings.push({g:m.g,text:`${txMatchLabel(m)}: no hi cap en tot l’horari. Allarga l’hora de final o permet més pistes.`});
+  };
+  // primer els partits 1 i després els 2; dins de cada ronda, els que tenen menys marge horari
+  // els grups amb més rondes finals per davant tenen prioritat per començar abans
+  const prio=m=>width(m)+jit[m.id]-depth[m.g]*90;
+  [1,2].forEach(round=>all.filter(m=>m.round===round).sort((x,y)=>prio(x)-prio(y)||(info(y).players.length-info(x).players.length)).forEach(place));
+  // Previsió de les rondes finals de cada grup: després del darrer partit del grup, ronda rere ronda
+  // (amb el descans entre rondes). Primer els grups que acaben més tard la fase regular.
+  // Si la cadena de rondes d'un grup no hi cap amb les pistes bones, es torna a provar amb les d'urgència.
+  const ko={};
+  const lastOf=gk=>{const g=groups[gk];return Math.max.apply(null,g.r2.concat(g.r1).map(m=>sched[m.id]?sched[m.id].slot:-1))};
+  Object.keys(groups).filter(gk=>txGroupPairs(groups[gk].cat,groups[gk].lv).length>=2).sort((x,y)=>lastOf(y)-lastOf(x)).forEach(gk=>{
+   const g=groups[gk],n=txGroupPairs(g.cat,g.lv).length,est=txKoEstimate(g,n),last=lastOf(gk);
+   const chain=(label,courts)=>{let at=last;const rounds=[],taken=[];
+    for(const rd of est[label]){const placed=[];
+     for(let i=at+1+c.rest;i<slots.length&&placed.length<rd.matches;i++){
+      const free=courts.filter(x=>(used[i]||[]).indexOf(x)<0&&!taken.some(t=>t.slot===i&&t.court===x));
+      while(free.length&&placed.length<rd.matches){const ct=free.shift();placed.push({slot:i,court:ct,extra:ct>c.courts})}}
+     if(placed.length<rd.matches)return null;
+     placed.forEach(x=>taken.push(x));rounds.push({name:rd.name,matches:placed});at=Math.max.apply(null,placed.map(x=>x.slot));}
+    return rounds};
+   const book=label=>{
+    let rounds=chain(label,regular),urg=false;
+    if(!rounds&&c.allowExtra&&extra.length){rounds=chain(label,regular.concat(extra));urg=!!rounds}
+    if(!rounds){score+=5000;warnings.push({g:gk,text:`${TXCAT(g.cat).name} ${g.lv}: el ${label==='main'?'quadre principal':'quadre de consolació'} no acaba abans de les ${c.end}. Allarga l’hora de final, escurça els torns o afegeix pistes.`});return []}
+    rounds.forEach(rd=>rd.matches.forEach(x=>{(used[x.slot]=used[x.slot]||[]).push(x.court);score+=x.slot+(x.extra?300:0)}));
+    if(urg&&rounds.some(rd=>rd.matches.some(x=>x.extra)))warnings.push({g:gk,text:`${TXCAT(g.cat).name} ${g.lv}: per acabar a temps, alguna ronda final fa servir les pistes d’urgència.`});
+    return rounds};
+   ko[gk]={main:book('main'),cons:book('cons')};
+  });
+  return {sched,ko,warnings,score};
+ };
+ let best=null;
+ for(let k=0;k<40;k++){const t=attempt(k);if(!best||t.score<best.score)best=t;if(best.score<1000&&k>=10)break}
+ TX.plan.schedule=best.sched;TX.plan.ko=best.ko;TX.plan.warnings=best.warnings;TX.plan.notes=notes;
+ txSave();
+}
+function txMatchLabel(m){const g=TX.plan.groups[m.g];return `${TXCAT(g.cat).name} ${g.lv} · partit ${m.round}·${m.id.split('-P'+m.round+'-')[1]}`}
+// Mida prevista dels quadres finals: amb 1 o 2 victòries → principal; amb 0 victòries → consolació
+function txKoEstimate(g,n){
+ const k=g.r1.filter(m=>!m.trio).length;
+ let minZero=Math.floor(k/2),maxZero=minZero;
+ if(k%2===1&&k>=3)maxZero++;
+ if(g.trio){maxZero++;if(k===1){maxZero++}}
+ if(n===2){minZero=0;maxZero=1}
+ const maxMain=n-minZero,P=maxMain>=2?Math.pow(2,Math.ceil(Math.log2(maxMain))):0;
+ const Q=maxZero>=2?Math.pow(2,Math.ceil(Math.log2(maxZero))):0;
+ const rounds=(size,count)=>{const out=[];if(size<2)return out;let s=size,first=true;while(s>=2){out.push({name:RNAME[s/2],matches:first?Math.max(0,count-s/2):s/2});first=false;s/=2}return out.filter(r=>r.matches>0)};
+ return {main:rounds(P,maxMain),cons:rounds(Q,maxZero),P,Q};
+}
+
+/* ---------- classificació de la fase regular ---------- */
+// Punts → diferència de jocs → jocs guanyats → enfrontament directe → ordre del sorteig
+function txStandings(cat,lv){
+ const pairs=txGroupPairs(cat,lv),key=gKey(cat,lv),g=TX.plan&&TX.plan.groups[key];
+ const rows=pairs.map(p=>({id:p.id,p,name:txPairName(p),pj:0,pg:0,pp:0,jg:0,jp:0,pts:0}));
+ const byId={};rows.forEach(r=>byId[r.id]=r);
+ let played=0,total=0;const h2h={};
+ if(g)g.r1.concat(g.r2).forEach(m=>{total++;const res=TX.results[m.id];if(!res)return;const a=txResolve(m.a),b=txResolve(m.b);if(!a||!b)return;
+  played++;const st=txStats(res);[[a,st.A],[b,st.B]].forEach(([id,s])=>{const r=byId[id];if(!r)return;r.pj++;s.won?r.pg++:r.pp++;r.jg+=s.gw;r.jp+=s.gl;r.pts+=s.pts});
+  h2h[a+'|'+b]=st.A.won?a:b;h2h[b+'|'+a]=st.A.won?a:b;});
+ rows.forEach(r=>r.dif=r.jg-r.jp);
+ const order=g?g.r1.concat(g.r2).reduce((o,m)=>{[m.a,m.b].forEach(s=>{if(s.pair&&o.indexOf(s.pair)<0)o.push(s.pair)});return o},[]):pairs.map(p=>p.id);
+ rows.sort((x,y)=>y.pts-x.pts||y.dif-x.dif||y.jg-x.jg||(h2h[x.id+'|'+y.id]?(h2h[x.id+'|'+y.id]===x.id?-1:1):0)||order.indexOf(x.id)-order.indexOf(y.id));
+ const complete=total>0&&played===total;
+ rows.forEach(r=>r.state=!complete?(r.pj>=2&&r.pg===0?'cons':r.pg>=1?'main':'pend'):(r.pg>=1?'main':'cons'));
+ return {rows,played,total,complete};
+}
+
+/* ---------- quadres finals (principal i consolació) ---------- */
+function koDraw(size,seedsCount){
+ // primera ronda amb caps de sèrie; els que no tenen rival passen directament (exempts)
+ const order=seedOrder(size),rounds=[];
+ rounds.push(Array.from({length:size/2},(_,i)=>({a:order[2*i]<=seedsCount?order[2*i]:0,b:order[2*i+1]<=seedsCount?order[2*i+1]:0})));
+ for(let s=size/4;s>=1;s/=2)rounds.push(Array.from({length:s},()=>({a:null,b:null})));
+ return rounds;
+}
+function koState(key,kind){TX.ko[key]=TX.ko[key]||{};TX.ko[key][kind]=TX.ko[key][kind]||{names:{},res:{}};return TX.ko[key][kind]}
+function koBuild(key,kind,entrants){
+ const n=entrants.length;if(n<2)return null;
+ const size=Math.pow(2,Math.ceil(Math.log2(n))),rounds=koDraw(size,n),st=koState(key,kind);
+ const nameFor=(seed)=>seed>0&&entrants[seed-1]?entrants[seed-1]:'';
+ const out=rounds.map((ms,r)=>ms.map((m,i)=>{
+  const id=`${r}-${i}`;let A,B;
+  if(r===0){A={seed:m.a,name:m.a?nameFor(m.a):'',bye:!m.a};B={seed:m.b,name:m.b?nameFor(m.b):'',bye:!m.b}}
+  else{A={from:`${r-1}-${2*i}`};B={from:`${r-1}-${2*i+1}`}}
+  return {id,A,B};
+ }));
+ // resol noms (sobreescrits a mà) i guanyadors en cascada
+ const winner={};
+ out.forEach((ms,r)=>ms.forEach(m=>{
+  ['A','B'].forEach(side=>{const x=m[side];if(x.from)x.name=winner[x.from]||'';const ov=st.names[m.id+side];if(ov)x.name=ov});
+  if(m.A.bye&&!m.B.bye)winner[m.id]=m.B.name;else if(m.B.bye&&!m.A.bye)winner[m.id]=m.A.name;
+  else{const res=st.res[m.id];if(res&&m.A.name&&m.B.name)winner[m.id]=txStats(res).A.won?m.A.name:m.B.name}
+  m.winner=winner[m.id]||'';
+ }));
+ return {rounds:out,size,champion:out[out.length-1][0].winner};
+}
+function koHtml(key,kind,entrants,placeholder){
+ const b=koBuild(key,kind,entrants.map(e=>e.name));
+ if(!b)return `<div class="empty">${kind==='main'?'Encara no hi ha prou parelles classificades per al quadre principal.':'Cap parella va a la consolació (o només n’hi ha una).'}</div>`;
+ const st=koState(key,kind),W=236,H=104,GX=40,TOP=28,U=H+18,cols=b.rounds.length;
+ const x=c=>16+c*(W+GX),y=(r,i)=>TOP+(i+.5)*Math.pow(2,r)*U-H/2;
+ const width=32+cols*W+(cols-1)*GX,height=TOP+b.size/2*U+120;
+ let boxes='',wires='',labels='';
+ b.rounds.forEach((ms,r)=>{
+  labels+=`<div class="rlabel" style="left:${x(r)}px;width:${W}px">${esc(RNAME[ms.length])}</div>`;
+  ms.forEach((m,i)=>{
+   const X=x(r),Y=y(r,i),res=st.res[m.id];
+   const row=(s,k)=>{const side=m[s];const ph=side.bye?'Exempt':(side.seed?`${placeholder} ${side.seed}`:'Guanyador');
+    const win=m.winner&&side.name===m.winner&&!side.bye;
+    return `<div class="ko-row${win?' win':''}">${side.seed?`<span class="seed-b">${side.seed}</span>`:'<span class="seed-b"></span>'}<input class="ko-name" data-k="${key}" data-kind="${kind}" data-id="${m.id}${s}" value="${esc(side.bye?'':side.name)}" placeholder="${esc(ph)}"${side.bye?' disabled':''} aria-label="Parella"></div>`};
+   const both=m.A.name&&m.B.name&&!m.A.bye&&!m.B.bye;
+   const score=m.A.bye||m.B.bye?'<span class="small muted">Passa directament</span>':`<input class="ko-score" data-k="${key}" data-kind="${kind}" data-id="${m.id}" value="${esc(res?setsText2(res):'')}" placeholder="${both?'Resultat (p. ex. 6-4 6-3)':'Pendent'}"${both?'':' disabled'} aria-label="Resultat">`;
+   boxes+=`<div class="ko-m${r===cols-1?' final':''}" style="left:${X}px;top:${Y}px;width:${W}px;height:${H}px">${row('A')}${row('B')}<div class="ko-foot">${score}</div></div>`;
+   if(r<cols-1){const nx=x(r+1),ny=y(r+1,i>>1)+H/2,x1=X+W,xm=x1+GX/2,y1=Y+H/2;wires+=`<path d="M${x1} ${y1}H${xm}V${ny}H${nx}"/>`}
+  });
+ });
+ const fx=x(cols-1),fy=y(cols-1,0)+H+16;
+ const cup=`<div class="trophy" style="left:${fx}px;width:${W}px;top:${fy}px"><div class="cup" aria-hidden="true">${kind==='main'?'🏆':'🥇'}</div><b>${b.champion?esc(b.champion):(kind==='main'?'Campions':'Guanyadors de la consolació')}</b><span>${b.champion?(kind==='main'?'Campions':'Guanyadors de la consolació'):'Guanyador de la final'}</span></div>`;
+ return `<div class="bracket-scroll ko-scroll"><div class="bracket-stage" style="width:${width}px;height:${height}px"><svg class="bracket-svg" width="${width}" height="${height}" aria-hidden="true">${wires}</svg>${labels}${boxes}${cup}</div></div>`;
+}
+function setsText2(res){return res.wo?`WO ${res.wo}`:res.sets.map(([a,b])=>`${a}-${b}`).join(' ')}
+function parseScore(text){
+ const t=text.trim().toUpperCase();if(!t)return {clear:true};
+ const wo=/^WO\s*([AB])$/.exec(t);if(wo)return {res:{wo:wo[1],sets:[]}};
+ const sets=(t.match(/\d+\s*[-–]\s*\d+/g)||[]).map(x=>x.split(/[-–]/).map(Number));
+ if(!sets.length)return {err:'Escriu el resultat set a set, per exemple 6-4 6-3 (o «WO A» / «WO B»).'};
+ const e=txEval(sets);if(e.err)return {err:e.err};
+ return {res:{wo:null,sets}};
+}
+
+/* ---------- interfície del Torneig Express ---------- */
+const TX_SUBS=[['normativa','Normativa i estructura'],['inscripcions','Inscripcions'],['quadres','Quadres'],['resultats','Resultats'],['ranking','Classificacions i ranking']];
+let TXV='graella';  // vista de Quadres
+function renderExpress(){
+ if(!TX_SUBS.some(s=>s[0]===TXS.sub))TXS.sub='normativa';
+ const t=TOURNEYS.express;
+ $('formatDetail').innerHTML=`<div class="view-head" style="margin-bottom:12px"><div><h2>${t.ico} ${esc(TX.config.name||t.name)}</h2><p class="muted">${TX.config.date?esc(fmtLong(TX.config.date))+' · ':''}${esc(TX.config.start)}–${esc(TX.config.end)} · ${TX.pairs.length} parelles inscrites</p></div><span class="pill">${esc(t.tag)}</span></div>
+ <nav class="subnav" id="txNav" aria-label="Apartats del Torneig Express">${TX_SUBS.map(([k,n])=>`<button data-txsub="${k}" aria-pressed="${k===TXS.sub}">${esc(n)}</button>`).join('')}</nav>
+ <div id="txBody" style="margin-top:14px"></div>`;
+ const sel=$('txNav').querySelector('[aria-pressed="true"]');if(sel)$('txNav').scrollLeft=sel.offsetLeft-$('txNav').offsetLeft-20;
+ txSaveUI();
+ ({normativa:txNormativa,inscripcions:txInscripcions,quadres:txQuadres,resultats:txResultats,ranking:txRanking})[TXS.sub]();
+}
+function txChips(withCounts){
+ const gs=txGroups();
+ if(!gs.some(g=>g.cat===TXS.cat&&g.lv===TXS.lv)&&gs.length){TXS.cat=gs[0].cat;TXS.lv=gs[0].lv}
+ const cats=TX_CATS.filter(c=>gs.some(g=>g.cat===c.k));
+ return `<div class="card ag-controls"><div><span class="lbl">Categoria</span><div class="chips">${cats.map(c=>`<button data-txcat="${c.k}" aria-pressed="${c.k===TXS.cat}">${esc(c.name)}</button>`).join('')}</div></div>
+ <div><span class="lbl">Nivell</span><div class="chips">${TX_LVS.map(lv=>{const n=txGroupPairs(TXS.cat,lv).length;return `<button data-txlv="${lv}" aria-pressed="${lv===TXS.lv}"${n?'':' disabled'}>Nivell ${lv}${withCounts?` <span class="small">· ${n} parelles</span>`:''}</button>`}).join('')}</div></div></div>`;
+}
+const timeOpts=(sel)=>{const out=[];for(let t=toMin(TX.config.start);t<=toMin(TX.config.end);t+=30)out.push(`<option${fromMin(t)===sel?' selected':''}>${fromMin(t)}</option>`);return out.join('')};
+
+/* --- Normativa i estructura --- */
+function txNormativa(){
+ const c=TX.config;
+ $('txBody').innerHTML=`<div class="rules">
+ <article class="rule"><h3><span class="ic">🗂️</span>Estructura</h3><ul>
+  <li>Tres categories: <b>Masculina</b>, <b>Femenina</b> i <b>Mixta</b>.</li><li>Tres nivells per categoria: <b>A</b>, <b>B</b> i <b>C</b>. Cada categoria i nivell és un quadre independent.</li>
+  <li>Torneig d’un sol dia, per parelles.</li></ul></article>
+ <article class="rule"><h3><span class="ic">✌️</span>Dos partits garantits</h3><ul>
+  <li><b>Partit 1:</b> enfrontaments per sorteig.</li><li><b>Partit 2:</b> guanyadors contra guanyadors i perdedors contra perdedors, perquè els creuaments siguin més justos.</li>
+  <li>Si el nombre de parelles és senar, una parella juga els seus dos partits a la segona ronda, així tothom en juga dos.</li></ul></article>
+ <article class="rule"><h3><span class="ic">🔢</span>Puntuació i classificació</h3>
+  <div class="key"><span>Victòria · 3 punts</span><span>Derrota amb un set guanyat · 1 punt</span><span>Derrota · 0 punts</span></div>
+  <ul><li>Només compten els dos partits de la fase regular. Les rondes eliminatòries no sumen al rànquing.</li>
+  <li>Desempat: punts → diferència de jocs → jocs guanyats → enfrontament directe → sorteig.</li></ul></article>
+ <article class="rule"><h3><span class="ic">🏆</span>Quadre principal</h3><ul>
+  <li>Hi passen les parelles que han guanyat almenys un dels dos partits.</li>
+  <li>El quadre comença a la ronda que toqui segons les classificades: Ronda de 32, setzens, vuitens, quarts, semifinals i final.</li>
+  <li>Els caps de sèrie surten de la classificació. Si el quadre no és complet, els millors caps de sèrie passen directament a la ronda següent (exempts).</li></ul></article>
+ <article class="rule"><h3><span class="ic">🥇</span>Quadre de consolació</h3><ul>
+  <li>Les parelles que perden els dos partits queden fora del quadre principal i juguen un quadre de consolació a part.</li>
+  <li>Funciona igual que el principal, amb la seva pròpia final.</li></ul></article>
+ <article class="rule"><h3><span class="ic">🎾</span>Format de partit</h3><ul>
+  <li>${esc(TX_FORMATS[c.format])}${c.format==='stb'?': a 1-1 en sets, el partit es decideix amb un super tie-break a 10 punts (2 de diferència)':''}.</li>
+  <li>Sets vàlids: 6-0 a 6-4, 7-5 i 7-6.</li><li>Cada partit té un torn de ${c.slot} minuts de pista, escalfament inclòs.</li></ul></article>
+ <article class="rule"><h3><span class="ic">🕒</span>Horaris i pistes</h3><ul>
+  <li>Els horaris es fan segons la disponibilitat que cada parella indica a la inscripció.</li>
+  <li>Ningú juga dos partits alhora (tampoc si juga en dues categories) i hi ha com a mínim ${c.rest} ${c.rest===1?'torn':'torns'} de descans entre partits del mateix jugador sempre que és possible.</li>
+  <li>Es juga a ${c.courts} pistes. Les pistes ${c.courts+1}${c.extra>1?` i ${c.courts+c.extra}`:''} només es fan servir en cas d’urgència.</li>
+  <li>Les parelles classificades han de poder jugar les rondes finals el mateix dia.</li></ul></article>
+ <article class="rule"><h3><span class="ic">💶</span>Inscripció</h3>
+  <div class="key"><span>${c.priceMember} € per jugador/a abonat/da</span><span>${c.priceNon} € per jugador/a no abonat/da</span></div>
+  <ul><li>La inscripció és per parelles i inclou un mínim de dos partits garantits.</li></ul></article>
+ <article class="rule wide fair"><h3><span class="ic">🤝</span>Puntualitat i joc net</h3><ul>
+  <li>Sigueu a la pista 10 minuts abans de l’hora: el torn comença a l’hora prevista. Més de 10 minuts de retard sense avisar pot ser WO.</li>
+  <li>Quan acabeu, comuniqueu el resultat a l’organització, set a set.</li>
+  <li>Cada parella canta les boles del seu costat. En cas de dubte, es repeteix el punt.</li>
+  <li>Respecte pels rivals, l’organització i les instal·lacions. Qualsevol situació no prevista la resol l’organització.</li></ul></article>
+ </div>`;
+}
+
+/* --- Inscripcions --- */
+function txInscripcions(){
+ const c=TX.config,e=TXS.edit?txPair(TXS.edit):null;
+ const pl=(n,p)=>`<fieldset class="tx-player"><legend>Jugador/a ${n}</legend>
+  <label class="lbl" for="tx-p${n}-name">Nom i cognoms</label><input id="tx-p${n}-name" autocomplete="off" value="${esc(p?p.name:'')}">
+  <div class="tx-2"><div><label class="lbl" for="tx-p${n}-phone">Telèfon</label><input id="tx-p${n}-phone" type="tel" inputmode="tel" value="${esc(p?p.phone:'')}"></div>
+  <div><label class="lbl" for="tx-p${n}-mail">Email</label><input id="tx-p${n}-mail" type="email" inputmode="email" value="${esc(p?p.mail:'')}"></div></div>
+  <span class="lbl">Abonat/da al club</span><div class="chips" role="radiogroup">${['Sí','No'].map(v=>`<label class="radio"><input type="radio" name="tx-p${n}-member" value="${v}"${p&&((p.member&&v==='Sí')||(!p.member&&v==='No'))?' checked':''}> ${v}</label>`).join('')}</div></fieldset>`;
+ const groups=txGroups(),players=TX.pairs.length*2,money=TX.pairs.reduce((s,p)=>s+[p.p1,p.p2].reduce((x,j)=>x+(j.member?c.priceMember:c.priceNon),0),0);
+ $('txBody').innerHTML=`<div class="stack">
+ <div class="card"><h3>Dades del torneig</h3><div class="grid tx-cfg" style="margin-top:10px">
+  <div><label class="lbl" for="txc-name">Nom</label><input id="txc-name" data-cfg="name" value="${esc(c.name)}"></div>
+  <div><label class="lbl" for="txc-date">Data</label><input id="txc-date" data-cfg="date" type="date" value="${esc(c.date)}"></div>
+  <div><label class="lbl" for="txc-start">Primer partit</label><select id="txc-start" data-cfg="start">${(()=>{let o='';for(let t=7*60;t<=14*60;t+=30)o+=`<option${fromMin(t)===c.start?' selected':''}>${fromMin(t)}</option>`;return o})()}</select></div>
+  <div><label class="lbl" for="txc-end">Hora màxima d’acabar</label><select id="txc-end" data-cfg="end">${(()=>{let o='';for(let t=16*60;t<=24*60;t+=30)o+=`<option${fromMin(t)===c.end?' selected':''}>${fromMin(t)}</option>`;return o})()}</select></div>
+  <div><label class="lbl" for="txc-pm">Preu abonat/da (€)</label><input id="txc-pm" data-cfg="priceMember" type="number" inputmode="numeric" min="0" value="${c.priceMember}"></div>
+  <div><label class="lbl" for="txc-pn">Preu no abonat/da (€)</label><input id="txc-pn" data-cfg="priceNon" type="number" inputmode="numeric" min="0" value="${c.priceNon}"></div>
+ </div></div>
+ <form class="card tx-form" id="txForm" novalidate><h3>${e?'Editar inscripció':'Formulari d’inscripció'}</h3><p class="muted small">La inscripció és per parelles. Omple les dades de les dues persones i la franja horària en què podeu jugar.</p>
+  <div class="tx-2" style="margin-top:10px"><div><label class="lbl" for="tx-cat">Categoria</label><select id="tx-cat">${TX_CATS.map(x=>`<option value="${x.k}"${(e?e.cat:TXS.cat)===x.k?' selected':''}>${x.name}</option>`).join('')}</select></div>
+  <div><label class="lbl" for="tx-lv">Nivell</label><select id="tx-lv">${TX_LVS.map(l=>`<option${(e?e.lv:TXS.lv)===l?' selected':''}>${l}</option>`).join('')}</select></div></div>
+  <div class="tx-players">${pl(1,e&&e.p1)}${pl(2,e&&e.p2)}</div>
+  <fieldset class="tx-player"><legend>Disponibilitat horària de la parella</legend><div class="tx-2"><div><label class="lbl" for="tx-from">Podem jugar des de les</label><select id="tx-from">${timeOpts(e?e.from:c.start)}</select></div><div><label class="lbl" for="tx-to">fins a les</label><select id="tx-to">${timeOpts(e?e.to:c.end)}</select></div></div></fieldset>
+  <div class="sb-err" id="txFormErr" role="alert"></div>
+  <div class="actions-row"><button class="primary" type="submit">${e?'Guardar canvis':'Inscriure la parella'}</button>${e?'<button class="secondary" type="button" data-tx="cancel">Cancel·lar</button>':''}</div>
+ </form>
+ <div class="card"><div class="ag-sum"><div><h3>Parelles inscrites</h3><p class="muted small">${TX.pairs.length} parelles · ${players} jugadors · ingressos previstos ${money} €</p></div>
+  <div class="actions-row" style="flex:0 1 auto"><button class="secondary small-btn" data-tx="demo">Carregar parelles d’exemple</button>${TX.pairs.length?'<button class="secondary small-btn" data-tx="clear">Esborrar totes</button>':''}</div></div>
+  ${groups.length?groups.map(g=>`<h4 class="tx-gh">${esc(TXCAT(g.cat).name)} · Nivell ${g.lv} <span class="pill">${g.n} ${g.n===1?'parella':'parelles'}</span></h4><ul class="tx-list">${txGroupPairs(g.cat,g.lv).map(p=>`<li><div><b>${esc(txPairName(p))}</b><span class="small muted">${esc(p.from)}–${esc(p.to)} · ${[p.p1,p.p2].map(j=>j.member?'abonat/da':'no abonat/da').join(' · ')}${p.demo?' · exemple':''}</span><details class="small"><summary>Contacte</summary>${[p.p1,p.p2].map(j=>`${esc(j.name)}: ${esc(j.phone)} · ${esc(j.mail)}`).join('<br>')}</details></div><span class="sb-actions"><button class="secondary small-btn" data-tx="edit" data-id="${p.id}">Editar</button><button class="secondary small-btn" data-tx="del" data-id="${p.id}">Treure</button></span></li>`).join('')}</ul>`).join(''):'<div class="empty">Encara no hi ha cap parella inscrita.</div>'}
+  <p class="muted small" style="margin-top:10px">Les dades de contacte només es guarden en aquest dispositiu i no surten als quadres.</p></div>
+ </div>`;
+}
+function txReadForm(){
+ const v=id=>$(id).value.trim(),pl=n=>({name:v(`tx-p${n}-name`).replace(/\s+/g,' '),phone:v(`tx-p${n}-phone`),mail:v(`tx-p${n}-mail`),member:(document.querySelector(`input[name="tx-p${n}-member"]:checked`)||{}).value});
+ const p1=pl(1),p2=pl(2),cat=v('tx-cat'),lv=v('tx-lv'),from=v('tx-from'),to=v('tx-to');
+ for(const [n,p] of [[1,p1],[2,p2]]){
+  if(nameWords(p.name).length<2)return {err:`Jugador/a ${n}: escriu el nom i almenys un cognom.`};
+  if(p.phone.replace(/\D/g,'').length<9)return {err:`Jugador/a ${n}: el telèfon ha de tenir com a mínim 9 xifres.`};
+  if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(p.mail))return {err:`Jugador/a ${n}: l’email no és vàlid.`};
+  if(!p.member)return {err:`Jugador/a ${n}: indica si és abonat/da al club.`};
+ }
+ if(norm(p1.name)===norm(p2.name))return {err:'Les dues persones de la parella no poden ser la mateixa.'};
+ if(toMin(to)-toMin(from)<TX.config.slot*2)return {err:`La franja horària ha de permetre jugar com a mínim dos partits (${TX.config.slot*2} minuts).`};
+ const dup=TX.pairs.find(p=>p.id!==TXS.edit&&p.cat===cat&&txPlayers(p).some(x=>x===norm(p1.name)||x===norm(p2.name)));
+ if(dup)return {err:`Un dels jugadors ja està inscrit a ${TXCAT(cat).name} (amb ${txPairName(dup)}). Es pot jugar en dues categories, però no dues vegades a la mateixa.`};
+ const mk=p=>({name:p.name,phone:p.phone,mail:p.mail.toLowerCase(),member:p.member==='Sí'});
+ return {pair:{cat,lv,p1:mk(p1),p2:mk(p2),from,to}};
+}
+function txDemo(){
+ const F=['Marc','Jordi','Pau','Albert','Xavi','Sergi','Oriol','Dani','Pere','Joan','Arnau','Roger','Víctor','Guillem','Ferran','Toni','Carles','Àlex','Ivan','Nil','Bernat','Eloi','David','Raül'];
+ const Fw=['Anna','Laia','Marta','Núria','Clara','Júlia','Berta','Mireia','Elena','Sara','Gemma','Carla','Alba','Paula','Irene','Ona','Neus','Rosa','Txell','Aina'];
+ const S=['Puig','Vidal','Soler','Ferrer','Roca','Serra','Font','Pons','Costa','Bosch','Mas','Riera','Sala','Torres','Camps','Prat','Coll','Vila','Casas','Garcia','Marín','Pujol','Martí','Ribas','Valls','Duran','Comas','Oliva'];
+ const r=rng(Date.now()&0xffff),taken=new Set(TX.pairs.reduce((a,p)=>a.concat(txPlayers(p)),[]));
+ // noms únics (cap persona repetida per error)
+ const nm=list=>{for(;;){const n=`${list[Math.floor(r()*list.length)]} ${S[Math.floor(r()*S.length)]} ${S[Math.floor(r()*S.length)]}`;if(!taken.has(norm(n))){taken.add(norm(n));return n}}};
+ const win=()=>{const x=r();return x<.6?[TX.config.start,TX.config.end]:x<.8?['12:00',TX.config.end]:[TX.config.start,'19:00']};
+ const spec=[['masculina','A',4],['masculina','B',8],['masculina','C',6],['femenina','B',6],['femenina','C',5],['mixta','B',4],['mixta','C',6]];
+ const men=[],women=[];let shared=0;
+ spec.forEach(([cat,lv,n])=>{for(let i=0;i<n;i++){
+  let a,b;
+  if(cat==='masculina'){a=nm(F);b=nm(F);men.push(a,b)}else if(cat==='femenina'){a=nm(Fw);b=nm(Fw);women.push(a,b)}
+  else if(shared<3&&men.length>shared*3&&women.length>shared*3){a=men[shared*3];b=women[shared*3];shared++}   // tres parelles mixtes amb gent que també juga Masculina o Femenina
+  else{a=nm(F);b=nm(Fw)}
+  const [from,to]=win();const mk=n=>({name:n,phone:'600'+String(Math.floor(r()*1e6)).padStart(6,'0'),mail:norm(n).replace(/[^a-z]+/g,'.')+'@exemple.cat',member:r()<.6});
+  TX.pairs.push({id:'p'+Date.now().toString(36)+Math.floor(r()*1e6).toString(36),cat,lv,p1:mk(a),p2:mk(b),from,to,demo:true});
+ }});
+}
+
+/* --- Quadres (horaris i pistes) --- */
+function txPlanStale(){if(!TX.plan)return false;const ids=TX.pairs.map(p=>p.id+p.cat+p.lv+p.from+p.to).sort().join();return TX.plan.sig!==ids}
+function txQuadres(){
+ const c=TX.config,gs=txGroups(),slots=txSlots();
+ const cfg=`<div class="card"><h3>Logística</h3><div class="grid tx-cfg" style="margin-top:10px">
+  <div><label class="lbl" for="txc-format">Format de partit</label><select id="txc-format" data-cfg="format">${Object.keys(TX_FORMATS).map(k=>`<option value="${k}"${k===c.format?' selected':''}>${esc(TX_FORMATS[k])}</option>`).join('')}</select></div>
+  <div><label class="lbl" for="txc-slot">Durada de cada torn</label><select id="txc-slot" data-cfg="slot">${[45,60,75,90].map(m=>`<option value="${m}"${m===c.slot?' selected':''}>${m} minuts</option>`).join('')}</select></div>
+  <div><label class="lbl" for="txc-courts">Pistes en bon estat</label><select id="txc-courts" data-cfg="courts">${[2,3,4,5,6,7,8].map(n=>`<option${n===c.courts?' selected':''}>${n}</option>`).join('')}</select></div>
+  <div><label class="lbl" for="txc-extra">Pistes d’urgència</label><select id="txc-extra" data-cfg="extra">${[0,1,2].map(n=>`<option${n===c.extra?' selected':''}>${n}</option>`).join('')}</select></div>
+  <div><label class="lbl" for="txc-rest">Descans mínim entre partits</label><select id="txc-rest" data-cfg="rest">${[0,1,2].map(n=>`<option value="${n}"${n===c.rest?' selected':''}>${n===0?'Cap torn':n+' '+(n===1?'torn':'torns')}</option>`).join('')}</select></div>
+  <div><label class="lbl" for="txc-allow">Pistes d’urgència</label><select id="txc-allow" data-cfg="allowExtra"><option value="1"${c.allowExtra?' selected':''}>Només si cal</option><option value="0"${c.allowExtra?'':' selected'}>No fer-les servir</option></select></div>
+ </div></div>`;
+ if(!gs.length){$('txBody').innerHTML=`<div class="stack">${cfg}<div class="card"><div class="empty">Primer cal inscriure parelles (pestanya Inscripcions).</div></div></div>`;return}
+ const hasRes=Object.keys(TX.results).length>0;
+ const gen=`<div class="card"><div class="ag-sum"><div><h3>Generar quadres i horaris</h3><p class="muted small">Fa el sorteig del partit 1, prepara el partit 2 (guanyadors contra guanyadors) i reparteix tots els partits en torns i pistes.</p></div></div>
+  ${TX.plan&&txPlanStale()?'<div class="notice" style="margin-bottom:10px">⚠️ Hi ha canvis a les inscripcions o a la logística des de l’últim càlcul. Torna a generar els horaris.</div>':''}
+  <div class="actions-row"><button class="primary" data-tx="gen">${TX.plan?'Tornar a calcular els horaris':'Generar quadres i horaris'}</button>${TX.plan?'<button class="secondary" data-tx="redraw">Nou sorteig</button>':''}</div>
+  ${hasRes?'<p class="small muted" style="margin-top:8px">Ja hi ha resultats guardats: tornar a generar o fer un nou sorteig els esborrarà (et demanarà confirmació).</p>':''}</div>`;
+ if(!TX.plan){$('txBody').innerHTML=`<div class="stack">${cfg}${gen}</div>`;return}
+ const sched=TX.plan.schedule,all=txAllMatches();
+ const lastSlot=Math.max.apply(null,Object.keys(sched).map(k=>sched[k].slot).concat(Object.keys(TX.plan.ko).reduce((a,k)=>a.concat(...['main','cons'].map(t=>TX.plan.ko[k][t].reduce((b,rd)=>b.concat(rd.matches.map(m=>m.slot)),[]))),[]),[0]));
+ const extraUsed=Object.keys(sched).filter(k=>sched[k].court>c.courts).length;
+ const koCount=Object.keys(TX.plan.ko).reduce((n,k)=>n+['main','cons'].reduce((a,t)=>a+TX.plan.ko[k][t].reduce((b,rd)=>b+rd.matches.length,0),0),0);
+ const warn=TX.plan.warnings,info=TX.plan.notes||[];
+ const summary=`<div class="card"><div class="facts" style="margin-top:0">
+  <div class="fact"><div class="k">Fase regular</div><div class="v">${all.length} partits</div><div class="d">${gs.length} quadres · 2 partits per parella</div></div>
+  <div class="fact"><div class="k">Rondes finals</div><div class="v">≈ ${koCount} partits</div><div class="d">principal i consolació (previsió)</div></div>
+  <div class="fact"><div class="k">Horari</div><div class="v">${esc(c.start)} – ${fromMin(slots[Math.min(lastSlot,slots.length-1)]+c.slot)}</div><div class="d">${lastSlot+1} torns de ${c.slot} min</div></div>
+  <div class="fact"><div class="k">Pistes</div><div class="v">${c.courts}${extraUsed?` + ${extraUsed} urg.`:''}</div><div class="d">${extraUsed?'s’han fet servir pistes d’urgència':'sense pistes d’urgència'}</div></div></div>
+  ${warn.length?`<details class="tx-warn" open><summary>${warn.length} ${warn.length===1?'avís':'avisos'}</summary><ul>${warn.map(w=>`<li>${esc(w.text)}</li>`).join('')}</ul></details>`:'<p class="small" style="margin-top:10px">✅ Tots els partits encaixen: disponibilitat respectada, sense solapaments i amb descans entre partits.</p>'}
+  ${info.length?`<ul class="tx-info">${info.map(w=>`<li>ℹ️ ${esc(TXCAT(TX.plan.groups[w.g].cat).name)} ${TX.plan.groups[w.g].lv}: ${esc(w.text)}</li>`).join('')}</ul>`:''}</div>`;
+ const views=`<div class="chips" id="txViews">${[['graella','Graella per pistes'],['grups','Per categoria'],['parelles','Horari per parella']].map(([k,n])=>`<button data-txview="${k}" aria-pressed="${k===TXV}">${n}</button>`).join('')}</div>`;
+ $('txBody').innerHTML=`<div class="stack">${cfg}${gen}${summary}<div class="card">${views}<div id="txView" style="margin-top:12px">${txViewHtml()}</div></div></div>`;
+}
+function txMatchNames(m){const a=txResolve(m.a),b=txResolve(m.b);return [a?txPairShort(txPair(a)):txSrcLabel(m.a),b?txPairShort(txPair(b)):txSrcLabel(m.b),a,b]}
+function txViewHtml(){
+ const c=TX.config,slots=txSlots(),sched=TX.plan.schedule,all=txAllMatches();
+ if(TXV==='graella'){
+  const courts=[];for(let i=1;i<=c.courts+c.extra;i++)courts.push(i);
+  const cell={};
+  all.forEach(m=>{const s=sched[m.id];if(!s)return;const g=TX.plan.groups[m.g],[na,nb]=txMatchNames(m);cell[s.slot+'-'+s.court]=`<div class="chip-m ${g.cat}" title="${esc(TXCAT(g.cat).name+' '+g.lv+' · partit '+m.round+': '+na+' – '+nb)}"><b>${TXCAT(g.cat).short}${g.lv} · P${m.round}</b><span>${esc(na)}</span><span>${esc(nb)}</span></div>`});
+  Object.keys(TX.plan.ko).forEach(k=>{const g=TX.plan.groups[k];['main','cons'].forEach(t=>TX.plan.ko[k][t].forEach(rd=>rd.matches.forEach(x=>{cell[x.slot+'-'+x.court]=`<div class="chip-m ${g.cat} ko"><b>${TXCAT(g.cat).short}${g.lv} · ${t==='main'?'Principal':'Consolació'}</b><span>${esc(rd.name)}</span></div>`})))});
+  const lastUsed=Math.max.apply(null,Object.keys(cell).map(k=>+k.split('-')[0]).concat([0]));
+  return `<div class="table-wrap"><table class="grid-t"><thead><tr><th>Hora</th>${courts.map(x=>`<th class="${x>c.courts?'urg':''}">Pista ${x}${x>c.courts?'<br><span class="small">urgència</span>':''}</th>`).join('')}</tr></thead><tbody>${slots.slice(0,lastUsed+1).map((t,i)=>`<tr><th>${fromMin(t)}</th>${courts.map(x=>`<td class="${x>c.courts?'urg':''}">${cell[i+'-'+x]||''}</td>`).join('')}</tr>`).join('')}</tbody></table></div>
+  <p class="muted small" style="margin-top:8px">P1 = partit 1 (sorteig) · P2 = partit 2 (guanyadors contra guanyadors). Les rondes finals són una previsió de torns i pistes reservats.</p>`;
+ }
+ if(TXV==='grups'){
+  return Object.keys(TX.plan.groups).map(k=>{const g=TX.plan.groups[k];const ms=all.filter(m=>m.g===k).sort((a,b)=>(sched[a.id]?sched[a.id].slot:99)-(sched[b.id]?sched[b.id].slot:99));
+   const ko=TX.plan.ko[k]||{main:[],cons:[]};
+   return `<div class="tx-grp"><h4 class="tx-gh">${esc(TXCAT(g.cat).name)} · Nivell ${g.lv}</h4><ul class="tx-list">${ms.map(m=>{const s=sched[m.id],[na,nb]=txMatchNames(m);return `<li><div><b>${s?fromMin(slots[s.slot]):'—'} · Pista ${s?s.court:'—'}</b><span>Partit ${m.round}: ${esc(na)} – ${esc(nb)}</span></div>${s&&s.flag==='urgencia'?'<span class="pill todo">urgència</span>':''}</li>`}).join('')}
+   ${['main','cons'].map(t=>ko[t].map(rd=>rd.matches.length?`<li class="ko-li"><div><b>${fromMin(slots[rd.matches[0].slot])}${rd.matches.length>1&&rd.matches[rd.matches.length-1].slot!==rd.matches[0].slot?'–'+fromMin(slots[rd.matches[rd.matches.length-1].slot]):''}</b><span>${t==='main'?'Quadre principal':'Consolació'} · ${esc(rd.name)} (${rd.matches.length} ${rd.matches.length===1?'partit':'partits'}, pistes ${rd.matches.map(x=>x.court).join(', ')})</span></div></li>`:'').join('')).join('')}</ul></div>`}).join('');
+ }
+ // horari per parella (per enviar-lo per WhatsApp)
+ return txGroups().map(g=>`<h4 class="tx-gh">${esc(TXCAT(g.cat).name)} · Nivell ${g.lv}</h4><ul class="tx-list">${txGroupPairs(g.cat,g.lv).map(p=>{
+  const mine=all.filter(m=>txCandidates(m.a).concat(txCandidates(m.b)).indexOf(p.id)>=0).sort((a,b)=>(sched[a.id]||{slot:99}).slot-(sched[b.id]||{slot:99}).slot);
+  const lines=mine.map(m=>{const s=sched[m.id],[na,nb,a,b]=txMatchNames(m);const fixed=(a===p.id||b===p.id);return `${s?fromMin(slots[s.slot]):'—'} · Pista ${s?s.court:'—'} · Partit ${m.round}${fixed?` contra ${esc(a===p.id?nb:na)}`:' (rival segons resultats)'}`});
+  const text=`🎾 ${TX.config.name}${TX.config.date?' · '+fmtLong(TX.config.date):''}\n${TXCAT(g.cat).name} ${g.lv}: ${txPairName(p)}\n`+lines.map(l=>'• '+l.replace(/&[^;]+;/g,'')).join('\n')+`\nSigueu a la pista 10 minuts abans. Bon torneig!`;
+  return `<li><div><b>${esc(txPairName(p))}</b>${lines.map(l=>`<span class="small">${l}</span>`).join('')}</div><a class="btn ghost small-btn" target="_blank" rel="noopener" href="https://wa.me/?text=${encodeURIComponent(text)}">WhatsApp</a></li>`}).join('')}</ul>`).join('');
+}
+
+/* --- Resultats --- */
+function txResultats(){
+ if(!TX.plan){$('txBody').innerHTML='<div class="card"><div class="empty">Primer cal generar els quadres (pestanya Quadres).</div></div>';return}
+ const key=gKey(TXS.cat,TXS.lv),g=TX.plan.groups[key],slots=txSlots();
+ let body='<div class="empty">Aquest nivell no té partits.</div>';
+ if(g){
+  const card=(m)=>{const a=txResolve(m.a),b=txResolve(m.b),s=TX.plan.schedule[m.id],res=TX.results[m.id],id='tx-'+m.id;
+   const head=`<div class="mt-head"><span class="small muted">Partit ${m.round} · ${s?fromMin(slots[s.slot])+' · Pista '+s.court:'sense horari'}</span>${res?'<span class="pill ok">Resultat guardat</span>':'<span class="pill todo">Pendent</span>'}</div>`;
+   if(!a||!b)return `<article class="mt">${head}<div class="vs-row"><div>${esc(txSrcLabel(m.a))}</div><span class="vs-badge">vs</span><div>${esc(txSrcLabel(m.b))}</div></div><p class="small muted">Es podrà anotar quan hi hagi el resultat dels partits 1 que el decideixen.</p></article>`;
+   const rows=[{name:txPairName(txPair(a)),short:txPairShort(txPair(a))},{name:txPairName(txPair(b)),short:txPairShort(txPair(b))}];
+   return `<article class="mt${res?' is-booked':''}">${head}${scoreboardHtml(id,rows,res,{points:true,stats:txStats,woSets:txWoSets()})}</article>`};
+  const done=g.r1.concat(g.r2).filter(m=>TX.results[m.id]).length,total=g.r1.length+g.r2.length;
+  body=`<div class="ag-sum"><div><h3>${esc(TXCAT(TXS.cat).name)} · Nivell ${TXS.lv}</h3><p class="muted small">${esc(TX_FORMATS[TX.config.format])}${TX.config.format==='stb'?' (S3 = super tie-break)':''}</p></div><span class="pill">${done} de ${total} resultats</span></div>
+  <h4 class="tx-gh">Partit 1 · sorteig</h4><div class="mts">${g.r1.map(card).join('')}</div>
+  <h4 class="tx-gh">Partit 2 · guanyadors contra guanyadors, perdedors contra perdedors</h4><div class="mts">${g.r2.map(card).join('')}</div>
+  <p class="muted small" style="margin-top:12px">Els resultats de les rondes finals s’anoten directament als quadres (pestanya Classificacions i ranking) i no compten per al rànquing.</p>`;
+ }
+ $('txBody').innerHTML=`<div class="stack">${txChips(true)}<div class="card">${body}</div></div>`;
+}
+
+/* --- Classificacions i ranking --- */
+function txRanking(){
+ const gs=txGroups();
+ if(!gs.length){$('txBody').innerHTML='<div class="card"><div class="empty">Encara no hi ha parelles inscrites.</div></div>';return}
+ const chips=txChips(true);
+ const key=gKey(TXS.cat,TXS.lv),s=txStandings(TXS.cat,TXS.lv),g=TX.plan&&TX.plan.groups[key];
+ const lab={main:'<span class="pill ok">Quadre principal</span>',cons:'<span class="pill todo">Consolació</span>',pend:'<span class="pill">Pendent</span>'};
+ const table=`<div class="table-wrap"><table class="rk"><thead><tr><th>#</th><th>Parella</th><th title="Partits jugats">PJ</th><th title="Partits guanyats">PG</th><th title="Partits perduts">PP</th><th title="Jocs guanyats">JG</th><th title="Jocs perduts">JP</th><th title="Diferència de jocs">Dif.</th><th>Punts</th><th>Estat</th></tr></thead>
+  <tbody>${s.rows.map((r,i)=>`<tr class="${r.state==='main'?'q-main':r.state==='cons'?'q-cons':''}"><td class="pos">${i+1}</td><td class="team">${esc(r.name)}</td><td>${r.pj}</td><td>${r.pg}</td><td>${r.pp}</td><td>${r.jg}</td><td>${r.jp}</td><td>${r.dif>0?'+':''}${r.dif}</td><td class="pts">${r.pts}</td><td>${lab[r.state]}</td></tr>`).join('')}</tbody></table></div><p class="swipe">↔ Llisca la taula per veure totes les columnes</p>`;
+ let mainE,consE,note='';
+ if(s.complete){mainE=s.rows.filter(r=>r.state==='main');consE=s.rows.filter(r=>r.state==='cons')}
+ else{
+  mainE=Array.from({length:Math.max(0,Math.min(s.rows.length,s.rows.length-(g?Math.floor(g.r1.filter(m=>!m.trio).length/2):0)))},()=>({name:''}));
+  consE=Array.from({length:g?Math.floor(g.r1.filter(m=>!m.trio).length/2):0},()=>({name:''}));
+  note=`<div class="notice">La fase regular encara no ha acabat (${s.played} de ${s.total} partits). Els quadres mostren la previsió i s’omplen sols amb la classificació final. També pots escriure els noms a mà.</div>`}
+ const times=t=>{const ko=TX.plan&&TX.plan.ko[key];if(!ko||!ko[t].length)return '';const slots=txSlots();return `<p class="small muted">Horari previst: ${ko[t].map(rd=>rd.matches.length?`${esc(rd.name)} ${fromMin(slots[rd.matches[0].slot])}`:'').filter(Boolean).join(' · ')}</p>`};
+ $('txBody').innerHTML=`<div class="stack">${chips}
+ <div class="card"><div class="ag-sum"><div><h3>Classificació · ${esc(TXCAT(TXS.cat).name)} ${TXS.lv}</h3><p class="muted small">Victòria 3 punts · derrota amb un set guanyat 1 punt · derrota 0. Només compten els 2 partits de la fase regular.</p></div><span class="pill">${s.played} de ${s.total} partits</span></div>${table}
+ <div class="legend" style="margin-top:8px"><span>Quadre principal (1 o 2 victòries)</span><span class="c">Consolació (cap victòria)</span></div></div>
+ ${note}
+ <div class="card"><div class="ag-sum"><div><h3>🏆 Quadre principal</h3>${times('main')}</div></div>${koHtml(key,'main',mainE,'Classificat')}</div>
+ <div class="card"><div class="ag-sum"><div><h3>🥇 Quadre de consolació</h3>${times('cons')}</div></div>${koHtml(key,'cons',consE,'Consolació')}</div>
+ <p class="muted small">Als quadres, escriu el resultat de cada partit set a set (per exemple «6-4 6-3» o «6-4 3-6 10-8»). La parella guanyadora passa sola a la ronda següent.</p></div>`;
+}
+
+/* --- esdeveniments --- */
+function txClick(e){
+ const b=e.target.closest('button');if(!b||b.disabled)return;
+ if(b.dataset.txsub){TXS.sub=b.dataset.txsub;TXS.edit=null;renderExpress();return}
+ if(b.dataset.txcat){TXS.cat=b.dataset.txcat;const lv=TX_LVS.find(l=>txGroupPairs(TXS.cat,l).length);if(!txGroupPairs(TXS.cat,TXS.lv).length&&lv)TXS.lv=lv;renderExpress();return}
+ if(b.dataset.txlv){TXS.lv=b.dataset.txlv;renderExpress();return}
+ if(b.dataset.txview){TXV=b.dataset.txview;$('txView').innerHTML=txViewHtml();document.querySelectorAll('#txViews button').forEach(x=>x.setAttribute('aria-pressed',String(x.dataset.txview===TXV)));return}
+ const a=b.dataset.tx;
+ const twoTap=(text)=>{if(b.dataset.sure==='1')return true;b.dataset.sure='1';b.textContent=text;b.classList.add('danger');return false};
+ if(a==='cancel'){TXS.edit=null;renderExpress();return}
+ if(a==='edit'){TXS.edit=b.dataset.id;renderExpress();$('txForm').scrollIntoView({block:'start'});return}
+ if(a==='del'){if(!twoTap('Segur?'))return;TX.pairs=TX.pairs.filter(p=>p.id!==b.dataset.id);txSave();renderExpress();return}
+ if(a==='clear'){if(!twoTap('Segur? Toca per esborrar-les totes'))return;TX.pairs=[];TX.plan=null;TX.results={};TX.ko={};txSave();renderExpress();return}
+ if(a==='demo'){txDemo();txSave();renderExpress();return}
+ if(a==='gen'||a==='redraw'){
+  if(Object.keys(TX.results).length&&!twoTap('Esborrarà els resultats. Toca per confirmar'))return;
+  const seed=a==='redraw'||!TX.plan?(Date.now()&0x7fffffff):TX.plan.seed;
+  TX.results={};TX.ko={};plan(seed);TX.plan.sig=TX.pairs.map(p=>p.id+p.cat+p.lv+p.from+p.to).sort().join();txSave();renderExpress();return;
+ }
+ // marcadors de la fase regular
+ const act=b.dataset.act,id=b.dataset.id;
+ if(act&&id&&id.indexOf('tx-')===0){
+  const mid=id.slice(3);
+  if(act==='edit'){EDIT[id]=true;renderExpress();return}
+  if(act==='del'){if(!twoTap('Segur?'))return;delete TX.results[mid];delete EDIT[id];txSave();renderExpress();return}
+  if(act==='save'){const r=readScoreboard(id,txEval);if(r.err){$(id+'-err').textContent='⚠️ '+r.err;return}TX.results[mid]=r.res;delete EDIT[id];txSave();renderExpress();return}
+ }
+}
+function txChange(e){
+ const t=e.target;
+ if(t.dataset.cfg){const k=t.dataset.cfg;let v=t.value;
+  if(['slot','courts','extra','rest','priceMember','priceNon'].indexOf(k)>=0)v=Math.max(0,parseInt(v,10)||0);
+  if(k==='allowExtra')v=v==='1';
+  if(k==='end'&&toMin(v)<=toMin(TX.config.start))return;
+  TX.config[k]=v;if(TX.plan)TX.plan.sig='canvi';txSave();
+  if(k==='name'||k==='date'||k==='start'||k==='end'||k==='format')renderExpress();
+  return;
+ }
+ if(t.classList.contains('ko-name')){const st=koState(t.dataset.k,t.dataset.kind);st.names[t.dataset.id]=t.value.trim();txSave();renderExpress();return}
+ if(t.classList.contains('ko-score')){const st=koState(t.dataset.k,t.dataset.kind),p=parseScore(t.value);
+  if(p.err){t.classList.add('bad');t.title=p.err;t.setCustomValidity&&t.setCustomValidity(p.err);const box=t.closest('.ko-m');let msg=box.querySelector('.ko-err');if(!msg){msg=document.createElement('div');msg.className='ko-err';box.appendChild(msg)}msg.textContent=p.err;return}
+  if(p.clear)delete st.res[t.dataset.id];else st.res[t.dataset.id]=p.res;txSave();renderExpress();return}
+}
+function txSubmit(e){
+ if(e.target.id!=='txForm')return;e.preventDefault();
+ const r=txReadForm();if(r.err){$('txFormErr').textContent='⚠️ '+r.err;return}
+ if(TXS.edit){const p=txPair(TXS.edit);Object.assign(p,r.pair);delete p.demo;TXS.edit=null}
+ else TX.pairs.push(Object.assign({id:'p'+Date.now().toString(36)+Math.floor(Math.random()*1e6).toString(36)},r.pair));
+ TXS.cat=r.pair.cat;TXS.lv=r.pair.lv;txSave();renderExpress();
+ const l=document.querySelector('.tx-list');if(l)l.scrollIntoView({block:'center'});
+}
 
 /* ---------------- PLAYOFFS ---------------- */
 // Mida = parelles a la primera ronda. Nom de cada ronda segons els partits que té.
