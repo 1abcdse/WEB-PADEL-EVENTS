@@ -118,7 +118,8 @@ main{padding:20px 16px 28px}
 .chips button[aria-pressed="true"]{background:var(--green);border-color:var(--green);color:var(--on-green)}
 .chips button[aria-pressed="true"] span{color:var(--on-green);opacity:.85}
 .chips button:disabled{opacity:.45;cursor:not-allowed}
-.ag-controls{display:grid;gap:10px}
+.ag-controls{display:grid;grid-template-columns:minmax(0,1fr);gap:10px}
+.ag-controls>*{min-width:0}
 .ag-controls .lbl,.lbl{font-size:11px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);display:block;margin-bottom:4px}
 .ag-sum{display:flex;flex-wrap:wrap;gap:8px;justify-content:space-between;align-items:flex-start;margin-bottom:12px}
 .ag-sum h3{margin:0}
@@ -142,8 +143,98 @@ button.danger{background:var(--gold-bg);color:var(--ink);outline:2px solid var(-
 .booked{display:grid;gap:2px;padding:10px 12px;border-radius:10px;background:var(--ok-bg);color:var(--ok-ink)}
 .booked span{font-size:13px}
 .pill.ok{background:var(--ok-bg);color:var(--ok-ink)}
+button.pill.go{border:0;cursor:pointer;min-height:36px;padding:6px 12px;font-size:13px}
 .table-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch}
 .res td,.res th{text-align:left!important;white-space:nowrap}
+
+/* Marcador de resultats (Resultats i PlayOffs) */
+.sb{display:grid;gap:6px}
+.sb-row{display:grid;grid-template-columns:auto minmax(0,1fr) repeat(3,46px) 18px;gap:6px;align-items:center}
+.sb-row.sb-hd{font-size:11px;font-weight:800;color:var(--muted);letter-spacing:.05em}
+.sb-name{min-width:0;overflow-wrap:anywhere;line-height:1.25;font-weight:600;font-size:14px}
+.sb-name-in{min-width:0;width:100%;padding:9px 10px;border:1px solid var(--field-line);border-radius:9px;background:var(--field);color:var(--ink);font-size:15px;font-weight:600}
+.sb-in{width:46px;padding:9px 0;text-align:center;border:1px solid var(--field-line);border-radius:9px;background:var(--field);color:var(--ink);font-size:16px;font-weight:700;font-variant-numeric:tabular-nums;-moz-appearance:textfield}
+.sb-in::-webkit-outer-spin-button,.sb-in::-webkit-inner-spin-button{-webkit-appearance:none;margin:0}
+.sb-set{text-align:center;font-weight:700;font-variant-numeric:tabular-nums}
+.sb.done .sb-row{padding:6px 8px;border-radius:9px;background:var(--soft)}
+.sb.done .sb-row.win{background:var(--ok-bg);color:var(--ok-ink)}
+.sb.done .sb-row.win .sb-name{font-weight:800}
+.sb-pts{text-align:center;font-weight:800}
+.seed-b:empty{padding:0;background:none}
+.seed-b{font-size:11px;font-weight:800;padding:2px 6px;border-radius:6px;background:var(--seed-bg);color:var(--seed-ink);white-space:nowrap}
+.sb-foot{display:flex;gap:8px;flex-wrap:wrap;align-items:center;justify-content:space-between}
+.sb-foot select{flex:1 1 160px;min-width:0;padding:10px;border:1px solid var(--field-line);border-radius:10px;background:var(--field);color:var(--ink);font-size:14px;min-height:44px}
+.sb-foot .primary{flex:1 1 140px}
+.sb-actions{display:flex;gap:6px}
+.small-btn{min-height:38px!important;padding:6px 12px!important;font-size:13px!important}
+.sb-err{color:var(--ink);font-size:13px;font-weight:600}
+.sb-err:empty{display:none}
+.sb-err:not(:empty){background:var(--gold-bg);border:1px solid var(--gold);border-radius:9px;padding:8px 10px}
+
+/* Classificació */
+.rk-title{font-size:20px;margin-bottom:10px}
+.rk-cat{display:grid;grid-template-columns:minmax(0,1fr);gap:16px}
+.rk-group{min-width:0}
+.rk{width:100%;border-collapse:collapse;font-variant-numeric:tabular-nums}
+.rk th,.rk td{padding:9px 8px;border-bottom:1px solid var(--line);text-align:center;font-size:14px;white-space:nowrap}
+.rk th{font-size:11px;color:var(--muted);letter-spacing:.04em}
+.rk td.team,.rk th:nth-child(2){text-align:left}
+.rk td.team{font-weight:600;white-space:normal;min-width:170px}
+.rk td.pts{font-weight:800;font-size:16px}
+.rk td.pos{font-weight:800;width:34px;position:relative}
+.rk tr.q-main td.pos{box-shadow:inset 4px 0 0 var(--green)}
+.rk tr.q-cons td.pos{box-shadow:inset 4px 0 0 var(--gold)}
+.rk th:nth-child(1),.rk td:nth-child(1){position:sticky;left:0;background:var(--card);z-index:1}
+.rk th:nth-child(2),.rk td:nth-child(2){position:sticky;left:34px;background:var(--card);z-index:1;box-shadow:2px 0 0 var(--line)}
+.swipe{display:none;font-size:12px;color:var(--muted);margin-top:4px}
+.tie{display:inline-block;margin-left:3px;color:var(--gold);font-weight:800}
+.legend{display:flex;flex-wrap:wrap;gap:14px;font-size:13px;color:var(--muted)}
+.legend span::before{content:"";display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:6px;vertical-align:-1px;background:var(--green)}
+.legend span.c::before{background:var(--gold)}
+
+/* PlayOffs de la lliga */
+.po-board{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.1fr) minmax(0,1fr);gap:22px;align-items:center;margin-top:6px}
+.po-board.single{grid-template-columns:minmax(0,1fr);max-width:460px;margin-inline:auto}
+.po-col{display:grid;gap:10px;min-width:0;position:relative}
+.po-round{font-size:11px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);text-align:center}
+.pm{border:1px solid var(--field-line);border-radius:14px;padding:12px;background:var(--card);box-shadow:var(--shadow2);display:grid;gap:10px;min-width:0;position:relative}
+.pm-head{display:flex;justify-content:space-between;gap:8px;align-items:baseline}
+.pm.final{border:2px solid var(--gold);background:var(--gold-bg)}
+.pm.cons{border-style:dashed}
+.po-board:not(.single) .po-col:first-child .pm::after,.po-board:not(.single) .po-col:last-child .pm::after{content:"";position:absolute;top:50%;width:22px;border-top:2px solid var(--wire)}
+.po-board .po-col:first-child .pm::after{right:-24px}
+.po-board .po-col:last-child .pm::after{left:-24px}
+.po-cup{display:grid;justify-items:center;gap:2px;text-align:center;padding:8px}
+.po-cup>span:first-child{width:52px;height:52px;border-radius:50%;display:grid;place-items:center;font-size:26px;background:var(--gold-bg);border:2px solid var(--gold)}
+.po-cup b{font-size:15px}
+.po-cup.won b{font-size:17px}
+.po-cons-wrap{margin-top:22px;padding-top:16px;border-top:2px dashed var(--line);display:grid;gap:10px;max-width:520px}
+.po-legend{margin:18px 0 0;padding-left:18px;display:grid;gap:4px;font-size:13px;color:var(--muted)}
+
+/* Normativa */
+.rules{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(320px,100%),1fr));gap:12px}
+.rule{border:1px solid var(--line);border-radius:14px;padding:16px;background:var(--card);display:grid;gap:8px;align-content:start}
+.rule h3{display:flex;gap:10px;align-items:center;font-size:16px;margin:0}
+.rule h3 .ic{width:34px;height:34px;border-radius:10px;display:grid;place-items:center;background:var(--green2);font-size:18px;flex:0 0 auto}
+.rule ul{margin:0;padding-left:18px;display:grid;gap:5px;font-size:14px;line-height:1.45}
+.rule .key{display:flex;flex-wrap:wrap;gap:6px}
+.rule .key span{font-size:13px;font-weight:700;padding:5px 9px;border-radius:8px;background:var(--soft2)}
+.rule.wide{grid-column:1 / -1}
+.rule.fair{background:var(--gold-bg);border-color:var(--gold)}
+
+@media(max-width:860px){
+ .po-board{grid-template-columns:minmax(0,1fr);gap:14px}
+ .po-board .pm::after{display:none}
+ .po-col.po-mid{order:3}
+ .po-board .po-col:not(.po-mid) .po-round{display:none}
+ .po-board .po-col:first-child::before{content:"Semifinals";font-size:11px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);text-align:center}
+}
+@media(max-width:420px){
+ .sb-row{grid-template-columns:auto minmax(0,1fr) repeat(3,40px) 14px;gap:5px}
+ .sb-in{width:40px;font-size:16px}
+ .sb-name{font-size:13px}
+}
+@media(max-width:700px){.rk td.team{min-width:130px;font-size:13px}.swipe{display:block}}
 
 /* Tornejos: selector de format */
 .formats{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(230px,100%),1fr));gap:10px}
@@ -233,6 +324,10 @@ button.danger{background:var(--gold-bg);color:var(--ink);outline:2px solid var(-
  <nav class="subnav" id="lligaSubnav" aria-label="Apartats de la Lliga Social">
   <button data-sub="inscripcions">Temporada i inscripcions</button>
   <button data-sub="enfrontaments">Organització d’enfrontaments</button>
+  <button data-sub="resultats">Resultats</button>
+  <button data-sub="classificacio">Classificació / Ranking</button>
+  <button data-sub="playoffs">PlayOffs</button>
+  <button data-sub="normativa">Normativa</button>
  </nav>
 
  <div id="lsub-inscripcions">
@@ -266,12 +361,99 @@ button.danger{background:var(--gold-bg);color:var(--ink);outline:2px solid var(-
    <div class="card" id="agMatches"></div>
    <div class="card" id="agClub"></div>
    <div class="card">
-    <h3>Còpia de seguretat de les reserves</h3>
-    <p class="muted small">Les confirmacions es guarden en aquest dispositiu. Fes-ne una còpia per no perdre-les o per passar-les a un altre dispositiu.</p>
+    <h3>Còpia de seguretat de la lliga</h3>
+    <p class="muted small">Les reserves, els resultats i els playoffs es guarden en aquest dispositiu. Fes-ne una còpia per no perdre’ls o per passar-los a un altre dispositiu.</p>
     <div class="actions-row" style="margin-top:10px"><button class="secondary" id="agExport">Exportar còpia</button><button class="secondary" id="agImportBtn">Importar còpia</button></div>
     <input type="file" id="agImport" accept="application/json,.json" class="hidden">
     <div id="agDataMsg"></div>
    </div>
+  </div>
+ </div>
+
+ <div id="lsub-resultats" class="hidden">
+  <div class="sec-title"><span class="n">4</span><h2>Resultats</h2></div>
+  <p class="muted" style="max-width:70ch;margin-bottom:12px">Tria la categoria, el nivell i la jornada, i anota el marcador set a set de cada partit. En guardar-lo es comprova que el resultat sigui vàlid i la classificació s’actualitza sola.</p>
+  <div class="stack">
+   <div class="card ag-controls">
+    <div><span class="lbl">Categoria</span><div class="chips" id="rsCats"></div></div>
+    <div><span class="lbl">Grup</span><div class="chips" id="rsGroups"></div></div>
+    <div><span class="lbl">Jornada</span><div class="chips" id="rsWeeks"></div></div>
+   </div>
+   <div class="card" id="rsMatches"></div>
+   <p class="muted small">Els resultats es guarden en aquest dispositiu, al mateix lloc que les reserves. La còpia de seguretat d’«Organització d’enfrontaments» inclou reserves, resultats i playoffs.</p>
+  </div>
+ </div>
+
+ <div id="lsub-classificacio" class="hidden">
+  <div class="sec-title"><span class="n">5</span><h2>Classificació / Ranking</h2></div>
+  <p class="muted" style="max-width:70ch;margin-bottom:12px">Una taula per categoria i nivell, calculada amb els resultats guardats. Victòria 3 punts; derrota amb un set guanyat 1 punt; derrota 0 punts.</p>
+  <div class="stack">
+   <div class="card ag-controls"><div><span class="lbl">Categoria</span><div class="chips" id="rkCats"></div></div>
+    <div class="legend"><span>Classificats per al quadre principal</span><span class="c">Quadre de consolació</span></div></div>
+   <div class="stack" id="rkTables"></div>
+   <p class="muted small">Desempat: punts → enfrontament directe (entre 2 parelles) → diferència de jocs → diferència de sets → mini-lligueta entre les empatades. «=» vol dir empat sense resoldre: decideix el coordinador.</p>
+  </div>
+ </div>
+
+ <div id="lsub-playoffs" class="hidden">
+  <div class="sec-title"><span class="n">6</span><h2>PlayOffs</h2></div>
+  <p class="muted" style="max-width:70ch;margin-bottom:12px">En acabar la fase regular, els 4 primers de cada grup juguen el quadre principal i el 5è i el 6è, la final de consolació. Els noms surten de la classificació; també es poden escriure o corregir a cada casella.</p>
+  <div class="stack">
+   <div class="card ag-controls">
+    <div><span class="lbl">Categoria</span><div class="chips" id="poCats"></div></div>
+    <div><span class="lbl">Grup</span><div class="chips" id="poGroups"></div></div>
+   </div>
+   <div class="card" id="poBoard"></div>
+  </div>
+ </div>
+
+ <div id="lsub-normativa" class="hidden">
+  <div class="sec-title"><span class="n">7</span><h2>Normativa de la Lliga Social</h2></div>
+  <p class="muted" style="max-width:70ch;margin-bottom:12px">Les normes que fan que la lliga funcioni bé per a tothom. Si tens dubtes, parla amb el coordinador.</p>
+  <div class="rules">
+   <article class="rule"><h3><span class="ic">🏆</span>Format de la competició</h3><ul>
+    <li>La temporada té tres proves: oct–des, gen–mar i abr–jul. Cada prova té inscripció pròpia.</li>
+    <li>Les parelles juguen en grups per categoria (Femenina, Masculina, Mixta) i nivell.</li>
+    <li>Fase regular de tots contra tots: una jornada per setmana.</li>
+    <li>Després, playoffs: els 4 primers juguen semifinals (1r–4t i 2n–3r) i final. El 5è i el 6è juguen la final de consolació.</li></ul></article>
+   <article class="rule"><h3><span class="ic">📅</span>Jornades i reserva de pista</h3><ul>
+    <li>Cada partit s’ha de jugar dins la setmana de la seva jornada. No hi ha ajornaments a una altra setmana.</li>
+    <li>Femenina i Masculina: dimarts, dimecres i divendres a les 21:00. Mixta: dissabte i diumenge, de 9:00 a 19:30.</li>
+    <li>Les dues parelles acorden el dia i l’hora amb l’enquesta de WhatsApp i ho comuniquen al coordinador, que reserva la pista.</li>
+    <li>El dijous (Femenina i Masculina) i la 5a pista del cap de setmana (Mixta) només amb aprovació del club.</li></ul></article>
+   <article class="rule"><h3><span class="ic">🎾</span>Format de partit</h3><ul>
+    <li>Al millor de 3 sets. Si queda 1-1, es juga un tercer set complet.</li>
+    <li>Sets vàlids: 6-0 a 6-4, 7-5 i 7-6. A 6-6 es juga un super tie-break a 10 punts (2 de diferència), que compta com a 7-6.</li>
+    <li>Star Point: després de dos iguals (40-40) seguits, el següent 40-40 es decideix amb punt d’or.</li>
+    <li>Límit horari a les 23:00: si el partit no ha acabat, el decideix un super tie-break a 10 punts.</li></ul></article>
+   <article class="rule"><h3><span class="ic">🔢</span>Puntuació</h3>
+    <div class="key"><span>Victòria · 3 punts</span><span>Derrota amb un set guanyat · 1 punt</span><span>Derrota · 0 punts</span></div>
+    <ul><li>Exemple: 6-4 / 1-6 / 7-5 → 3 punts per a la guanyadora i 1 per a la perdedora.</li>
+    <li>WO: 3 punts per a la parella perjudicada, 0 per a la que el provoca, i marcador de 6-0 / 6-0.</li></ul></article>
+   <article class="rule"><h3><span class="ic">⚖️</span>Classificació i desempats</h3><ul>
+    <li>1. Punts.</li><li>2. Entre dues parelles: enfrontament directe.</li><li>3. Diferència de jocs.</li><li>4. Diferència de sets.</li>
+    <li>5. Entre tres o més: mini-lligueta amb els partits entre elles.</li><li>6. Si continua l’empat, decideix el coordinador (o es juga un partit de desempat).</li></ul></article>
+   <article class="rule"><h3><span class="ic">🚫</span>Cancel·lacions i WO</h3><ul>
+    <li>Cancel·lar o rebutjar l’horari proposat per la parella rival compta com un avís (1/3, 2/3).</li>
+    <li>A la 3a cancel·lació del mateix enfrontament, WO a favor de la parella rival, i qui ha cancel·lat paga el partit.</li>
+    <li>No presentar-se a un partit confirmat és WO. Paguen el partit els jugadors absents.</li>
+    <li>El coordinador pot revisar i revertir un WO.</li></ul></article>
+   <article class="rule"><h3><span class="ic">💶</span>Preus i pagaments</h3>
+    <div class="key"><span>Inscripció: 10 € abonat/da · 20 € no abonat/da</span><span>Partit: 1 € · 5 €</span></div>
+    <ul><li>Es paga per persona i per prova.</li><li>Els suplents només paguen els partits que juguen (la inscripció, només si volen el welcome pack).</li></ul></article>
+   <article class="rule"><h3><span class="ic">🔁</span>Suplents</h3><ul>
+    <li>Es pot jugar amb un suplent del mateix nivell que la parella, amb el vistiplau del coordinador.</li>
+    <li>Els punts i el rànquing individual compten per a qui ha jugat realment el partit.</li></ul></article>
+   <article class="rule"><h3><span class="ic">📝</span>Comunicació de resultats</h3><ul>
+    <li>La parella guanyadora envia el resultat al coordinador el mateix dia del partit, set a set (per exemple 6-4 3-6 7-5).</li>
+    <li>La parella perdedora el confirma. Qualsevol reclamació s’ha de fer en un termini de 48 hores.</li>
+    <li>El coordinador valida el resultat i actualitza la classificació.</li></ul></article>
+   <article class="rule wide fair"><h3><span class="ic">🤝</span>Joc net i bona convivència</h3><ul>
+    <li>Sigueu puntuals: el torn de pista comença a l’hora reservada i l’escalfament es fa dins el torn.</li>
+    <li>Cada parella canta les boles del seu costat de la pista. En cas de dubte, es repeteix el punt.</li>
+    <li>Respecte en tot moment pels rivals, la parella, el personal del club i les instal·lacions.</li>
+    <li>Responeu les enquestes de WhatsApp aviat: com més d’hora s’acorda l’horari, més fàcil és trobar pista.</li>
+    <li>Qualsevol situació no prevista en aquesta normativa la resol el coordinador de la lliga.</li></ul></article>
   </div>
  </div>
 </section>
@@ -459,15 +641,15 @@ function renderLliga(){
  <div class="fields" style="margin-top:10px">${L.fields.map(f=>`<span class="pill">${esc(f)}</span>`).join('')}</div>
  <p class="muted small" style="margin-top:10px">Un jugador pot jugar Masculina o Femenina i també Mixta: van en dies diferents i mai coincideixen.</p>`;
 
- $('lligaSteps').innerHTML=LLIGA_STEPS.map(([t,dsc,st])=>`<li><div><h3>${esc(t)}</h3><p class="muted small">${esc(dsc)}</p></div><span class="pill${st?' todo':''}">${esc(st||'Per definir')}</span></li>`).join('');
+ $('lligaSteps').innerHTML=LLIGA_STEPS.map(([t,dsc,st,sub])=>`<li><div><h3>${esc(t)}</h3><p class="muted small">${esc(dsc)}</p></div>${sub?`<button class="pill ok go" data-sub="${sub}">Obrir →</button>`:`<span class="pill${st?' todo':''}">${esc(st||'Per definir')}</span>`}</li>`).join('');
 }
 const LLIGA_STEPS=[
  ['Divisions i grups','Es faran quan tanquin les inscripcions, per saber quantes parelles hi ha a cada categoria i nivell.','Després del 9/10'],
- ['Calendari de jornades','Enfrontaments de cada jornada, votació de dia i hora per WhatsApp i reserva de pistes.','En marxa'],
- ['Resultats','Introducció i validació dels resultats de cada partit.'],
- ['Classificació','Taula per grup amb punts, partits i diferència de jocs.'],
- ['Fase final','Semifinals, finals i quadre de consolació.'],
- ['Normativa','Reglament, puntuació i criteris de desempat.']
+ ['Calendari de jornades','Enfrontaments de cada jornada, votació de dia i hora per WhatsApp i reserva de pistes.','Disponible','enfrontaments'],
+ ['Resultats','Marcador set a set de cada partit, amb validació del resultat.','Disponible','resultats'],
+ ['Classificació / Ranking','Taula per categoria i nivell amb punts, partits i diferència de jocs.','Disponible','classificacio'],
+ ['PlayOffs','Semifinals i final per als 4 primers, i final de consolació per al 5è i el 6è.','Disponible','playoffs'],
+ ['Normativa','Format, puntuació, desempats, cancel·lacions i joc net.','Disponible','normativa']
 ];
 
 /* ---------------- LLIGA SOCIAL · ORGANITZACIÓ D'ENFRONTAMENTS ---------------- */
@@ -628,22 +810,249 @@ function agendaClick(e){
  }
 }
 function exportAgenda(){
- const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([JSON.stringify(AG,null,2)],{type:'application/json'}));a.download=`reserves-lliga-${iso(todayLocal())}.json`;
+ const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([JSON.stringify(AG,null,2)],{type:'application/json'}));a.download=`lliga-social-${iso(todayLocal())}.json`;
  document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(a.href),1000);
 }
 function importAgenda(input){
  const f=input.files[0];input.value='';if(!f)return;
  const rd=new FileReader();rd.onload=()=>{let x=null;try{x=JSON.parse(rd.result)}catch(e){}
   if(!x||!x.bookings||typeof x.bookings!=='object'){$('agDataMsg').innerHTML='<div class="notice">El fitxer no és una còpia de les reserves.</div>';return}
-  AG=x;saveAgenda();renderAgenda();$('agDataMsg').innerHTML=`<div class="notice">Còpia carregada: ${Object.keys(AG.bookings).length} partits confirmats.</div>`};
+  AG=x;if(!AG.results||typeof AG.results!=='object')AG.results={};if(!AG.playoffs||typeof AG.playoffs!=='object')AG.playoffs={};
+  saveAgenda();renderAgenda();$('agDataMsg').innerHTML=`<div class="notice">Còpia carregada: ${Object.keys(AG.bookings).length} partits confirmats i ${Object.keys(AG.results).length} resultats.</div>`};
  rd.readAsText(f);
 }
+const LSUBS={inscripcions:null,enfrontaments:()=>renderAgenda(),resultats:()=>renderResults(),classificacio:()=>renderRanking(),playoffs:()=>renderPlayoffsLliga(),normativa:null};
 function showLligaSub(sub){
- P.lsub=sub==='enfrontaments'?'enfrontaments':'inscripcions';savePrefs();
- $('lsub-inscripcions').classList.toggle('hidden',P.lsub!=='inscripcions');
- $('lsub-enfrontaments').classList.toggle('hidden',P.lsub!=='enfrontaments');
+ P.lsub=sub in LSUBS?sub:'inscripcions';savePrefs();
+ Object.keys(LSUBS).forEach(k=>$('lsub-'+k).classList.toggle('hidden',k!==P.lsub));
  document.querySelectorAll('#lligaSubnav button').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.sub===P.lsub)));
- if(P.lsub==='enfrontaments')renderAgenda();
+ const sel=$('lligaSubnav').querySelector('[aria-pressed="true"]');if(sel)$('lligaSubnav').scrollLeft=sel.offsetLeft-$('lligaSubnav').offsetLeft-20;
+ if(LSUBS[P.lsub])LSUBS[P.lsub]();
+}
+
+/* ---------------- LLIGA SOCIAL · RESULTATS ---------------- */
+// Es guarden al mateix magatzem que les reserves (AG), al dispositiu del coordinador.
+if(!AG.results||typeof AG.results!=='object')AG.results={};
+if(!AG.playoffs||typeof AG.playoffs!=='object')AG.playoffs={};
+const EDIT={};   // marcadors oberts per editar
+// Format de partit (rules-2026-27): millor de 3 sets; sets vàlids 6-0…6-4, 7-5 i 7-6 (super tie-break a 6-6).
+function validSet(a,b){const w=Math.max(a,b),l=Math.min(a,b);return (w===6&&l<=4)||(w===7&&(l===5||l===6))}
+function evalSets(sets){
+ if(sets.length<2)return {err:'Cal posar com a mínim 2 sets.'};
+ let sa=0,sb=0;
+ for(let i=0;i<sets.length;i++){
+  const [a,b]=sets[i];
+  if(sa===2||sb===2)return {err:'Sobra el 3r set: el partit ja estava decidit en 2 sets.'};
+  if(!validSet(a,b))return {err:`El set ${i+1} (${a}-${b}) no és vàlid. Resultats possibles: 6-0 a 6-4, 7-5 o 7-6.`};
+  if(a>b)sa++;else sb++;
+ }
+ if(sa<2&&sb<2)return {err:'Falta el 3r set: amb un set per banda es juga un tercer set.'};
+ return {winner:sa>sb?'A':'B',sa,sb};
+}
+// Totals de cada banda. Punts: victòria 3, derrota amb un set a favor 1, derrota 0. WO: 3 i 0 amb 6-0 6-0.
+function sideStats(res){
+ const sets=res.wo?(res.wo==='A'?[[6,0],[6,0]]:[[0,6],[0,6]]):res.sets;
+ const e=evalSets(sets);const out={};
+ ['A','B'].forEach((s,k)=>{
+  let gw=0,gl=0,sw=0,sl=0;
+  sets.forEach(([a,b])=>{const mine=k?b:a,their=k?a:b;gw+=mine;gl+=their;if(mine>their)sw++;else sl++});
+  const won=e.winner===s;
+  out[s]={won,gw,gl,sw,sl,pts:won?3:(res.wo?0:(sw>0?1:0))};
+ });
+ return out;
+}
+function setsText(res){return res.wo?'WO (6-0 6-0)':res.sets.map(([a,b])=>`${a}-${b}`).join(' ')}
+// Marcador: una fila per parella i una columna per set
+function scoreboardHtml(id,rows,res,opts){
+ opts=opts||{};
+ const editing=!res||EDIT[id];
+ if(!editing){
+  const ss=sideStats(res),w=ss.A.won?0:1;
+  const sets=res.wo?(res.wo==='A'?[[6,0],[6,0]]:[[0,6],[0,6]]):res.sets;
+  return `<div class="sb done">${rows.map((r,k)=>`<div class="sb-row${k===w?' win':''}"><span class="seed-b">${esc(r.seed||'')}</span><span class="sb-name">${esc(r.name)}</span>${sets.map(st=>`<span class="sb-set">${st[k]}</span>`).join('')}<span class="sb-pts">${k===w?'✓':''}</span></div>`).join('')}
+   <div class="sb-foot"><span class="small muted">${res.wo?'Partit guanyat per WO':''}${opts.points?`${res.wo?' · ':''}Punts: ${esc(rows[0].short||'A')} +${ss.A.pts} · ${esc(rows[1].short||'B')} +${ss.B.pts}`:''}</span>
+   <span class="sb-actions"><button class="secondary small-btn" data-act="edit" data-id="${esc(id)}">Editar</button><button class="secondary small-btn" data-act="del" data-id="${esc(id)}">Esborrar</button></span></div></div>`;
+ }
+ const v=(k,i)=>res&&!res.wo&&res.sets[i]?res.sets[i][k]:'';
+ return `<div class="sb">
+  <div class="sb-row sb-hd"><span class="seed-b"></span><span class="sb-name"></span><span class="sb-set">S1</span><span class="sb-set">S2</span><span class="sb-set">S3</span></div>
+  ${rows.map((r,k)=>`<div class="sb-row"><span class="seed-b">${esc(r.seed||'')}</span>${r.input?`<input class="sb-name-in" id="${id}-n${k}" value="${esc(r.name)}" placeholder="${esc(r.placeholder||'Parella')}" aria-label="Nom de la parella">`:`<span class="sb-name">${esc(r.name)}</span>`}${[0,1,2].map(i=>`<input class="sb-in" id="${id}-${k}${i}" type="number" inputmode="numeric" min="0" max="7" value="${v(k,i)}" aria-label="Set ${i+1} ${esc(r.name)}">`).join('')}</div>`).join('')}
+  <div class="sb-foot"><select id="${id}-wo" aria-label="Walkover"><option value="">Partit jugat</option><option value="A"${res&&res.wo==='A'?' selected':''}>WO a favor de ${esc(rows[0].short||rows[0].name||'A')}</option><option value="B"${res&&res.wo==='B'?' selected':''}>WO a favor de ${esc(rows[1].short||rows[1].name||'B')}</option></select>
+  <button class="primary" data-act="save" data-id="${esc(id)}">Guardar resultat</button></div>
+  <div class="sb-err" id="${id}-err" role="alert"></div></div>`;
+}
+function readScoreboard(id){
+ const wo=$(id+'-wo').value;
+ if(wo)return {res:{wo,sets:[]}};
+ const sets=[];
+ for(let i=0;i<3;i++){
+  const a=$(id+'-0'+i).value,b=$(id+'-1'+i).value;
+  if(a===''&&b==='')continue;
+  if(a===''||b==='')return {err:`Al set ${i+1} falta el resultat d’una de les parelles.`};
+  if(sets.length<i)return {err:`Has deixat buit el set ${sets.length+1}.`};
+  sets.push([+a,+b]);
+ }
+ const e=evalSets(sets);if(e.err)return {err:e.err};
+ return {res:{wo:null,sets}};
+}
+function pickersHtml(prefix){
+ const cats=LLIGA.cats;if(!cats.some(c=>c.k===AS.cat))AS.cat=cats[0].k;
+ const groups=['B','C'].filter(lv=>groupPairs(AS.cat,lv).length>=2);
+ if(groups.indexOf(AS.lv)<0)AS.lv=groups[0]||'B';
+ const n=groupPairs(AS.cat,AS.lv).length,maxJ=Math.min(n>=2?roundRobin(n).length:0,rrWeeks().length);
+ if(AS.j>maxJ||AS.j<1)AS.j=1;saveAS();
+ $(prefix+'Cats').innerHTML=cats.map(c=>`<button data-cat="${c.k}" aria-pressed="${c.k===AS.cat}">${esc(c.name)}</button>`).join('');
+ $(prefix+'Groups').innerHTML=['B','C'].map(lv=>{const k=groupPairs(AS.cat,lv).length;return `<button data-lv="${lv}" aria-pressed="${lv===AS.lv}"${k<2?' disabled':''}>Nivell ${lv} <span class="small">· ${k} parelles</span></button>`}).join('');
+ if($(prefix+'Weeks'))$(prefix+'Weeks').innerHTML=rrWeeks().map((w,i)=>{const j=i+1,r=weekRange(j);return `<button data-j="${j}" aria-pressed="${j===AS.j}"${j>maxJ?' disabled':''}><b>J${j}</b><span>${fmtDM(r.from)}–${fmtDM(r.to)}</span></button>`}).join('');
+}
+function renderResults(){
+ pickersHtml('rs');
+ const pairs=groupPairs(AS.cat,AS.lv),round=pairs.length>=2?roundRobin(pairs.length)[AS.j-1]:null;
+ const c=LLIGA.cats.find(x=>x.k===AS.cat);
+ if(!round){$('rsMatches').innerHTML='<div class="empty">Aquest grup encara no té prou parelles.</div>';return}
+ let done=0;
+ const cards=round.matches.map(([a,b],i)=>{
+  const pa=pairs[a],pb=pairs[b],key=matchKey(AS.cat,AS.j,pa,pb),res=AG.results[key],bk=AG.bookings[key];
+  if(res)done++;
+  const rows=[{name:pairName(pa),short:`P${a+1}`,seed:`P${a+1}`},{name:pairName(pb),short:`P${b+1}`,seed:`P${b+1}`}];
+  return `<article class="mt${res?' is-booked':''}"><div class="mt-head"><span class="small muted">${esc(c.name)} ${AS.lv} · Jornada ${AS.j} · Partit ${i+1}</span>${res?'<span class="pill ok">Resultat guardat</span>':'<span class="pill todo">Pendent</span>'}</div>
+   ${bk?`<p class="small muted">${esc(slotLabel(bk))} · Pista ${bk.court}</p>`:''}
+   ${scoreboardHtml('rs-'+i,rows,res,{points:true})}</article>`;
+ });
+ const bye=round.bye!=null?`<p class="muted small">Descansa: ${esc(pairName(pairs[round.bye]))}</p>`:'';
+ $('rsMatches').innerHTML=`<div class="ag-sum"><div><h3>${esc(c.name)} · Nivell ${AS.lv} · Jornada ${AS.j}</h3>${bye}</div><span class="pill">${done} de ${round.matches.length} resultats</span></div><div class="mts">${cards.join('')}</div>`;
+}
+function resultsClick(e){
+ const b=e.target.closest('button');if(!b||b.disabled)return;
+ if(b.dataset.cat){AS.cat=b.dataset.cat;AS.j=1;renderResults();return}
+ if(b.dataset.lv){AS.lv=b.dataset.lv;AS.j=1;renderResults();return}
+ if(b.dataset.j){AS.j=+b.dataset.j;renderResults();return}
+ const act=b.dataset.act,id=b.dataset.id;if(!act||!id)return;
+ const i=+id.split('-')[1],pairs=groupPairs(AS.cat,AS.lv),[ia,ib]=roundRobin(pairs.length)[AS.j-1].matches[i];
+ const pa=pairs[ia],pb=pairs[ib],key=matchKey(AS.cat,AS.j,pa,pb);
+ if(act==='edit'){EDIT[id]=true;renderResults();return}
+ if(act==='del'){
+  if(b.dataset.sure!=='1'){b.dataset.sure='1';b.textContent='Segur?';b.classList.add('danger');return}
+  delete AG.results[key];delete EDIT[id];saveAgenda();renderResults();return;
+ }
+ if(act==='save'){
+  const r=readScoreboard(id);
+  if(r.err){$(id+'-err').textContent='⚠️ '+r.err;return}
+  AG.results[key]=Object.assign(r.res,{cat:AS.cat,lv:AS.lv,j:AS.j,a:pairName(pa),b:pairName(pb)});
+  delete EDIT[id];saveAgenda();renderResults();
+ }
+}
+
+/* ---------------- LLIGA SOCIAL · CLASSIFICACIÓ ---------------- */
+// Desempat (docs/ARCHITECTURE.md): punts → enfrontament directe (2 parelles) → diferència de jocs →
+// diferència de sets → mini-lligueta (3 o més). Quan un criteri parteix l'empat, cada subgrup torna a començar.
+function groupBy(block,key){const m=new Map();block.forEach(r=>{const k=key(r);if(!m.has(k))m.set(k,[]);m.get(k).push(r)});return [...m.keys()].sort((a,b)=>b-a).map(k=>m.get(k))}
+function miniLeague(block,played){
+ const ids=block.map(r=>r.i),t={};ids.forEach(i=>t[i]={pts:0,dif:0,sdif:0});
+ played.filter(x=>ids.indexOf(x.a)>=0&&ids.indexOf(x.b)>=0).forEach(x=>{
+  [[x.a,x.st.A],[x.b,x.st.B]].forEach(([i,s])=>{t[i].pts+=s.pts;t[i].dif+=s.gw-s.gl;t[i].sdif+=s.sw-s.sl});
+ });
+ return t;
+}
+function resolveTie(block,played){
+ if(block.length<2)return block;
+ const ids=block.map(r=>r.i);
+ if(block.length===2){const m=played.filter(x=>ids.indexOf(x.a)>=0&&ids.indexOf(x.b)>=0);if(m.length){const w=m[m.length-1].w;return w===block[0].i?block:[block[1],block[0]]}}
+ const keys=[r=>r.dif,r=>r.sdif];
+ if(block.length>=3){const ml=miniLeague(block,played);keys.push(r=>ml[r.i].pts,r=>ml[r.i].dif,r=>ml[r.i].sdif)}
+ for(const key of keys){const g=groupBy(block,key);if(g.length>1)return [].concat.apply([],g.map(x=>resolveTie(x,played)))}
+ block.forEach(r=>r.tied=true);
+ return block.slice().sort((x,y)=>x.i-y.i);
+}
+function standings(cat,lv){
+ const pairs=groupPairs(cat,lv);if(pairs.length<2)return {rows:[],played:0,total:0};
+ const rounds=roundRobin(pairs.length).slice(0,rrWeeks().length);
+ const rows=pairs.map((p,i)=>({i,p,name:pairName(p),pj:0,pg:0,pp:0,jg:0,jp:0,sg:0,sp:0,pts:0,tied:false}));
+ const played=[];let total=0;
+ rounds.forEach((r,ri)=>r.matches.forEach(([a,b])=>{
+  total++;const res=AG.results[matchKey(cat,ri+1,pairs[a],pairs[b])];if(!res)return;
+  const st=sideStats(res);
+  [[rows[a],st.A],[rows[b],st.B]].forEach(([row,s])=>{row.pj++;s.won?row.pg++:row.pp++;row.jg+=s.gw;row.jp+=s.gl;row.sg+=s.sw;row.sp+=s.sl;row.pts+=s.pts});
+  played.push({a,b,w:st.A.won?a:b,st});
+ }));
+ rows.forEach(r=>{r.dif=r.jg-r.jp;r.sdif=r.sg-r.sp});
+ const out=[].concat.apply([],groupBy(rows,r=>r.pts).map(bl=>resolveTie(bl,played)));
+ return {rows:out,played:played.length,total};
+}
+let RK='totes';
+function renderRanking(){
+ const cats=LLIGA.cats;
+ $('rkCats').innerHTML=[['totes','Totes']].concat(cats.map(c=>[c.k,c.name])).map(([k,n])=>`<button data-rk="${k}" aria-pressed="${k===RK}">${esc(n)}</button>`).join('');
+ const blocks=cats.filter(c=>RK==='totes'||RK===c.k).map(c=>{
+  const tables=['B','C'].map(lv=>{
+   const s=standings(c.k,lv);if(!s.rows.length)return '';
+   const n=s.rows.length,q=n>=4?4:2;
+   const body=s.rows.map((r,k)=>{const pos=k+1,cls=pos<=q?'q-main':(n>=6&&pos<=6?'q-cons':'');
+    return `<tr class="${cls}"><td class="pos">${pos}${r.tied&&r.pj?'<span class="tie" title="Empat sense resoldre: decideix el coordinador">=</span>':''}</td><td class="team">${esc(r.name)}</td><td>${r.pj}</td><td>${r.pg}</td><td>${r.pp}</td><td>${r.jg}</td><td>${r.jp}</td><td>${r.dif>0?'+':''}${r.dif}</td><td class="pts">${r.pts}</td></tr>`}).join('');
+   return `<div class="rk-group"><div class="ag-sum"><h3>${esc(c.name)} · Nivell ${lv}</h3><span class="pill">${s.played} de ${s.total} partits jugats</span></div>
+    <div class="table-wrap"><table class="rk"><thead><tr><th>#</th><th>Parella</th><th title="Partits jugats">PJ</th><th title="Partits guanyats">PG</th><th title="Partits perduts">PP</th><th title="Jocs guanyats">JG</th><th title="Jocs perduts">JP</th><th title="Diferència de jocs">Dif.</th><th>Punts</th></tr></thead><tbody>${body}</tbody></table></div><p class="swipe">↔ Llisca la taula per veure totes les columnes</p></div>`;
+  }).join('');
+  return `<section class="card rk-cat"><h2 class="rk-title">${esc(c.name)}</h2>${tables||'<div class="empty">Sense grups.</div>'}</section>`;
+ });
+ $('rkTables').innerHTML=blocks.join('');
+}
+
+/* ---------------- LLIGA SOCIAL · PLAYOFFS ---------------- */
+// Quadre de cada grup (packages/domain/src/playoffs.ts): semis 1r–4t i 2n–3r, final, i final de consolació 5è–6è.
+const ORD=['','1r','2n','3r','4t','5è','6è'];
+function poTemplate(n){
+ if(n>=4){const t=[{code:'SF1',name:'Semifinal 1',a:1,b:4},{code:'SF2',name:'Semifinal 2',a:2,b:3},{code:'F',name:'Final',a:'SF1',b:'SF2'}];if(n>=6)t.push({code:'CF',name:'Final de consolació',a:5,b:6});return t}
+ return n>=2?[{code:'F',name:'Final',a:1,b:2}]:[];
+}
+function poState(){const k=AS.cat+'|'+AS.lv;if(!AG.playoffs[k])AG.playoffs[k]={names:{},res:{}};return AG.playoffs[k]}
+function poWinnerName(st,code,names){const r=st.res[code];if(!r)return '';const w=sideStats(r).A.won?0:1;return names[code][w]}
+function renderPlayoffsLliga(){
+ pickersHtml('po');
+ const pairs=groupPairs(AS.cat,AS.lv),n=pairs.length,c=LLIGA.cats.find(x=>x.k===AS.cat);
+ const s=standings(AS.cat,AS.lv),st=poState(),tpl=poTemplate(n);
+ const complete=s.total>0&&s.played===s.total;
+ const names={};
+ tpl.forEach(m=>{names[m.code]=['a','b'].map(side=>{const src=m[side];const ov=st.names[m.code+side];if(ov!=null&&ov!=='')return ov;
+  if(typeof src==='number'){const r=s.rows[src-1];return complete&&r?r.name:''}
+  return poWinnerName(st,src,names)})});
+ const card=(m,dates)=>{const rows=['a','b'].map((side,k)=>{const src=m[side];return {name:names[m.code][k],input:true,seed:typeof src==='number'?ORD[src]:'',placeholder:typeof src==='number'?`${ORD[src]} classificat`:`Guanyador ${src==='SF1'?'semifinal 1':'semifinal 2'}`,short:typeof src==='number'?ORD[src]:(src==='SF1'?'SF1':'SF2')}});
+  return `<article class="pm${m.code==='F'?' final':''}${m.code==='CF'?' cons':''}"><div class="pm-head"><b>${esc(m.name)}</b><span class="small muted">${esc(dates)}</span></div>${scoreboardHtml('po-'+m.code,rows,st.res[m.code])}</article>`};
+ const W=LLIGA.weeks.filter(w=>w[2]),semis=W[0]?`${fmtDM(d(W[0][1]))} – ${fmtDM(addDays(d(W[0][1]),6))}`:'',fin=W[1]?`${fmtDM(d(W[1][1]))} – ${fmtDM(addDays(d(W[1][1]),6))}`:'';
+ const champ=poWinnerName(st,'F',names),cons=tpl.some(m=>m.code==='CF')?poWinnerName(st,'CF',names):'';
+ let h=`<div class="ag-sum"><div><h3>${esc(c.name)} · Nivell ${AS.lv}</h3><p class="muted small">${n} parelles al grup · ${complete?'classificació final':`fase regular en joc (${s.played} de ${s.total} partits): els noms s’omplen sols quan acabi, o els pots escriure`}</p></div></div>`;
+ if(!tpl.length){$('poBoard').innerHTML=h+'<div class="empty">Aquest grup no té prou parelles per fer playoffs.</div>';return}
+ const get=code=>tpl.find(m=>m.code===code);
+ if(get('SF1')){
+  h+=`<div class="po-board">
+   <div class="po-col"><div class="po-round">Semifinals</div>${card(get('SF1'),semis)}</div>
+   <div class="po-col po-mid"><div class="po-round">Final</div><div class="po-cup${champ?' won':''}"><span aria-hidden="true">🏆</span><b>${champ?esc(champ):'Campions'}</b><span class="small">${champ?`Campions ${esc(c.name)} ${AS.lv}`:'Guanyador de la final'}</span></div>${card(get('F'),fin)}</div>
+   <div class="po-col"><div class="po-round">Semifinals</div>${card(get('SF2'),semis)}</div></div>`;
+ }else h+=`<div class="po-board single"><div class="po-col po-mid"><div class="po-round">Final</div><div class="po-cup${champ?' won':''}"><span aria-hidden="true">🏆</span><b>${champ?esc(champ):'Campions'}</b></div>${card(get('F'),fin)}</div></div>`;
+ if(get('CF'))h+=`<div class="po-cons-wrap"><div class="po-round">Quadre de consolació · 5è contra 6è</div>${card(get('CF'),semis)}${cons?`<p class="small" style="margin-top:6px">🥇 Guanyadors de la consolació: <b>${esc(cons)}</b></p>`:''}</div>`;
+ h+=`<ol class="po-legend">${get('SF1')?`<li><b>Semifinals</b> · ${esc(semis)}: el 1r contra el 4t i el 2n contra el 3r.</li><li><b>Final</b> · ${esc(fin)}: els dos guanyadors de les semifinals.</li>`:`<li><b>Final</b> · ${esc(fin)}: el 1r contra el 2n del grup.</li>`}${get('CF')?`<li><b>Consolació</b> · ${esc(semis)}: el 5è contra el 6è.</li>`:''}</ol>`;
+ $('poBoard').innerHTML=h;
+}
+function playoffsClick(e){
+ const b=e.target.closest('button');if(!b||b.disabled)return;
+ if(b.dataset.cat){AS.cat=b.dataset.cat;renderPlayoffsLliga();return}
+ if(b.dataset.lv){AS.lv=b.dataset.lv;renderPlayoffsLliga();return}
+ const act=b.dataset.act,id=b.dataset.id;if(!act||!id)return;
+ const code=id.slice(3),st=poState();
+ if(act==='edit'){EDIT[id]=true;renderPlayoffsLliga();return}
+ if(act==='del'){if(b.dataset.sure!=='1'){b.dataset.sure='1';b.textContent='Segur?';b.classList.add('danger');return}delete st.res[code];delete EDIT[id];saveAgenda();renderPlayoffsLliga();return}
+ if(act==='save'){
+  const r=readScoreboard(id);
+  const nA=$(id+'-n0').value.trim(),nB=$(id+'-n1').value.trim();
+  if(!nA||!nB){$(id+'-err').textContent='⚠️ Escriu el nom de les dues parelles.';return}
+  if(r.err){$(id+'-err').textContent='⚠️ '+r.err;return}
+  st.res[code]=r.res;delete EDIT[id];saveAgenda();renderPlayoffsLliga();
+ }
+}
+// Els noms escrits a mà es guarden en sortir del camp
+function playoffsNameChange(e){
+ const t=e.target;if(!t.classList.contains('sb-name-in'))return;
+ const m=/^po-(\w+)-n([01])$/.exec(t.id);if(!m)return;
+ poState().names[m[1]+(m[2]==='0'?'a':'b')]=t.value.trim();saveAgenda();
 }
 
 /* ---------------- TORNEJOS ---------------- */
@@ -760,6 +1169,11 @@ window.addEventListener('resize',()=>{const sc=$('bscroll');if(sc&&sc.clientWidt
 
 /* ---------------- INICI ---------------- */
 document.querySelectorAll('#lligaSubnav button').forEach(b=>b.addEventListener('click',()=>showLligaSub(b.dataset.sub)));
+$('lligaSteps').addEventListener('click',e=>{const b=e.target.closest('[data-sub]');if(b){showLligaSub(b.dataset.sub);$('lligaSubnav').scrollIntoView({block:'start'})}});
+['rsCats','rsGroups','rsWeeks','rsMatches'].forEach(id=>$(id).addEventListener('click',resultsClick));
+$('rkCats').addEventListener('click',e=>{const b=e.target.closest('[data-rk]');if(b){RK=b.dataset.rk;renderRanking()}});
+['poCats','poGroups','poBoard'].forEach(id=>$(id).addEventListener('click',playoffsClick));
+$('poBoard').addEventListener('change',playoffsNameChange);
 ['agCats','agGroups','agWeeks','agMatches'].forEach(id=>$(id).addEventListener('click',agendaClick));
 $('agExport').addEventListener('click',exportAgenda);
 $('agImportBtn').addEventListener('click',()=>$('agImport').click());
