@@ -149,7 +149,7 @@ button.pill.go{border:0;cursor:pointer;min-height:36px;padding:6px 12px;font-siz
 
 /* Marcador de resultats (Resultats i PlayOffs) */
 .sb{display:grid;gap:6px}
-.sb-row{display:grid;grid-template-columns:auto minmax(0,1fr) repeat(3,46px) 18px;gap:6px;align-items:center}
+.sb-row{display:grid;grid-template-columns:auto minmax(0,1fr) repeat(var(--cols,3),46px) 18px;gap:6px;align-items:center}
 .sb-row.sb-hd{font-size:11px;font-weight:800;color:var(--muted);letter-spacing:.05em}
 .sb-name{min-width:0;overflow-wrap:anywhere;line-height:1.25;font-weight:600;font-size:14px}
 .sb-name-in{min-width:0;width:100%;padding:9px 10px;border:1px solid var(--field-line);border-radius:9px;background:var(--field);color:var(--ink);font-size:15px;font-weight:600}
@@ -230,7 +230,7 @@ button.pill.go{border:0;cursor:pointer;min-height:36px;padding:6px 12px;font-siz
  .po-board .po-col:first-child::before{content:"Semifinals";font-size:11px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);text-align:center}
 }
 @media(max-width:420px){
- .sb-row{grid-template-columns:auto minmax(0,1fr) repeat(3,40px) 14px;gap:5px}
+ .sb-row{grid-template-columns:auto minmax(0,1fr) repeat(var(--cols,3),40px) 14px;gap:5px}
  .sb-in{width:40px;font-size:16px}
  .sb-name{font-size:13px}
 }
@@ -258,6 +258,11 @@ button.pill.go{border:0;cursor:pointer;min-height:36px;padding:6px 12px;font-siz
 .tx-list details summary{cursor:pointer;color:var(--muted)}
 .tx-warn{margin-top:12px;border:1px solid var(--gold);background:var(--gold-bg);border-radius:10px;padding:10px 12px}
 .tx-warn summary{font-weight:700;cursor:pointer}
+.demo-box{display:grid;gap:4px;min-width:min(100%,320px)}
+.demo-row{display:flex;gap:8px;flex-wrap:wrap}
+.demo-row select{flex:1 1 140px;width:auto!important}
+.demo-card{display:flex;gap:12px;justify-content:space-between;align-items:center;flex-wrap:wrap;border-style:dashed}
+.demo-card>div{flex:1 1 240px;min-width:0}
 .tx-info{margin:10px 0 0;padding-left:0;list-style:none;display:grid;gap:4px;font-size:13px;color:var(--muted)}
 .tx-warn ul{margin:8px 0 0;padding-left:18px;display:grid;gap:4px;font-size:13px}
 .grid-t{border-collapse:separate;border-spacing:4px;font-size:12px}
@@ -320,6 +325,9 @@ button.pill.go{border:0;cursor:pointer;min-height:36px;padding:6px 12px;font-siz
 .trophy span{font-size:11px;color:var(--muted)}
 
 .rounds-list{display:grid;gap:14px}
+.po-main-h{margin:4px 0 8px}
+.cons-head{margin:22px 0 8px;padding-top:16px;border-top:2px dashed var(--line)}
+.cons-head h3{margin:0 0 2px}
 .round-block h3{display:flex;gap:8px;align-items:center}
 .round-block .ms{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(230px,100%),1fr));gap:8px}
 .lm{border:1px solid var(--field-line);border-radius:10px;background:var(--card);overflow:hidden}
@@ -914,14 +922,15 @@ function scoreboardHtml(id,rows,res,opts){
   const ss=(opts.stats||sideStats)(res),w=ss.A.won?0:1;
   const wo=opts.woSets||[[6,0],[6,0]];
   const sets=res.wo?(res.wo==='A'?wo:wo.map(([a,b])=>[b,a])):res.sets;
-  return `<div class="sb done">${rows.map((r,k)=>`<div class="sb-row${k===w?' win':''}"><span class="seed-b">${esc(r.seed||'')}</span><span class="sb-name">${esc(r.name)}</span>${sets.map(st=>`<span class="sb-set">${st[k]}</span>`).join('')}<span class="sb-pts">${k===w?'✓':''}</span></div>`).join('')}
+  return `<div class="sb done" style="--cols:${Math.max(1,sets.length)}">${rows.map((r,k)=>`<div class="sb-row${k===w?' win':''}"><span class="seed-b">${esc(r.seed||'')}</span><span class="sb-name">${esc(r.name)}</span>${sets.map(st=>`<span class="sb-set">${st[k]}</span>`).join('')}<span class="sb-pts">${k===w?'✓':''}</span></div>`).join('')}
    <div class="sb-foot"><span class="small muted">${res.wo?'Partit guanyat per WO':''}${opts.points?`${res.wo?' · ':''}Punts: ${esc(rows[0].short||'A')} +${ss.A.pts} · ${esc(rows[1].short||'B')} +${ss.B.pts}`:''}</span>
    <span class="sb-actions"><button class="secondary small-btn" data-act="edit" data-id="${esc(id)}">Editar</button><button class="secondary small-btn" data-act="del" data-id="${esc(id)}">Esborrar</button></span></div></div>`;
  }
  const v=(k,i)=>res&&!res.wo&&res.sets[i]?res.sets[i][k]:'';
- return `<div class="sb">
-  <div class="sb-row sb-hd"><span class="seed-b"></span><span class="sb-name"></span><span class="sb-set">S1</span><span class="sb-set">S2</span><span class="sb-set">S3</span></div>
-  ${rows.map((r,k)=>`<div class="sb-row"><span class="seed-b">${esc(r.seed||'')}</span>${r.input?`<input class="sb-name-in" id="${id}-n${k}" value="${esc(r.name)}" placeholder="${esc(r.placeholder||'Parella')}" aria-label="Nom de la parella">`:`<span class="sb-name">${esc(r.name)}</span>`}${[0,1,2].map(i=>`<input class="sb-in" id="${id}-${k}${i}" type="number" inputmode="numeric" min="0" value="${v(k,i)}" aria-label="Set ${i+1} ${esc(r.name)}">`).join('')}</div>`).join('')}
+ const heads=opts.heads||['S1','S2','S3'];
+ return `<div class="sb" style="--cols:${heads.length}">
+  <div class="sb-row sb-hd"><span class="seed-b"></span><span class="sb-name"></span>${heads.map(h=>`<span class="sb-set">${esc(h)}</span>`).join('')}</div>
+  ${rows.map((r,k)=>`<div class="sb-row"><span class="seed-b">${esc(r.seed||'')}</span>${r.input?`<input class="sb-name-in" id="${id}-n${k}" value="${esc(r.name)}" placeholder="${esc(r.placeholder||'Parella')}" aria-label="Nom de la parella">`:`<span class="sb-name">${esc(r.name)}</span>`}${heads.map((h,i)=>`<input class="sb-in" id="${id}-${k}${i}" type="number" inputmode="numeric" min="0" value="${v(k,i)}" aria-label="Set ${i+1} ${esc(r.name)}">`).join('')}</div>`).join('')}
   <div class="sb-foot"><select id="${id}-wo" aria-label="Walkover"><option value="">Partit jugat</option><option value="A"${res&&res.wo==='A'?' selected':''}>WO a favor de ${esc(rows[0].short||rows[0].name||'A')}</option><option value="B"${res&&res.wo==='B'?' selected':''}>WO a favor de ${esc(rows[1].short||rows[1].name||'B')}</option></select>
   <button class="primary" data-act="save" data-id="${esc(id)}">Guardar resultat</button></div>
   <div class="sb-err" id="${id}-err" role="alert"></div></div>`;
@@ -931,7 +940,7 @@ function readScoreboard(id,validate){
  const wo=$(id+'-wo').value;
  if(wo)return {res:{wo,sets:[]}};
  const sets=[];
- for(let i=0;i<3;i++){
+ for(let i=0;i<3&&$(id+'-0'+i);i++){
   const a=$(id+'-0'+i).value,b=$(id+'-1'+i).value;
   if(a===''&&b==='')continue;
   if(a===''||b==='')return {err:`Al set ${i+1} falta el resultat d’una de les parelles.`};
@@ -1129,10 +1138,14 @@ const TXKEY='torneig-express-v1';
 const TX_CATS=[{k:'masculina',name:'Masculina',short:'M'},{k:'femenina',name:'Femenina',short:'F'},{k:'mixta',name:'Mixta',short:'X'}];
 const TX_LVS=['A','B','C'];
 // Formats de partit: 2 sets + super tie-break (per defecte), millor de 3 sets complets, o 1 set
-const TX_FORMATS={stb:'2 sets i super tie-break a 10 punts',bo3:'Millor de 3 sets',set1:'1 set'};
-function txDefault(){return {config:{name:'Torneig Express',date:'',start:'09:00',end:'22:00',slot:60,format:'stb',courts:6,extra:2,allowExtra:true,rest:1,priceMember:25,priceNon:30},pairs:[],plan:null,results:{},ko:{}}}
+// Formats de partit: a 9 jocs (per defecte) o 1 set + super tie-break a 10 punts, amb joc d'or si cadascú en guanya un
+const TX_FORMATS={nine:'Partit a 9 jocs',setstb:'1 set + super tie-break a 10 punts (joc d’or si hi ha empat)'};
+// Columnes del marcador segons el format
+const TX_COLS={nine:{cols:1,heads:['Jocs']},setstb:{cols:3,heads:['Set','STB','Or']}};
+function txDefault(){return {config:{name:'Torneig Express',date:'',start:'09:00',end:'22:00',slot:45,format:'nine',courts:6,extra:2,allowExtra:true,rest:1,priceMember:25,priceNon:30},pairs:[],plan:null,results:{},ko:{}}}
 let TX=txDefault();
 try{const x=JSON.parse(localStorage.getItem(TXKEY));if(x&&x.config&&Array.isArray(x.pairs))TX=Object.assign(txDefault(),x,{config:Object.assign(txDefault().config,x.config)})}catch(e){}
+if(!TX_FORMATS[TX.config.format])TX.config.format='nine';   // formats antics → a 9 jocs
 function txSave(){try{localStorage.setItem(TXKEY,JSON.stringify(TX))}catch(e){}}
 let TXS={sub:'normativa',cat:'masculina',lv:'B',edit:null};
 try{const x=JSON.parse(localStorage.getItem(TXKEY+'-ui'));if(x)TXS=Object.assign(TXS,x,{edit:null})}catch(e){}
@@ -1145,35 +1158,37 @@ const fromMin=m=>`${String(Math.floor(m/60)).padStart(2,'0')}:${String(m%60).pad
 /* ---------- format de partit ---------- */
 function txEval(sets,fmt){
  fmt=fmt||TX.config.format;
- if(fmt==='bo3')return evalSets(sets);
- if(fmt==='set1'){
-  if(sets.length!==1)return {err:'En aquest torneig es juga a 1 set: posa només el primer set.'};
-  const [a,b]=sets[0];if(!validSet(a,b))return {err:`El set (${a}-${b}) no és vàlid. Resultats possibles: 6-0 a 6-4, 7-5 o 7-6.`};
+ if(fmt==='nine'){
+  // Partit a 9 jocs: guanya qui arriba a 9 (9-0…9-7). A 8-8 es juga un tie-break i queda 9-8.
+  if(sets.length!==1)return {err:'Els partits són a 9 jocs: posa només el marcador de jocs (p. ex. 9-6).'};
+  const [a,b]=sets[0],w=Math.max(a,b),l=Math.min(a,b);
+  if(w!==9||l>8)return {err:`El marcador ${a}-${b} no és vàlid en un partit a 9 jocs. Resultats possibles: 9-0 a 9-7, i 9-8 (amb tie-break a 8-8).`};
   return {winner:a>b?'A':'B',sa:a>b?1:0,sb:a>b?0:1};
  }
- // stb: 2 sets; amb 1-1, super tie-break a 10 punts (diferència de 2) al lloc del 3r set
- if(sets.length<2)return {err:'Cal posar com a mínim 2 sets.'};
- let sa=0,sb=0;
- for(let i=0;i<sets.length;i++){
-  const [a,b]=sets[i];
-  if(sa===2||sb===2)return {err:'Sobra el super tie-break: el partit ja estava decidit en 2 sets.'};
-  if(i<2){if(!validSet(a,b))return {err:`El set ${i+1} (${a}-${b}) no és vàlid. Resultats possibles: 6-0 a 6-4, 7-5 o 7-6.`}}
-  else{const w=Math.max(a,b),l=Math.min(a,b);if(w<10||w-l<2||(w>10&&w-l!==2))return {err:`El super tie-break (${a}-${b}) no és vàlid: es juga a 10 punts amb 2 de diferència (p. ex. 10-7 o 12-10).`}}
-  if(a>b)sa++;else sb++;
- }
- if(sa<2&&sb<2)return {err:'Falta el super tie-break: amb un set per banda es decideix amb un super tie-break a 10 punts (posa’l a S3).'};
- return {winner:sa>sb?'A':'B',sa,sb};
+ // setstb: 1 set + super tie-break a 10 punts sempre; si cada parella en guanya un, joc d'or (1-0)
+ if(sets.length<2)return {err:'Cal posar el set i el super tie-break.'};
+ const [s1,tb,gold]=sets;
+ if(!validSet(s1[0],s1[1]))return {err:`El set (${s1[0]}-${s1[1]}) no és vàlid. Resultats possibles: 6-0 a 6-4, 7-5 o 7-6.`};
+ const w=Math.max(tb[0],tb[1]),l=Math.min(tb[0],tb[1]);
+ if(w<10||w-l<2||(w>10&&w-l!==2))return {err:`El super tie-break (${tb[0]}-${tb[1]}) no és vàlid: es juga a 10 punts amb 2 de diferència (p. ex. 10-7 o 12-10).`};
+ const setA=s1[0]>s1[1],tbA=tb[0]>tb[1];
+ if(setA===tbA){if(gold)return {err:'Sobra el joc d’or: la mateixa parella ha guanyat el set i el super tie-break.'};return {winner:setA?'A':'B',sa:setA?2:0,sb:setA?0:2}}
+ if(!gold)return {err:'Cada parella ha guanyat un (set i super tie-break): falta el joc d’or (posa 1-0 o 0-1 a «Or»).'};
+ if(!((gold[0]===1&&gold[1]===0)||(gold[0]===0&&gold[1]===1)))return {err:'El joc d’or s’anota 1-0 o 0-1.'};
+ return {winner:gold[0]?'A':'B',sa:1,sb:1};
 }
-const txWoSets=()=>TX.config.format==='set1'?[[6,0]]:[[6,0],[6,0]];
-// Totals d'una banda. El super tie-break compta com un set i un joc (1-0) per a qui el guanya.
+const txWoSets=()=>TX.config.format==='nine'?[[9,0]]:[[6,0],[10,0]];
+// Totals d'una banda per a la classificació.
+// A 9 jocs: els jocs del marcador. Amb set + super tie-break: els jocs del set, i el super tie-break i el joc d'or
+// compten com un joc (1-0) per a qui els guanya. El set i el super tie-break compten com a «set a favor».
 function txStats(res){
  const wo=txWoSets(),sets=res.wo?(res.wo==='A'?wo:wo.map(([a,b])=>[b,a])):res.sets;
- const e=txEval(sets),out={};
+ const e=txEval(sets),fmt=TX.config.format,out={};
  ['A','B'].forEach((s,k)=>{
   let gw=0,gl=0,sw=0,sl=0;
-  sets.forEach(([a,b],i)=>{const mine=k?b:a,their=k?a:b;
-   if(TX.config.format==='stb'&&i===2){if(mine>their){gw++;sw++}else{gl++;sl++}}
-   else{gw+=mine;gl+=their;if(mine>their)sw++;else sl++}});
+  sets.forEach(([a,b],i)=>{const mine=k?b:a,their=k?a:b,won=mine>their;
+   if(fmt==='setstb'&&i>0){if(won)gw++;else gl++;if(i===1){if(won)sw++;else sl++}}
+   else{gw+=mine;gl+=their;if(won)sw++;else sl++}});
   const won=e.winner===s;
   out[s]={won,gw,gl,sw,sl,pts:won?3:(res.wo?0:(sw>0?1:0))};
  });
@@ -1402,7 +1417,9 @@ function koBuild(key,kind,entrants){
 }
 function koHtml(key,kind,entrants,placeholder){
  const b=koBuild(key,kind,entrants.map(e=>e.name));
- if(!b)return `<div class="empty">${kind==='main'?'Encara no hi ha prou parelles classificades per al quadre principal.':'Cap parella va a la consolació (o només n’hi ha una).'}</div>`;
+ // Una sola parella classificada (p. ex. grup de 2 en què una parella guanya els dos partits): campiona directament
+ if(!b&&kind==='main'&&entrants.length===1&&entrants[0].name)return `<div class="po-cup won" style="margin:8px auto"><span aria-hidden="true">🏆</span><b>${esc(entrants[0].name)}</b><span class="small">Campions: única parella amb victòries a la fase regular</span></div>`;
+ if(!b)return `<div class="empty">${kind==='main'?'Encara no hi ha prou parelles classificades per al quadre principal.':entrants.length===1?'Només hi ha una parella sense victòries: no cal quadre de consolació.':'Cap parella va a la consolació.'}</div>`;
  const st=koState(key,kind),W=236,H=104,GX=40,TOP=28,U=H+18,cols=b.rounds.length;
  const x=c=>16+c*(W+GX),y=(r,i)=>TOP+(i+.5)*Math.pow(2,r)*U-H/2;
  const width=32+cols*W+(cols-1)*GX,height=TOP+b.size/2*U+120;
@@ -1415,7 +1432,7 @@ function koHtml(key,kind,entrants,placeholder){
     const win=m.winner&&side.name===m.winner&&!side.bye;
     return `<div class="ko-row${win?' win':''}">${side.seed?`<span class="seed-b">${side.seed}</span>`:'<span class="seed-b"></span>'}<input class="ko-name" data-k="${key}" data-kind="${kind}" data-id="${m.id}${s}" value="${esc(side.bye?'':side.name)}" placeholder="${esc(ph)}"${side.bye?' disabled':''} aria-label="Parella"></div>`};
    const both=m.A.name&&m.B.name&&!m.A.bye&&!m.B.bye;
-   const score=m.A.bye||m.B.bye?'<span class="small muted">Passa directament</span>':`<input class="ko-score" data-k="${key}" data-kind="${kind}" data-id="${m.id}" value="${esc(res?setsText2(res):'')}" placeholder="${both?'Resultat (p. ex. 6-4 6-3)':'Pendent'}"${both?'':' disabled'} aria-label="Resultat">`;
+   const score=m.A.bye||m.B.bye?'<span class="small muted">Passa directament</span>':`<input class="ko-score" data-k="${key}" data-kind="${kind}" data-id="${m.id}" value="${esc(res?setsText2(res):'')}" placeholder="${both?(TX.config.format==='nine'?'Resultat (p. ex. 9-6)':'Resultat (p. ex. 6-4 10-7)'):'Pendent'}"${both?'':' disabled'} aria-label="Resultat">`;
    boxes+=`<div class="ko-m${r===cols-1?' final':''}" style="left:${X}px;top:${Y}px;width:${W}px;height:${H}px">${row('A')}${row('B')}<div class="ko-foot">${score}</div></div>`;
    if(r<cols-1){const nx=x(r+1),ny=y(r+1,i>>1)+H/2,x1=X+W,xm=x1+GX/2,y1=Y+H/2;wires+=`<path d="M${x1} ${y1}H${xm}V${ny}H${nx}"/>`}
   });
@@ -1429,7 +1446,7 @@ function parseScore(text){
  const t=text.trim().toUpperCase();if(!t)return {clear:true};
  const wo=/^WO\s*([AB])$/.exec(t);if(wo)return {res:{wo:wo[1],sets:[]}};
  const sets=(t.match(/\d+\s*[-–]\s*\d+/g)||[]).map(x=>x.split(/[-–]/).map(Number));
- if(!sets.length)return {err:'Escriu el resultat set a set, per exemple 6-4 6-3 (o «WO A» / «WO B»).'};
+ if(!sets.length)return {err:TX.config.format==='nine'?'Escriu el marcador de jocs, per exemple 9-6 (o «WO A» / «WO B»).':'Escriu el set i el super tie-break, per exemple 6-4 10-7, i el joc d’or si cal: 6-4 7-10 1-0 (o «WO A» / «WO B»).'};
  const e=txEval(sets);if(e.err)return {err:e.err};
  return {res:{wo:null,sets}};
 }
@@ -1478,8 +1495,9 @@ function txNormativa(){
   <li>Les parelles que perden els dos partits queden fora del quadre principal i juguen un quadre de consolació a part.</li>
   <li>Funciona igual que el principal, amb la seva pròpia final.</li></ul></article>
  <article class="rule"><h3><span class="ic">🎾</span>Format de partit</h3><ul>
-  <li>${esc(TX_FORMATS[c.format])}${c.format==='stb'?': a 1-1 en sets, el partit es decideix amb un super tie-break a 10 punts (2 de diferència)':''}.</li>
-  <li>Sets vàlids: 6-0 a 6-4, 7-5 i 7-6.</li><li>Cada partit té un torn de ${c.slot} minuts de pista, escalfament inclòs.</li></ul></article>
+  ${c.format==='nine'?`<li><b>Partits a 9 jocs.</b> Guanya la primera parella que arriba a 9 jocs (de 9-0 a 9-7).</li><li>A 8-8 es juga un tie-break i el marcador queda 9-8.</li>`
+  :`<li><b>1 set + super tie-break a 10 punts.</b> Sempre es juguen tots dos.</li><li>Si la mateixa parella guanya el set i el super tie-break, guanya el partit.</li><li>Si cada parella en guanya un, el partit es decideix amb un <b>joc d’or</b>: un joc complet (15-0, 30-0, 40-0…).</li><li>Set vàlid: 6-0 a 6-4, 7-5 o 7-6. Super tie-break: a 10 punts amb 2 de diferència.</li>`}
+  <li>Cada partit té un torn de ${c.slot} minuts de pista, escalfament inclòs.</li></ul></article>
  <article class="rule"><h3><span class="ic">🕒</span>Horaris i pistes</h3><ul>
   <li>Els horaris es fan segons la disponibilitat que cada parella indica a la inscripció.</li>
   <li>Ningú juga dos partits alhora (tampoc si juga en dues categories) i hi ha com a mínim ${c.rest} ${c.rest===1?'torn':'torns'} de descans entre partits del mateix jugador sempre que és possible.</li>
@@ -1523,7 +1541,7 @@ function txInscripcions(){
   <div class="actions-row"><button class="primary" type="submit">${e?'Guardar canvis':'Inscriure la parella'}</button>${e?'<button class="secondary" type="button" data-tx="cancel">Cancel·lar</button>':''}</div>
  </form>
  <div class="card"><div class="ag-sum"><div><h3>Parelles inscrites</h3><p class="muted small">${TX.pairs.length} parelles · ${players} jugadors · ingressos previstos ${money} €</p></div>
-  <div class="actions-row" style="flex:0 1 auto"><button class="secondary small-btn" data-tx="demo">Carregar parelles d’exemple</button>${TX.pairs.length?'<button class="secondary small-btn" data-tx="clear">Esborrar totes</button>':''}</div></div>
+  <div class="demo-box"><label class="lbl" for="txDemoN">Crear exemple</label><div class="demo-row"><select id="txDemoN">${[30,40,50,60].map(n=>`<option value="${n}"${n===(TXS.demoN||40)?' selected':''}>${n} parelles</option>`).join('')}</select><button class="secondary small-btn" data-tx="demo">Crear exemple</button>${TX.pairs.length?'<button class="secondary small-btn" data-tx="clear">Esborrar totes</button>':''}</div><span class="small muted">Inscripcions inventades per fer proves. Substitueixen les actuals.</span></div></div>
   ${groups.length?groups.map(g=>`<h4 class="tx-gh">${esc(TXCAT(g.cat).name)} · Nivell ${g.lv} <span class="pill">${g.n} ${g.n===1?'parella':'parelles'}</span></h4><ul class="tx-list">${txGroupPairs(g.cat,g.lv).map(p=>`<li><div><b>${esc(txPairName(p))}</b><span class="small muted">${esc(p.from)}–${esc(p.to)} · ${[p.p1,p.p2].map(j=>j.member?'abonat/da':'no abonat/da').join(' · ')}${p.demo?' · exemple':''}</span><details class="small"><summary>Contacte</summary>${[p.p1,p.p2].map(j=>`${esc(j.name)}: ${esc(j.phone)} · ${esc(j.mail)}`).join('<br>')}</details></div><span class="sb-actions"><button class="secondary small-btn" data-tx="edit" data-id="${p.id}">Editar</button><button class="secondary small-btn" data-tx="del" data-id="${p.id}">Treure</button></span></li>`).join('')}</ul>`).join(''):'<div class="empty">Encara no hi ha cap parella inscrita.</div>'}
   <p class="muted small" style="margin-top:10px">Les dades de contacte només es guarden en aquest dispositiu i no surten als quadres.</p></div>
  </div>`;
@@ -1544,24 +1562,62 @@ function txReadForm(){
  const mk=p=>({name:p.name,phone:p.phone,mail:p.mail.toLowerCase(),member:p.member==='Sí'});
  return {pair:{cat,lv,p1:mk(p1),p2:mk(p2),from,to}};
 }
-function txDemo(){
- const F=['Marc','Jordi','Pau','Albert','Xavi','Sergi','Oriol','Dani','Pere','Joan','Arnau','Roger','Víctor','Guillem','Ferran','Toni','Carles','Àlex','Ivan','Nil','Bernat','Eloi','David','Raül'];
- const Fw=['Anna','Laia','Marta','Núria','Clara','Júlia','Berta','Mireia','Elena','Sara','Gemma','Carla','Alba','Paula','Irene','Ona','Neus','Rosa','Txell','Aina'];
- const S=['Puig','Vidal','Soler','Ferrer','Roca','Serra','Font','Pons','Costa','Bosch','Mas','Riera','Sala','Torres','Camps','Prat','Coll','Vila','Casas','Garcia','Marín','Pujol','Martí','Ribas','Valls','Duran','Comas','Oliva'];
- const r=rng(Date.now()&0xffff),taken=new Set(TX.pairs.reduce((a,p)=>a.concat(txPlayers(p)),[]));
+// «Crear exemple»: inscripcions inventades per lots (30–60 parelles) repartides pels 9 quadres
+const TX_DEMO_SPLIT=[['masculina','A',.10],['masculina','B',.16],['masculina','C',.14],['femenina','A',.06],['femenina','B',.12],['femenina','C',.12],['mixta','A',.06],['mixta','B',.10],['mixta','C',.14]];
+function txDemo(total){
+ total=Math.max(2,Math.min(60,total||39));
+ const F=['Marc','Jordi','Pau','Albert','Xavi','Sergi','Oriol','Dani','Pere','Joan','Arnau','Roger','Víctor','Guillem','Ferran','Toni','Carles','Àlex','Ivan','Nil','Bernat','Eloi','David','Raül','Quim','Lluís','Adrià','Gerard'];
+ const Fw=['Anna','Laia','Marta','Núria','Clara','Júlia','Berta','Mireia','Elena','Sara','Gemma','Carla','Alba','Paula','Irene','Ona','Neus','Rosa','Txell','Aina','Judit','Maria','Íngrid','Noemí'];
+ const S=['Puig','Vidal','Soler','Ferrer','Roca','Serra','Font','Pons','Costa','Bosch','Mas','Riera','Sala','Torres','Camps','Prat','Coll','Vila','Casas','Garcia','Marín','Pujol','Martí','Ribas','Valls','Duran','Comas','Oliva','Bassa','Rovira','Sabaté','Tort'];
+ const r=rng((Date.now()^total*7919)&0x7fffffff),taken=new Set(TX.pairs.reduce((a,p)=>a.concat(txPlayers(p)),[]));
  // noms únics (cap persona repetida per error)
  const nm=list=>{for(;;){const n=`${list[Math.floor(r()*list.length)]} ${S[Math.floor(r()*S.length)]} ${S[Math.floor(r()*S.length)]}`;if(!taken.has(norm(n))){taken.add(norm(n));return n}}};
- const win=()=>{const x=r();return x<.6?[TX.config.start,TX.config.end]:x<.8?['12:00',TX.config.end]:[TX.config.start,'19:00']};
- const spec=[['masculina','A',4],['masculina','B',8],['masculina','C',6],['femenina','B',6],['femenina','C',5],['mixta','B',4],['mixta','C',6]];
+ const win=()=>{const x=r();return x<.7?[TX.config.start,TX.config.end]:x<.85?['12:00',TX.config.end]:[TX.config.start,'19:00']};
+ // repartiment: proporcional als pesos, amb un mínim de 2 parelles per quadre
+ const raw=TX_DEMO_SPLIT.map(([cat,lv,w])=>({cat,lv,n:Math.max(2,Math.floor(w*total)),rem:w*total%1}));
+ let diff=total-raw.reduce((a,x)=>a+x.n,0);
+ raw.slice().sort((a,b)=>b.rem-a.rem).forEach(x=>{if(diff>0){x.n++;diff--}});
+ while(diff<0){const x=raw.filter(y=>y.n>2).sort((a,b)=>b.n-a.n)[0];if(!x)break;x.n--;diff++}
  const men=[],women=[];let shared=0;
- spec.forEach(([cat,lv,n])=>{for(let i=0;i<n;i++){
+ raw.forEach(({cat,lv,n})=>{for(let i=0;i<n;i++){
   let a,b;
-  if(cat==='masculina'){a=nm(F);b=nm(F);men.push(a,b)}else if(cat==='femenina'){a=nm(Fw);b=nm(Fw);women.push(a,b)}
-  else if(shared<3&&men.length>shared*3&&women.length>shared*3){a=men[shared*3];b=women[shared*3];shared++}   // tres parelles mixtes amb gent que també juga Masculina o Femenina
+  if(cat==='masculina'){a=nm(F);b=nm(F);men.push(a,b)}
+  else if(cat==='femenina'){a=nm(Fw);b=nm(Fw);women.push(a,b)}
+  else if(shared<Math.ceil(total/15)&&men.length>shared*3&&women.length>shared*3){a=men[shared*3];b=women[shared*3];shared++}   // gent que també juga Masculina o Femenina
   else{a=nm(F);b=nm(Fw)}
   const [from,to]=win();const mk=n=>({name:n,phone:'600'+String(Math.floor(r()*1e6)).padStart(6,'0'),mail:norm(n).replace(/[^a-z]+/g,'.')+'@exemple.cat',member:r()<.6});
-  TX.pairs.push({id:'p'+Date.now().toString(36)+Math.floor(r()*1e6).toString(36),cat,lv,p1:mk(a),p2:mk(b),from,to,demo:true});
+  TX.pairs.push({id:'p'+Date.now().toString(36)+Math.floor(r()*1e9).toString(36),cat,lv,p1:mk(a),p2:mk(b),from,to,demo:true});
  }});
+}
+// Marcador inventat i vàlid segons el format de partit
+function txRandomScore(r,fmt){
+ fmt=fmt||TX.config.format;const flip=x=>x.map(([a,b])=>[b,a]);const aWins=r()<.5;
+ if(fmt==='nine'){const l=Math.floor(r()*9);const sc=[[9,l]];return aWins?sc:flip(sc)}
+ const sets=[[6,4],[6,3],[6,2],[7,5],[7,6],[6,1],[6,0]];const st=sets[Math.floor(r()*sets.length)];
+ const l=Math.floor(r()*9),tb=r()<.15?[12,10]:[10,l];
+ const setA=r()<.5,tbA=r()<.6?setA:!setA;
+ const out=[setA?st:[st[1],st[0]],tbA?tb:[tb[1],tb[0]]];
+ if(setA!==tbA)out.push(r()<.5?[1,0]:[0,1]);
+ return out;
+}
+// Omple tots els resultats que falten de la fase regular (els partits 2 quan ja hi ha els 1)
+function txFillRegular(){
+ const r=rng(Date.now()&0x7fffffff);let n=0;
+ for(let pass=0;pass<3;pass++)txAllMatches().forEach(m=>{if(TX.results[m.id]||!txResolve(m.a)||!txResolve(m.b))return;TX.results[m.id]={wo:null,sets:txRandomScore(r)};n++});
+ return n;
+}
+// Juga tots els quadres finals (principal i consolació) dels grups amb la fase regular acabada
+function txFillKO(){
+ const r=rng((Date.now()*3)&0x7fffffff);let n=0;
+ txGroups().forEach(g=>{const s=txStandings(g.cat,g.lv);if(!s.complete)return;
+  [['main',s.rows.filter(x=>x.state==='main')],['cons',s.rows.filter(x=>x.state==='cons')]].forEach(([kind,ent])=>{
+   const st=koState(g.key,kind);
+   for(let guard=0;guard<8;guard++){const b=koBuild(g.key,kind,ent.map(e=>e.name));if(!b)break;let added=0;
+    b.rounds.forEach(ms=>ms.forEach(m=>{if(st.res[m.id]||m.A.bye||m.B.bye||!m.A.name||!m.B.name)return;st.res[m.id]={wo:null,sets:txRandomScore(r)};added++;n++}));
+    if(!added)break}
+  });
+ });
+ return n;
 }
 
 /* --- Quadres (horaris i pistes) --- */
@@ -1634,14 +1690,15 @@ function txResultats(){
    const head=`<div class="mt-head"><span class="small muted">Partit ${m.round} · ${s?fromMin(slots[s.slot])+' · Pista '+s.court:'sense horari'}</span>${res?'<span class="pill ok">Resultat guardat</span>':'<span class="pill todo">Pendent</span>'}</div>`;
    if(!a||!b)return `<article class="mt">${head}<div class="vs-row"><div>${esc(txSrcLabel(m.a))}</div><span class="vs-badge">vs</span><div>${esc(txSrcLabel(m.b))}</div></div><p class="small muted">Es podrà anotar quan hi hagi el resultat dels partits 1 que el decideixen.</p></article>`;
    const rows=[{name:txPairName(txPair(a)),short:txPairShort(txPair(a))},{name:txPairName(txPair(b)),short:txPairShort(txPair(b))}];
-   return `<article class="mt${res?' is-booked':''}">${head}${scoreboardHtml(id,rows,res,{points:true,stats:txStats,woSets:txWoSets()})}</article>`};
+   return `<article class="mt${res?' is-booked':''}">${head}${scoreboardHtml(id,rows,res,Object.assign({points:true,stats:txStats,woSets:txWoSets()},TX_COLS[TX.config.format]))}</article>`};
   const done=g.r1.concat(g.r2).filter(m=>TX.results[m.id]).length,total=g.r1.length+g.r2.length;
-  body=`<div class="ag-sum"><div><h3>${esc(TXCAT(TXS.cat).name)} · Nivell ${TXS.lv}</h3><p class="muted small">${esc(TX_FORMATS[TX.config.format])}${TX.config.format==='stb'?' (S3 = super tie-break)':''}</p></div><span class="pill">${done} de ${total} resultats</span></div>
-  <h4 class="tx-gh">Partit 1 · sorteig</h4><div class="mts">${g.r1.map(card).join('')}</div>
-  <h4 class="tx-gh">Partit 2 · guanyadors contra guanyadors, perdedors contra perdedors</h4><div class="mts">${g.r2.map(card).join('')}</div>
+  body=`<div class="ag-sum"><div><h3>${esc(TXCAT(TXS.cat).name)} · Nivell ${TXS.lv}</h3><p class="muted small">${esc(TX_FORMATS[TX.config.format])}${TX.config.format==='setstb'?' · «STB» = super tie-break · «Or» = joc d’or, només si cada parella ha guanyat un':' · anota els jocs de cada parella (p. ex. 9-6)'}</p></div><span class="pill">${done} de ${total} resultats</span></div>
+  <h4 class="tx-gh">Partit 1 · sorteig</h4><div class="mts">${g.r1.map(m=>card(Object.assign({round:1},m))).join('')}</div>
+  <h4 class="tx-gh">Partit 2 · guanyadors contra guanyadors, perdedors contra perdedors</h4><div class="mts">${g.r2.map(m=>card(Object.assign({round:2},m))).join('')}</div>
   <p class="muted small" style="margin-top:12px">Els resultats de les rondes finals s’anoten directament als quadres (pestanya Classificacions i ranking) i no compten per al rànquing.</p>`;
  }
- $('txBody').innerHTML=`<div class="stack">${txChips(true)}<div class="card">${body}</div></div>`;
+ const left=txAllMatches().filter(m=>!TX.results[m.id]).length;
+ $('txBody').innerHTML=`<div class="stack">${txChips(true)}<div class="card demo-card"><div><b>Crear exemple</b><p class="small muted">Omple amb resultats inventats tots els partits pendents de la fase regular de totes les categories (${left} partits).</p></div><button class="secondary small-btn" data-tx="fillres"${left?'':' disabled'}>Crear exemple</button></div><div class="card">${body}</div></div>`;
 }
 
 /* --- Classificacions i ranking --- */
@@ -1661,12 +1718,13 @@ function txRanking(){
   note=`<div class="notice">La fase regular encara no ha acabat (${s.played} de ${s.total} partits). Els quadres mostren la previsió i s’omplen sols amb la classificació final. També pots escriure els noms a mà.</div>`}
  const times=t=>{const ko=TX.plan&&TX.plan.ko[key];if(!ko||!ko[t].length)return '';const slots=txSlots();return `<p class="small muted">Horari previst: ${ko[t].map(rd=>rd.matches.length?`${esc(rd.name)} ${fromMin(slots[rd.matches[0].slot])}`:'').filter(Boolean).join(' · ')}</p>`};
  $('txBody').innerHTML=`<div class="stack">${chips}
+ <div class="card demo-card"><div><b>Crear exemple</b><p class="small muted">Juga amb resultats inventats tots els quadres finals (principal i consolació) dels grups que han acabat la fase regular.</p></div><button class="secondary small-btn" data-tx="fillko">Crear exemple</button></div>
  <div class="card"><div class="ag-sum"><div><h3>Classificació · ${esc(TXCAT(TXS.cat).name)} ${TXS.lv}</h3><p class="muted small">Victòria 3 punts · derrota amb un set guanyat 1 punt · derrota 0. Només compten els 2 partits de la fase regular.</p></div><span class="pill">${s.played} de ${s.total} partits</span></div>${table}
  <div class="legend" style="margin-top:8px"><span>Quadre principal (1 o 2 victòries)</span><span class="c">Consolació (cap victòria)</span></div></div>
  ${note}
  <div class="card"><div class="ag-sum"><div><h3>🏆 Quadre principal</h3>${times('main')}</div></div>${koHtml(key,'main',mainE,'Classificat')}</div>
  <div class="card"><div class="ag-sum"><div><h3>🥇 Quadre de consolació</h3>${times('cons')}</div></div>${koHtml(key,'cons',consE,'Consolació')}</div>
- <p class="muted small">Als quadres, escriu el resultat de cada partit set a set (per exemple «6-4 6-3» o «6-4 3-6 10-8»). La parella guanyadora passa sola a la ronda següent.</p></div>`;
+ <p class="muted small">Als quadres, escriu el resultat de cada partit (${TX.config.format==='nine'?'per exemple «9-6»':'per exemple «6-4 10-7», o «6-4 7-10 1-0» si cal joc d’or'}). La parella guanyadora passa sola a la ronda següent.</p></div>`;
 }
 
 /* --- esdeveniments --- */
@@ -1682,7 +1740,12 @@ function txClick(e){
  if(a==='edit'){TXS.edit=b.dataset.id;renderExpress();$('txForm').scrollIntoView({block:'start'});return}
  if(a==='del'){if(!twoTap('Segur?'))return;TX.pairs=TX.pairs.filter(p=>p.id!==b.dataset.id);txSave();renderExpress();return}
  if(a==='clear'){if(!twoTap('Segur? Toca per esborrar-les totes'))return;TX.pairs=[];TX.plan=null;TX.results={};TX.ko={};txSave();renderExpress();return}
- if(a==='demo'){txDemo();txSave();renderExpress();return}
+ if(a==='demo'){
+  const n=+$('txDemoN').value||40;TXS.demoN=n;
+  if(TX.pairs.length&&!twoTap('Substituirà les inscripcions. Toca per confirmar'))return;
+  TX.pairs=[];TX.plan=null;TX.results={};TX.ko={};txDemo(n);txSave();renderExpress();return}
+ if(a==='fillres'){const n=txFillRegular();txSave();renderExpress();$('txBody').insertAdjacentHTML('afterbegin',`<div class="notice">S’han omplert ${n} resultats d’exemple.</div>`);return}
+ if(a==='fillko'){const n=txFillKO();txSave();renderExpress();$('txBody').insertAdjacentHTML('afterbegin',`<div class="notice">${n?`S’han jugat ${n} partits dels quadres finals.`:'Cal acabar la fase regular abans de jugar els quadres (Resultats → Crear exemple).'}</div>`);return}
  if(a==='gen'||a==='redraw'){
   if(Object.keys(TX.results).length&&!twoTap('Esborrarà els resultats. Toca per confirmar'))return;
   const seed=a==='redraw'||!TX.plan?(Date.now()&0x7fffffff):TX.plan.seed;
@@ -1742,11 +1805,27 @@ function buildRounds(n){
  }
  return rounds;
 }
+// Quadre de consolació: el juguen les parelles que perden el primer partit del quadre principal
+function consRounds(n){
+ if(n<4)return null;
+ const first=buildRounds(n)[0],rounds=[];
+ let count=first.length/2,r=0;
+ while(count>=1){
+  const ms=[];
+  for(let i=0;i<count;i++){
+   const code='C'+RCODE[count]+(count>1?(i+1):'');
+   if(r===0)ms.push({code,a:{label:'Perdedor '+first[2*i].code},b:{label:'Perdedor '+first[2*i+1].code}});
+   else{const p=rounds[r-1];ms.push({code,a:{label:'Guanyador '+p[2*i].code},b:{label:'Guanyador '+p[2*i+1].code}})}
+  }
+  rounds.push(ms);count/=2;r++;
+ }
+ return rounds;
+}
 function slotHtml(x){return `<div class="s">${x.seed?`<span class="seed">${x.seed}</span>`:''}<span class="nm">${esc(x.label)}</span></div>`}
 
 // Quadre simètric: meitat superior a l'esquerra, meitat inferior a la dreta, final al centre.
-function bracketHtml(n){
- const rounds=buildRounds(n),k=rounds.length;
+function bracketHtml(n,rounds,opt){
+ rounds=rounds||buildRounds(n);opt=opt||{};const k=rounds.length;
  const W=172,H=60,GX=34,GY=14,TOP=30,PAD=16,U=H+GY;
  const cols=2*k-1,colX=c=>PAD+c*(W+GX);
  const half=Math.max(1,rounds[0].length/2);           // partits de la primera ronda a cada costat
@@ -1770,16 +1849,16 @@ function bracketHtml(n){
  });
  boxes.push({m:rounds[k-1][0],x:fx,y:fy,final:true});
  for(let c=0;c<cols;c++){const r=c<k?c:cols-1-c;labels.push(`<div class="rlabel" style="left:${colX(c)}px;width:${W}px">${esc(RNAME[rounds[r].length])}</div>`)}
- const trophy=`<div class="trophy" style="left:${fx}px;width:${W}px;top:${fy+H+18}px"><div class="cup" aria-hidden="true">🏆</div><b>Campions</b><span>Guanyador de la final</span></div>`;
- return {width,height,html:`<div class="bracket-stage" id="stage" style="width:${width}px;height:${height}px">
+ const trophy=`<div class="trophy" style="left:${fx}px;width:${W}px;top:${fy+H+18}px"><div class="cup" aria-hidden="true">${opt.cup||'🏆'}</div><b>${esc(opt.champ||'Campions')}</b><span>Guanyador de la final</span></div>`;
+ return {width,height,html:`<div class="bracket-stage" id="${opt.id||'stage'}" style="width:${width}px;height:${height}px">
   <svg class="bracket-svg" width="${width}" height="${height}" viewBox="0 0 ${width} ${height}" aria-hidden="true">${wires.map(d=>`<path d="${d}"/>`).join('')}</svg>
   ${labels.join('')}${trophy}
   ${boxes.map(b=>`<div class="m${b.final?' final':''}" style="left:${b.x}px;top:${b.y}px;width:${W}px;height:${H}px">${slotHtml(b.m.a)}${slotHtml(b.m.b)}<span class="code">${esc(b.m.code)}</span></div>`).join('')}
  </div>`};
 }
-function listHtml(n){
- const rounds=buildRounds(n);
- return '<div class="rounds-list">'+rounds.map(ms=>{const fin=ms.length===1;return `<div class="round-block"><h3>${esc(RNAME[ms.length])} <span class="pill">${ms.length} ${ms.length===1?'partit':'partits'}</span></h3><div class="ms">${ms.map(m=>`<div class="lm${fin?' final':''}"><div class="hd">${fin?'🏆 Final':'Partit '+esc(m.code)}</div>${slotHtml(m.a)}${slotHtml(m.b)}</div>`).join('')}</div></div>`}).join('')+'</div>';
+function listHtml(n,rounds,cup){
+ rounds=rounds||buildRounds(n);cup=cup||'🏆';
+ return '<div class="rounds-list">'+rounds.map(ms=>{const fin=ms.length===1;return `<div class="round-block"><h3>${esc(RNAME[ms.length])} <span class="pill">${ms.length} ${ms.length===1?'partit':'partits'}</span></h3><div class="ms">${ms.map(m=>`<div class="lm${fin?' final':''}"><div class="hd">${fin?cup+' Final':'Partit '+esc(m.code)}</div>${slotHtml(m.a)}${slotHtml(m.b)}</div>`).join('')}</div></div>`}).join('')+'</div>';
 }
 let fitW=0;
 // «auto»: el quadre sencer si es llegeix bé reduït; si quedaria massa petit (mòbil), a mida real per lliscar.
@@ -1790,24 +1869,28 @@ function effectiveZoom(){
 }
 function applyZoom(){
  const st=$('stage'),sc=$('bscroll');if(!st||!sc)return;
- const w=st.offsetWidth,h=st.offsetHeight,z=effectiveZoom();
- const s=z==='fit'?Math.min(1,(sc.clientWidth-2)/w):1;
- st.style.transform=s<1?`scale(${s})`:'';
- sc.style.height=(h*s+2)+'px';fitW=sc.clientWidth;
+ const z=effectiveZoom();
+ // el mateix criteri per al quadre principal i per al de consolació
+ [['stage','bscroll'],['stageC','bscrollC']].forEach(([a,b])=>{const st=$(a),sc=$(b);if(!st||!sc)return;
+  const w=st.offsetWidth,h=st.offsetHeight,s=z==='fit'?Math.min(1,(sc.clientWidth-2)/w):1;
+  st.style.transform=s<1?`scale(${s})`:'';sc.style.height=(h*s+2)+'px'});
+ fitW=sc.clientWidth;
  $('zFit').setAttribute('aria-pressed',String(z==='fit'));$('z100').setAttribute('aria-pressed',String(z==='100'));
 }
 function renderPlayoffs(){
  if(!SIZES.some(s=>s[0]===P.size))P.size=16;
  $('sizes').innerHTML=SIZES.map(([n,nm])=>`<button data-n="${n}" aria-pressed="${n===P.size}"><b>${esc(nm)}</b><span>${n} parelles</span></button>`).join('');
- const n=P.size,rounds=Math.log2(n),matches=n-1;
+ const n=P.size,rounds=Math.log2(n),matches=n-1,cons=consRounds(n),consM=cons?n/2-1:0;
  const sel=$('sizes').querySelector('[aria-pressed="true"]');
  if(sel)$('sizes').scrollLeft=sel.offsetLeft-$('sizes').offsetLeft-($('sizes').clientWidth-sel.offsetWidth)/2;
- $('poSummary').innerHTML=`<span class="pill">${n} parelles</span><span class="pill">${rounds} ${rounds===1?'ronda':'rondes'}</span><span class="pill">${matches} ${matches===1?'partit':'partits'}</span>`;
+ $('poSummary').innerHTML=`<span class="pill">${n} parelles</span><span class="pill">${rounds} ${rounds===1?'ronda':'rondes'}</span><span class="pill">${matches} ${matches===1?'partit':'partits'}</span>${cons?`<span class="pill">+ ${consM} ${consM===1?'partit':'partits'} de consolació</span>`:''}`;
  $('vBracket').setAttribute('aria-pressed',String(P.mode==='bracket'));$('vList').setAttribute('aria-pressed',String(P.mode==='list'));
  $('zoomSeg').classList.toggle('hidden',P.mode!=='bracket');
- if(P.mode==='list'){$('poView').innerHTML=listHtml(n);return}
- const b=bracketHtml(n);
- $('poView').innerHTML=`<div class="bracket-scroll" id="bscroll">${b.html}</div><p class="muted small" style="margin-top:8px">Els caps de sèrie 1 i 2 només es poden trobar a la final. «Ajustar» mostra el quadre sencer; «100%» el mostra a mida real per lliscar-lo.</p>`;
+ const consHead=cons?`<div class="cons-head"><h3>🥇 Quadre de consolació</h3><p class="muted small">Per a les ${n/2} parelles eliminades al primer partit (${esc(RNAME[n/2].toLowerCase())}). Té la seva pròpia final.</p></div>`:'';
+ if(P.mode==='list'){$('poView').innerHTML=`<h3 class="po-main-h">🏆 Quadre principal</h3>`+listHtml(n)+(cons?consHead+listHtml(n/2,cons,'🥇'):'');return}
+ const b=bracketHtml(n),c=cons?bracketHtml(n/2,cons,{id:'stageC',cup:'🥇',champ:'Campions de consolació'}):null;
+ $('poView').innerHTML=`<h3 class="po-main-h">🏆 Quadre principal</h3><div class="bracket-scroll" id="bscroll">${b.html}</div><p class="muted small" style="margin-top:8px">Els caps de sèrie 1 i 2 només es poden trobar a la final. «Ajustar» mostra el quadre sencer; «100%» el mostra a mida real per lliscar-lo.</p>
+ ${c?consHead+`<div class="bracket-scroll" id="bscrollC">${c.html}</div>`:`<p class="muted small" style="margin-top:10px">Amb només una final no hi ha quadre de consolació.</p>`}`;
  applyZoom();
 }
 $('sizes').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;P.size=+b.dataset.n;savePrefs();renderPlayoffs()});
