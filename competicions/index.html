@@ -3,28 +3,35 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#273127">
+<meta name="theme-color" content="#0b2545">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700;800&family=Barlow+Semi+Condensed:wght@600;700;800&display=swap">
 <meta name="format-detection" content="telephone=no">
 <title>Competicions El Masnou</title>
 <style>
-/* Competicions del club: tres seccions independents (Lliga Social, Tornejos, Playoffs) amb la identitat de l'Americana. */
+/* Competicions del club: tres seccions independents (Lliga Social, Tornejos, Playoffs).
+   Tema: capçalera blau nit de pista, verd maragda com a color principal, groc pilota per als detalls i or per als campions. */
 :root{
- --bg:#f3f5f1;--card:#fff;--ink:#202720;--muted:#66705f;--green:#65745b;--on-green:#fff;--green2:#e9eee6;--on-green2:#293127;
- --line:#dce2da;--field:#fff;--field-line:#cbd3c9;--soft:#fafbf9;--soft2:#edf1eb;--chip:#e5eae3;
- --gold:#c49a45;--gold-bg:#fbf5e7;--wire:#b7c2b2;--seed-bg:#e9eee6;--seed-ink:#3d4a37;
- --ok-bg:#e5f1e3;--ok-ink:#355e36;--head:#273127;--on-head:#fff;--head-btn:#ffffff1f;--shadow:0 8px 24px #0000000d;--shadow2:0 3px 10px #0000000f;
- --font:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif
+ --bg:#eef3f9;--card:#fff;--ink:#0f1b2d;--muted:#5a6a80;--green:#0a9f6a;--on-green:#fff;--green2:#dcf6ea;--on-green2:#05603f;
+ --line:#dbe4ef;--field:#fff;--field-line:#c5d2e1;--soft:#f6f9fd;--soft2:#e8f0f9;--chip:#e5edf7;
+ --gold:#f0a500;--gold-bg:#fff5d6;--wire:#9db1c8;--seed-bg:#e2ebff;--seed-ink:#1d4fd7;
+ --ok-bg:#d9f8e8;--ok-ink:#03784a;--head:#0b2545;--on-head:#fff;--head-btn:#ffffff1a;--shadow:0 10px 30px #0f234614;--shadow2:0 4px 14px #0f234614;
+ --lime:#d6f20a;--accent2:#1d6fe6;--head2:#0d4f6b;
+ --font:"Barlow",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;--display:"Barlow Semi Condensed","Barlow",-apple-system,"Segoe UI",Roboto,Arial,sans-serif
 }
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
- --bg:#121612;--card:#1b211b;--ink:#e6ebe3;--muted:#9ea89a;--green:#7f9472;--on-green:#0f140f;--green2:#283128;--on-green2:#dfe7da;
- --line:#2f382e;--field:#141914;--field-line:#3a4539;--soft:#171c17;--soft2:#222a21;--chip:#283128;
- --gold:#d4ad5e;--gold-bg:#2c2617;--wire:#465345;--seed-bg:#2c372a;--seed-ink:#c9d6c2;
- --ok-bg:#1f3320;--ok-ink:#a9d8a6;--head:#0b0f0b;--on-head:#e6ebe3;--head-btn:#ffffff1a;--shadow:0 8px 24px #00000040;--shadow2:0 3px 10px #00000033;color-scheme:dark}}
+ --bg:#08111f;--card:#101b2d;--ink:#e8eef7;--muted:#93a5bd;--green:#22c98b;--on-green:#03261a;--green2:#0e3528;--on-green2:#a5f1cf;
+ --line:#1e2c44;--field:#0b1525;--field-line:#2a3c58;--soft:#0d1829;--soft2:#152338;--chip:#1a2a43;
+ --gold:#fbbf24;--gold-bg:#382a07;--wire:#3c516e;--seed-bg:#1a2c52;--seed-ink:#a8c6ff;
+ --ok-bg:#0d3a28;--ok-ink:#8ef0c1;--head:#050c18;--on-head:#e8eef7;--head-btn:#ffffff14;--shadow:0 10px 30px #00000059;--shadow2:0 4px 14px #00000047;
+ --lime:#d6f20a;--accent2:#5b9bff;--head2:#0a3346;color-scheme:dark}}
 :root[data-theme="dark"]{
- --bg:#121612;--card:#1b211b;--ink:#e6ebe3;--muted:#9ea89a;--green:#7f9472;--on-green:#0f140f;--green2:#283128;--on-green2:#dfe7da;
- --line:#2f382e;--field:#141914;--field-line:#3a4539;--soft:#171c17;--soft2:#222a21;--chip:#283128;
- --gold:#d4ad5e;--gold-bg:#2c2617;--wire:#465345;--seed-bg:#2c372a;--seed-ink:#c9d6c2;
- --ok-bg:#1f3320;--ok-ink:#a9d8a6;--head:#0b0f0b;--on-head:#e6ebe3;--head-btn:#ffffff1a;--shadow:0 8px 24px #00000040;--shadow2:0 3px 10px #00000033;color-scheme:dark}
+ --bg:#08111f;--card:#101b2d;--ink:#e8eef7;--muted:#93a5bd;--green:#22c98b;--on-green:#03261a;--green2:#0e3528;--on-green2:#a5f1cf;
+ --line:#1e2c44;--field:#0b1525;--field-line:#2a3c58;--soft:#0d1829;--soft2:#152338;--chip:#1a2a43;
+ --gold:#fbbf24;--gold-bg:#382a07;--wire:#3c516e;--seed-bg:#1a2c52;--seed-ink:#a8c6ff;
+ --ok-bg:#0d3a28;--ok-ink:#8ef0c1;--head:#050c18;--on-head:#e8eef7;--head-btn:#ffffff14;--shadow:0 10px 30px #00000059;--shadow2:0 4px 14px #00000047;
+ --lime:#d6f20a;--accent2:#5b9bff;--head2:#0a3346;color-scheme:dark}
 
 *{box-sizing:border-box}html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
 body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--font);overflow-x:hidden}
@@ -237,9 +244,9 @@ button.pill.go{border:0;cursor:pointer;min-height:36px;padding:6px 12px;font-siz
 @media(max-width:700px){.rk td.team{min-width:130px;font-size:13px}.swipe{display:block}}
 
 /* Torneig Express */
-:root{--cat-m:#5d7a8c;--cat-f:#a86a8a;--cat-x:#b38a3e}
-@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--cat-m:#86a6ba;--cat-f:#cf96b3;--cat-x:#d9b26a}}
-:root[data-theme="dark"]{--cat-m:#86a6ba;--cat-f:#cf96b3;--cat-x:#d9b26a}
+:root{--cat-m:#2563eb;--cat-f:#e0257a;--cat-x:#f08c00}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--cat-m:#6ea2ff;--cat-f:#ff6aa9;--cat-x:#ffb547}}
+:root[data-theme="dark"]{--cat-m:#6ea2ff;--cat-f:#ff6aa9;--cat-x:#ffb547}
 #formatDetail input:not([type=radio]),#formatDetail select{width:100%;padding:10px;border:1px solid var(--field-line);border-radius:10px;background:var(--field);color:var(--ink);font-size:15px;min-height:44px;font-family:inherit}
 #formatDetail .sb-in{width:46px;padding:9px 0}
 #formatDetail .ko-m input.ko-name,#formatDetail .ko-m input.ko-score{min-height:0;height:28px;padding:3px 8px;font-size:13px;border-radius:7px}
@@ -350,6 +357,151 @@ button.pill.go{border:0;cursor:pointer;min-height:36px;padding:6px 12px;font-siz
  .seg button{flex:1 1 0}
 }
 @media (prefers-reduced-motion:no-preference){.view{animation:fade .18s ease-out}@keyframes fade{from{transform:translateY(4px)}to{transform:none}}}
+
+/* ================= TEMA VISUAL ================= */
+body{font-size:15px;line-height:1.45;-webkit-font-smoothing:antialiased;background:var(--bg) radial-gradient(1200px 500px at 85% -120px,color-mix(in srgb,var(--green) 10%,transparent),transparent 70%) no-repeat}
+h1,h2,h3,.rk-title,.sec-title h2,.view-head h2{font-family:var(--display);letter-spacing:.01em}
+h2{font-size:24px;font-weight:800}h3{font-weight:700}
+::selection{background:color-mix(in srgb,var(--lime) 60%,transparent)}
+
+/* Capçalera: blau nit amb les línies d'una pista */
+header{position:relative;overflow:hidden;color:var(--on-head);padding-top:26px;
+ background:
+  linear-gradient(90deg,transparent calc(50% - 1px),#ffffff12 calc(50% - 1px),#ffffff12 calc(50% + 1px),transparent calc(50% + 1px)),
+  linear-gradient(180deg,transparent 62%,#ffffff10 62%,#ffffff10 calc(62% + 2px),transparent calc(62% + 2px)),
+  radial-gradient(700px 260px at 100% 0,color-mix(in srgb,var(--green) 45%,transparent),transparent 70%),
+  linear-gradient(120deg,var(--head) 0%,var(--head2) 100%)}
+header::after{content:"";position:absolute;left:0;right:0;bottom:0;height:3px;background:linear-gradient(90deg,var(--lime),var(--green) 45%,var(--accent2))}
+header h1{font-family:var(--display);font-size:40px;font-weight:800;letter-spacing:.01em;text-transform:uppercase;line-height:1}
+.club{color:var(--lime);opacity:1;font-weight:800;font-size:12px;letter-spacing:.14em;margin-bottom:4px}
+.main-tabs{gap:4px;margin-top:20px}
+.main-tabs button{font-family:var(--display);font-size:17px;letter-spacing:.02em;padding:12px 20px;border-radius:14px 14px 0 0;color:#ffffffcc;background:#ffffff12;transition:background .15s,color .15s}
+.main-tabs button:hover{background:#ffffff26;color:#fff}
+.main-tabs button[aria-selected="true"]{background:var(--bg);color:var(--ink);box-shadow:inset 0 3px 0 var(--green)}
+
+/* Capçaleres de secció */
+.view-head h2{font-size:30px;line-height:1.1}
+.sec-title h2{font-size:22px}
+.sec-title .n{background:linear-gradient(135deg,var(--green),var(--accent2));color:#fff;box-shadow:0 4px 10px color-mix(in srgb,var(--green) 35%,transparent)}
+
+/* Targetes */
+.card{border-radius:18px;border-color:var(--line);box-shadow:var(--shadow)}
+.mt,.pm,.rule,.cat,.phase,.fact,.leader{transition:box-shadow .15s,transform .15s}
+@media (hover:hover){.mt:hover,.cat:hover,.rule:hover{box-shadow:var(--shadow2);transform:translateY(-1px)}}
+.notice{border-left:4px solid var(--accent2);background:color-mix(in srgb,var(--accent2) 8%,var(--card))}
+
+/* Botons */
+button.primary,.btn,.primary{background:linear-gradient(135deg,var(--green),color-mix(in srgb,var(--green) 70%,var(--accent2)));color:var(--on-green);box-shadow:0 6px 16px color-mix(in srgb,var(--green) 30%,transparent);transition:transform .12s,box-shadow .12s,filter .12s}
+button.primary:hover,.btn:hover{filter:brightness(1.06);transform:translateY(-1px)}
+button.primary:active,.btn:active{transform:none}
+button.secondary,.btn.ghost{background:var(--green2);color:var(--on-green2);box-shadow:none}
+button.secondary:hover{filter:brightness(.97)}
+.btn.wa{background:linear-gradient(135deg,#1fb85c,#128c4a);color:#fff}
+
+/* Subpestanyes, fitxes i selectors */
+.subnav{background:var(--card);border:1px solid var(--line);box-shadow:var(--shadow2);padding:5px;border-radius:14px}
+.subnav button{font-weight:700;color:var(--muted);border-radius:10px}
+.subnav button[aria-pressed="true"]{background:linear-gradient(135deg,var(--green),color-mix(in srgb,var(--green) 70%,var(--accent2)));color:#fff;box-shadow:0 4px 12px color-mix(in srgb,var(--green) 30%,transparent)}
+.chips button{border-radius:12px;border-color:var(--line);font-weight:700}
+.chips button[aria-pressed="true"],.sizes button[aria-pressed="true"]{background:var(--ink);border-color:var(--ink);color:var(--card)}
+.chips button[aria-pressed="true"] span,.sizes button[aria-pressed="true"] span{color:var(--card);opacity:.75}
+.chips button[data-cat="masculina"][aria-pressed="true"],.chips button[data-txcat="masculina"][aria-pressed="true"]{background:var(--cat-m);border-color:var(--cat-m);color:#fff}
+.chips button[data-cat="femenina"][aria-pressed="true"],.chips button[data-txcat="femenina"][aria-pressed="true"]{background:var(--cat-f);border-color:var(--cat-f);color:#fff}
+.chips button[data-cat="mixta"][aria-pressed="true"],.chips button[data-txcat="mixta"][aria-pressed="true"]{background:var(--cat-x);border-color:var(--cat-x);color:#fff}
+.seg{background:var(--soft2)}
+.seg button[aria-pressed="true"]{background:var(--card);color:var(--green)}
+.format{border-radius:16px;transition:border-color .15s,box-shadow .15s}
+.format[aria-pressed="true"]{border-color:var(--green);background:linear-gradient(135deg,var(--green2),var(--card));box-shadow:0 0 0 3px color-mix(in srgb,var(--green) 20%,transparent)}
+
+/* Etiquetes */
+.pill{font-weight:700}
+.pill.ok{background:var(--ok-bg);color:var(--ok-ink)}
+.pill.todo{background:var(--gold-bg);color:color-mix(in srgb,var(--gold) 55%,var(--ink));border-color:var(--gold)}
+.status{background:var(--ok-bg);color:var(--ok-ink);box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--green) 35%,transparent)}
+.status::before{box-shadow:0 0 0 3px color-mix(in srgb,var(--green) 25%,transparent)}
+
+/* Xifres destacades */
+.fact{border:0;background:var(--soft2);border-radius:14px;position:relative;overflow:hidden}
+.fact::before{content:"";position:absolute;left:0;top:0;bottom:0;width:4px;background:linear-gradient(180deg,var(--green),var(--accent2))}
+.fact .v{font-family:var(--display);font-size:24px;font-weight:800}
+.timeline li{border-radius:12px}
+.timeline li b{font-family:var(--display);font-size:15px}
+.timeline li.now{outline:0;background:var(--green);color:#fff}
+.timeline li.now span{color:#ffffffd9}
+.timeline li.po{background:var(--gold-bg);border-color:var(--gold)}
+
+/* Categories de la Lliga */
+.cat{border-radius:16px;border-top:4px solid var(--green)}
+.cats .cat:nth-child(1){border-top-color:var(--cat-f)}.cats .cat:nth-child(2){border-top-color:var(--cat-m)}.cats .cat:nth-child(3){border-top-color:var(--cat-x)}
+.meter{height:10px}
+.meter i{background:linear-gradient(90deg,var(--green),var(--accent2))}
+.lv{background:var(--seed-bg);color:var(--seed-ink)}
+.lv.B{background:var(--gold-bg);color:color-mix(in srgb,var(--gold) 55%,var(--ink));border-color:var(--gold)}
+
+/* Taules de classificació */
+.rk thead th,.price thead th{background:var(--soft2);color:var(--muted);text-transform:uppercase;letter-spacing:.06em;font-size:11px}
+.rk thead th:nth-child(1),.rk thead th:nth-child(2){background:var(--soft2)}
+.rk thead th:first-child{border-top-left-radius:10px}.rk thead th:last-child{border-top-right-radius:10px}
+.rk tbody tr:nth-child(even) td{background:color-mix(in srgb,var(--soft2) 55%,var(--card))}
+.rk tbody tr:hover td{background:color-mix(in srgb,var(--green) 7%,var(--card))}
+.rk td.pts{font-family:var(--display);font-size:18px;color:var(--green)}
+.rk td.pos{font-family:var(--display);font-size:16px}
+.rk tr.q-main td.pos{box-shadow:inset 4px 0 0 var(--green)}
+.rk tr.q-cons td.pos{box-shadow:inset 4px 0 0 var(--gold)}
+.grid-t th{font-family:var(--display);font-size:12px;letter-spacing:.03em}
+.grid-t td{background:var(--soft2)}
+.chip-m{box-shadow:var(--shadow2);border-left-width:5px}
+.chip-m b{font-family:var(--display);font-size:12px;letter-spacing:.02em}
+
+/* Marcadors */
+.sb.done .sb-row{background:var(--soft2)}
+.sb.done .sb-row.win{background:linear-gradient(90deg,var(--ok-bg),color-mix(in srgb,var(--ok-bg) 40%,var(--card)));color:var(--ok-ink);box-shadow:inset 3px 0 0 var(--green)}
+.sb-set{font-family:var(--display);font-size:16px}
+.sb-in{font-family:var(--display);font-size:18px!important}
+.sb-in:focus,#formatDetail input:focus,#formatDetail select:focus{border-color:var(--green);box-shadow:0 0 0 3px color-mix(in srgb,var(--green) 20%,transparent);outline:0}
+.vs-badge{background:var(--ink);color:var(--card);font-family:var(--display);letter-spacing:.06em}
+.mt{border-radius:16px}
+.mt.is-booked{border-color:color-mix(in srgb,var(--green) 55%,var(--line));box-shadow:0 0 0 1px color-mix(in srgb,var(--green) 25%,transparent),var(--shadow2)}
+.booked{background:linear-gradient(135deg,var(--ok-bg),color-mix(in srgb,var(--ok-bg) 50%,var(--card)))}
+
+/* Quadres eliminatoris (Playoffs, Lliga i Torneig) */
+.bracket-scroll{background:
+  linear-gradient(var(--line) 1px,transparent 1px) 0 0/100% 32px,
+  var(--soft);border-radius:16px}
+.bracket-svg path{stroke:color-mix(in srgb,var(--accent2) 45%,var(--wire));stroke-width:2.5;stroke-linecap:round}
+.rlabel{font-family:var(--display);color:var(--accent2);font-size:12px;letter-spacing:.1em}
+.m,.ko-m{border-radius:12px;border-left:4px solid var(--accent2);box-shadow:var(--shadow2)}
+.m .code{color:var(--accent2);font-family:var(--display)}
+.m.final,.ko-m.final,.pm.final{border:2px solid var(--gold);border-left-width:4px;background:linear-gradient(135deg,var(--gold-bg),var(--card));box-shadow:0 0 0 4px color-mix(in srgb,var(--gold) 18%,transparent),var(--shadow2)}
+.s .seed,.seed-b{background:var(--seed-bg);color:var(--seed-ink)}
+.trophy .cup,.po-cup>span:first-child{background:radial-gradient(circle at 35% 30%,#fff7d1,var(--gold-bg) 60%);border-color:var(--gold);box-shadow:0 6px 18px color-mix(in srgb,var(--gold) 40%,transparent)}
+.trophy b,.po-cup b{font-family:var(--display);font-size:16px}
+.pm{border-radius:16px}
+.pm.cons,.ko-m:not(.final){border-left-color:var(--accent2)}
+.ko-row.win .ko-name{border-color:var(--green);background:var(--ok-bg);color:var(--ok-ink)}
+.po-round{font-family:var(--display);color:var(--accent2)}
+.cons-head h3,.po-main-h{font-family:var(--display);font-size:20px}
+
+/* Normativa */
+.rule{border-radius:16px;border-top:3px solid var(--green)}
+.rule h3 .ic{background:linear-gradient(135deg,var(--green2),color-mix(in srgb,var(--accent2) 15%,var(--card)))}
+.rule .key span{background:var(--green2);color:var(--on-green2)}
+.rule.fair{border-top-color:var(--gold)}
+
+/* Torneig Express */
+.tx-player{border-radius:14px;background:var(--soft)}
+.tx-player legend{font-family:var(--display);font-size:16px}
+.radio:has(input:checked){border-color:var(--green);background:var(--green2);color:var(--on-green2)}
+.tx-list li{border-radius:12px}
+.demo-card{border-color:color-mix(in srgb,var(--lime) 60%,var(--line));background:linear-gradient(135deg,color-mix(in srgb,var(--lime) 10%,var(--card)),var(--card))}
+.tx-warn{border-radius:12px}
+
+@media(max-width:700px){
+ header h1{font-size:32px}
+ .main-tabs button{font-size:15px;padding:11px 12px}
+ .view-head h2{font-size:26px}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
 </style>
 </head>
 <body>
