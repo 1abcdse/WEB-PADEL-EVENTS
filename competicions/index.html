@@ -303,6 +303,17 @@ button.pill.go{border:0;cursor:pointer;min-height:36px;padding:6px 12px;font-siz
 .te-card-h{display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap}
 .te-line{display:flex;gap:8px;align-items:center;font-size:14px}
 .te-line .lv{min-width:58px;text-align:center}
+.lv.lv-A,.lv.lv-B,.lv.lv-C{color:#fff;border:0;font-family:var(--display);letter-spacing:.02em;display:inline-block;vertical-align:1px}
+.lv.lv-A{background:#7048e8}.lv.lv-B{background:#1c7ed6}.lv.lv-C{background:#0ca678}
+.te-lvblock{margin-top:14px}.te-lvblock>h4{margin:0;display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.te-lvblock .te-groups{margin-top:8px}
+.te-order li .lv{min-width:22px;text-align:center}
+.te-champs{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(200px,100%),1fr));gap:10px;margin-top:10px}
+.te-champ{border:1px solid var(--line);border-radius:14px;padding:10px 12px;background:var(--soft);display:grid;grid-template-columns:auto minmax(0,1fr);column-gap:12px;row-gap:3px;justify-items:start;align-items:center;min-width:0}
+.te-champ>*{grid-column:2}
+.te-champ.done{background:linear-gradient(135deg,var(--gold-bg),var(--card));border-color:var(--gold)}
+.te-champ .cup{font-size:30px;line-height:1;grid-column:1;grid-row:1/span 3}
+.te-champ b{display:flex;align-items:center;font-size:16px}
 .te-groups{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(240px,100%),1fr));gap:10px;margin-top:14px}
 .te-group{border:1px solid var(--line);border-radius:14px;padding:12px;background:var(--soft)}
 .te-group h4{margin:0 0 6px;font-family:var(--display);font-size:17px;color:var(--accent2)}
@@ -1306,7 +1317,7 @@ function playoffsNameChange(e){
 /* ---------------- TORNEJOS ---------------- */
 const TOURNEYS={
  express:{ico:'⚡',name:'Torneig Express',tag:'1 dia',desc:'Torneig de parelles que es juga en una sola jornada.'},
- equips:{ico:'👥',name:'Torneig per equips Express',tag:'1 dia · equips',desc:'Equips de colors amb una parella masculina, una de femenina i una de mixta.'},
+ equips:{ico:'👥',name:'Torneig per equips Express',tag:'1 dia · equips',desc:'Equips de colors amb una parella masculina, una de femenina i una de mixta, en tres categories per nivell (A, B i C).'},
  capsetmana:{ico:'📅',name:'Torneig de cap de setmana',tag:'Cap de setmana',desc:'Torneig de parelles repartit al llarg d’un cap de setmana.'}
 };
 function renderTornejos(){
@@ -1983,15 +1994,18 @@ function txSubmit(e){
 // Cada enfrontament entre dos equips són 3 partits alhora (a 3 pistes); guanya l'equip que en guanya 2.
 // Fase de grups (tots contra tots) i quadre final amb els dos primers de cada grup.
 const TEKEY='torneig-equips-v1';
-const TE_COLORS=[['Vermell','#e03131'],['Blau','#1c7ed6'],['Verd','#2f9e44'],['Groc','#f2c200'],['Taronja','#f76707'],['Lila','#7048e8'],['Rosa','#e64980'],['Cel','#15aabf'],['Negre','#212529'],['Blanc','#f1f3f5'],['Granat','#a61e4d'],['Turquesa','#0ca678'],['Marró','#8d5524'],['Gris','#868e96'],['Or','#d4a017'],['Plata','#adb5bd']];
+const TE_COLORS=[['Vermell','#e03131'],['Blau','#1c7ed6'],['Verd','#2f9e44'],['Groc','#f2c200'],['Taronja','#f76707'],['Lila','#7048e8'],['Rosa','#e64980'],['Cel','#15aabf'],['Negre','#212529'],['Blanc','#f1f3f5'],['Granat','#a61e4d'],['Turquesa','#0ca678'],['Marró','#8d5524'],['Gris','#868e96'],['Or','#d4a017'],['Plata','#adb5bd'],['Corall','#ff6b6b'],['Oliva','#5c940d'],['Marí','#1864ab'],['Menta','#38d9a9'],['Lavanda','#b197fc'],['Ocre','#e67700'],['Bordeus','#862e2e'],['Fúcsia','#d6336c']];
+const TE_LEVELS=['A','B','C'];
 const TE_PAIRS=[['m','Parella masculina','Masculí',['Jugador 1','Jugador 2']],['f','Parella femenina','Femení',['Jugadora 1','Jugadora 2']],['x','Parella mixta','Mixt',['Jugador','Jugadora']]];
 function teDefault(){return {config:{name:'Torneig per equips',date:'',start:'09:00',end:'22:00',slot:45,courts:6,rest:1,priceMember:25,priceNon:30},teams:[],plan:null,results:{}}}
 let TE=teDefault();
 try{const x=JSON.parse(localStorage.getItem(TEKEY));if(x&&x.config&&Array.isArray(x.teams))TE=Object.assign(teDefault(),x,{config:Object.assign(teDefault().config,x.config)})}catch(e){}
+// sorteigs fets abans de separar per nivells: no són compatibles, cal tornar-los a fer
+if(TE.plan&&!TE.plan.cats){TE.plan=null;TE.results={}}
 function teSave(){try{localStorage.setItem(TEKEY,JSON.stringify(TE))}catch(e){}}
-let TES={sub:'normativa',stage:'A',edit:null,demoN:8};
+let TES={sub:'normativa',stage:'1',level:'A',filter:'all',edit:null,demoN:4};
 try{const x=JSON.parse(localStorage.getItem(TEKEY+'-ui'));if(x)TES=Object.assign(TES,x,{edit:null})}catch(e){}
-function teSaveUI(){try{localStorage.setItem(TEKEY+'-ui',JSON.stringify({sub:TES.sub,stage:TES.stage,demoN:TES.demoN}))}catch(e){}}
+function teSaveUI(){try{localStorage.setItem(TEKEY+'-ui',JSON.stringify({sub:TES.sub,stage:TES.stage,level:TES.level,filter:TES.filter,demoN:TES.demoN}))}catch(e){}}
 const teTeam=id=>TE.teams.find(t=>t.id===id);
 const teColor=t=>(TE_COLORS.find(c=>c[0]===t.color)||['','#868e96'])[1];
 const teDot=t=>t?`<span class="te-dot" style="background:${teColor(t)}" aria-hidden="true"></span>`:'';
@@ -2013,27 +2027,41 @@ function teTie(id){
 }
 
 /* ---------- sorteig de grups i calendari ---------- */
+// Tres categories per nivell (A, B, C): cada una té els seus grups, la seva fase final i el seu equip campió.
+// Totes comparteixen les pistes i l'horari del dia.
+const teCatTeams=L=>TE.teams.filter(t=>t.level===L);
+const teCat=L=>TE.plan&&TE.plan.cats?TE.plan.cats[L]:null;
 function teGroupCount(n){return n<=5?1:Math.ceil(n/4)}
 function teBuild(seed){
- const r=rng(seed),ids=shuffled(TE.teams.map(t=>t.id),r),G=teGroupCount(ids.length),groups=[];
- for(let g=0;g<G;g++)groups.push({name:String.fromCharCode(65+g),teams:[]});
- // repartiment en serp perquè els grups quedin equilibrats (3 o 4 equips)
- ids.forEach((id,i)=>{const row=Math.floor(i/G),col=row%2?G-1-i%G:i%G;groups[col].teams.push(id)});
- const ties=[];
- groups.forEach(g=>{roundRobin(g.teams.length).forEach((rd,ri)=>rd.matches.forEach(([a,b],mi)=>ties.push({id:`G${g.name}-${ri+1}-${mi+1}`,stage:'G',group:g.name,round:ri+1,a:g.teams[a],b:g.teams[b]})))});
- TE.plan={seed,groups,ties,schedule:{},ko:[],warnings:[]};
+ const r=rng(seed),cats={};
+ TE_LEVELS.forEach(L=>{
+  const ids=shuffled(teCatTeams(L).map(t=>t.id),r),groups=[],ties=[];
+  if(ids.length>=3){
+   const G=teGroupCount(ids.length);
+   for(let g=0;g<G;g++)groups.push({name:String(g+1),teams:[]});
+   // repartiment en serp perquè els grups quedin equilibrats (3 o 4 equips)
+   ids.forEach((id,i)=>{const row=Math.floor(i/G),col=row%2?G-1-i%G:i%G;groups[col].teams.push(id)});
+   groups.forEach(g=>{roundRobin(g.teams.length).forEach((rd,ri)=>rd.matches.forEach(([a,b],mi)=>ties.push({id:`${L}-G${g.name}-${ri+1}-${mi+1}`,level:L,stage:'G',group:g.name,round:ri+1,a:g.teams[a],b:g.teams[b]})))});
+  }
+  cats[L]={level:L,n:ids.length,groups,ties};
+ });
+ TE.plan={seed,cats,ties:[].concat.apply([],TE_LEVELS.map(L=>cats[L].ties)),schedule:{},ko:{},warnings:[]};
  teSchedule();
 }
-// Quadre final: dos primers de cada grup (si només hi ha un grup, els quatre primers)
-function teQualifiers(){
- const P=TE.plan;if(!P)return {count:0,seeds:[]};
- if(P.groups.length===1){const n=P.groups[0].teams.length;return {count:Math.min(n,n>=4?4:2),single:true}}
- return {count:P.groups.length*2,single:false};
+// Quadre final de cada nivell: dos primers de cada grup (si només hi ha un grup, els quatre primers)
+function teQualifiers(L){
+ const C=teCat(L);if(!C||!C.groups.length)return {count:0,single:false};
+ if(C.groups.length===1){const n=C.groups[0].teams.length;return {count:n>=4?4:2,single:true}}
+ return {count:C.groups.length*2,single:false};
 }
-function teKoSize(){const q=teQualifiers().count;return q>=2?Math.pow(2,Math.ceil(Math.log2(q))):0}
+function teKoSize(L){const q=teQualifiers(L).count;return q>=2?Math.pow(2,Math.ceil(Math.log2(q))):0}
 function teSchedule(){
  const c=TE.config,P=TE.plan,slots=txSlotsFor(c),per=Math.floor(c.courts/3),busy={},used={},W=[];
- if(per<1){P.warnings.push('Calen com a mínim 3 pistes per jugar un enfrontament (3 partits alhora).');return}
+ const noLv=TE.teams.filter(t=>TE_LEVELS.indexOf(t.level)<0).length;
+ if(noLv)W.push(`${noLv} ${noLv===1?'equip no té':'equips no tenen'} nivell i no entren al sorteig (edita’ls a Inscripcions).`);
+ TE_LEVELS.forEach(L=>{const n=P.cats[L].n;if(n>0&&n<3)W.push(`Nivell ${L}: només hi ha ${n} ${n===1?'equip':'equips'}; calen com a mínim 3 per jugar la categoria.`)});
+ P.ko={};
+ if(per<1){W.push('Calen com a mínim 3 pistes per jugar un enfrontament (3 partits alhora).');P.warnings=W;teSave();return}
  const place=(id,teams,after)=>{
   for(let rest of [c.rest,0])for(let i=after+1;i<slots.length;i++){
    if((used[i]||0)>=per)continue;
@@ -2045,37 +2073,45 @@ function teSchedule(){
   }
   W.push(`${teTieLabel(id)}: no hi cap abans de les ${c.end}. Allarga l’horari o afegeix pistes.`);return -1;
  };
- // ronda a ronda, alternant grups, perquè tots els grups avancin al mateix ritme
+ // fase de grups ronda a ronda, alternant nivells i grups, perquè totes les categories avancin al mateix ritme
  const maxR=Math.max.apply(null,P.ties.map(t=>t.round).concat([0]));
- for(let rd=1;rd<=maxR;rd++)P.ties.filter(t=>t.round===rd).forEach(t=>place(t.id,[t.a,t.b],-1));
- let last=Math.max.apply(null,Object.keys(P.schedule).map(k=>P.schedule[k].slot).concat([-1]));
- // fase final: cada ronda després de l'anterior, amb descans; els exempts no ocupen pista
- const size=teKoSize(),q=teQualifiers().count,order=seedOrder(size||1);P.ko=[];
- for(let s=size,r=0;s>=2;s/=2,r++){
-  const rd=[];let at=last+1+c.rest;
+ for(let rd=1;rd<=maxR;rd++){
+  const lists=TE_LEVELS.map(L=>P.cats[L].ties.filter(t=>t.round===rd)),len=Math.max.apply(null,lists.map(l=>l.length));
+  for(let i=0;i<len;i++)lists.forEach(l=>{if(l[i])place(l[i].id,[l[i].a,l[i].b],-1)});
+ }
+ // fase final de cada nivell: cada ronda després de l'anterior, amb descans; els exempts no ocupen pista
+ const last={},info={};
+ TE_LEVELS.forEach(L=>{
+  last[L]=Math.max.apply(null,P.cats[L].ties.map(t=>P.schedule[t.id]?P.schedule[t.id].slot:-1).concat([-1]));
+  const size=teKoSize(L);info[L]={size,q:teQualifiers(L).count,order:seedOrder(size||1),rounds:size?Math.round(Math.log2(size)):0};P.ko[L]=[];
+ });
+ const maxK=Math.max.apply(null,TE_LEVELS.map(L=>info[L].rounds).concat([0]));
+ for(let r=0;r<maxK;r++)TE_LEVELS.forEach(L=>{
+  const I=info[L];if(r>=I.rounds)return;
+  const s=I.size/Math.pow(2,r),rd=[];let at=last[L]+1+c.rest;
   for(let m=0;m<s/2;m++){
-   const id=`K${r}-${m}`;
-   const bye=r===0&&(order[2*m]>q||order[2*m+1]>q);   // un cap de sèrie sense rival passa directament i no ocupa pista
+   const id=`${L}-K${r}-${m}`;
+   const bye=r===0&&(I.order[2*m]>I.q||I.order[2*m+1]>I.q);   // un cap de sèrie sense rival passa directament i no ocupa pista
    if(bye){rd.push({id,slot:null});continue}
    while(at<slots.length&&(used[at]||0)>=per)at++;
-   if(at>=slots.length){W.push(`Fase final · ${RNAME[s/2]}: no hi cap abans de les ${c.end}. Allarga l’horari o afegeix pistes.`);rd.push({id,slot:null});continue}
+   if(at>=slots.length){W.push(`Nivell ${L} · ${RNAME[s/2]}: no hi cap abans de les ${c.end}. Allarga l’horari o afegeix pistes.`);rd.push({id,slot:null});continue}
    const k=used[at]||0;used[at]=k+1;rd.push({id,slot:at,courts:[3*k+1,3*k+2,3*k+3]});
   }
-  P.ko.push({name:RNAME[s/2],ties:rd});
-  last=Math.max.apply(null,rd.map(x=>x.slot==null?last:x.slot).concat([last]));
- }
+  P.ko[L].push({name:RNAME[s/2],ties:rd});
+  last[L]=Math.max.apply(null,rd.map(x=>x.slot==null?last[L]:x.slot).concat([last[L]]));
+ });
  P.warnings=W;teSave();
 }
 function txSlotsFor(c){const s=toMin(c.start),e=toMin(c.end),out=[];for(let t=s;t+c.slot<=e;t+=c.slot)out.push(t);return out}
-function teTieLabel(id){const t=TE.plan.ties.find(x=>x.id===id);return t?`Grup ${t.group} · ${teName(teTeam(t.a))} – ${teName(teTeam(t.b))}`:id}
+function teTieLabel(id){const t=TE.plan.ties.find(x=>x.id===id);return t?`Nivell ${t.level} · Grup ${t.group} · ${teName(teTeam(t.a))} – ${teName(teTeam(t.b))}`:id}
 
 /* ---------- classificació dels grups ---------- */
 // Enfrontaments guanyats → partits guanyats → diferència de jocs → jocs guanyats → enfrontament directe → sorteig
-function teStandings(gname){
- const P=TE.plan,g=P.groups.find(x=>x.name===gname);
+function teStandings(L,gname){
+ const C=teCat(L),g=C.groups.find(x=>x.name===gname);
  const rows=g.teams.map((id,i)=>({id,i,t:teTeam(id),ej:0,eg:0,ep:0,pg:0,pp:0,jg:0,jp:0}));
  const by={};rows.forEach(r=>by[r.id]=r);const h2h={};let played=0,total=0;
- P.ties.filter(t=>t.group===gname).forEach(t=>{total++;const s=teTie(t.id);if(!s.done)return;played++;
+ C.ties.filter(t=>t.group===gname).forEach(t=>{total++;const s=teTie(t.id);if(!s.done)return;played++;
   const A=by[t.a],B=by[t.b];A.ej++;B.ej++;
   if(s.winner==='A'){A.eg++;B.ep++}else{B.eg++;A.ep++}
   A.pg+=s.wa;A.pp+=s.wb;B.pg+=s.wb;B.pp+=s.wa;A.jg+=s.ga;A.jp+=s.gb;B.jg+=s.gb;B.jp+=s.ga;
@@ -2084,16 +2120,16 @@ function teStandings(gname){
  rows.sort((x,y)=>y.eg-x.eg||y.pg-x.pg||y.dif-x.dif||y.jg-x.jg||(h2h[x.id+'|'+y.id]?(h2h[x.id+'|'+y.id]===x.id?-1:1):0)||x.i-y.i);
  return {rows,played,total,complete:total>0&&played===total};
 }
-// Entrades del quadre final per ordre de cap de sèrie: primers de grup, després segons
-function teKoEntrants(){
- const P=TE.plan;if(!P)return [];
- const st=P.groups.map(g=>Object.assign({g:g.name},teStandings(g.name)));
+// Entrades del quadre final d'un nivell per ordre de cap de sèrie: primers de grup, després segons
+function teKoEntrants(L){
+ const C=teCat(L);if(!C||!C.groups.length)return [];
+ const st=C.groups.map(g=>Object.assign({g:g.name},teStandings(L,g.name)));
  if(!st.every(s=>s.complete))return null;
  const cmp=(x,y)=>y.eg/Math.max(1,y.ej)-x.eg/Math.max(1,x.ej)||y.pg-x.pg||y.dif-x.dif||y.jg-x.jg;
- if(P.groups.length===1)return st[0].rows.slice(0,teQualifiers().count).map((r,i)=>({id:r.id,label:`${i+1}r del grup`}));
+ if(C.groups.length===1)return st[0].rows.slice(0,teQualifiers(L).count).map((r,i)=>({id:r.id,label:`${i+1}r del grup`}));
  const firsts=st.map(s=>Object.assign({g:s.g,label:`1r grup ${s.g}`},s.rows[0])).sort(cmp);
  const seconds=st.map(s=>Object.assign({g:s.g,label:`2n grup ${s.g}`},s.rows[1])).sort(cmp);
- const seeds=firsts.concat(seconds),size=teKoSize(),order=seedOrder(size),G=firsts.length;
+ const seeds=firsts.concat(seconds),size=teKoSize(L),order=seedOrder(size),G=firsts.length;
  // A la primera ronda, un primer de grup no s'ha de trobar el segon del seu mateix grup:
  // si passa, s'intercanvia aquell segon amb un altre segon que no provoqui cap repetició.
  const rival=k=>{const p=order.indexOf(k+1);return seeds[order[p^1]-1]};   // equip que s'enfronta al cap de sèrie k+1
@@ -2108,16 +2144,16 @@ function teKoEntrants(){
  }
  return seeds;
 }
-// Quadre final resolt: noms per caps de sèrie, exempts i guanyadors de cada enfrontament
-function teKo(){
- const size=teKoSize();if(!size)return null;
- const ent=teKoEntrants(),order=seedOrder(size),rounds=[];
+// Quadre final d'un nivell resolt: noms per caps de sèrie, exempts i guanyadors de cada enfrontament
+function teKo(L){
+ const size=teKoSize(L);if(!size)return null;
+ const ent=teKoEntrants(L),order=seedOrder(size),q=teQualifiers(L).count,rounds=[];
  let prev=null;
  for(let s=size,r=0;s>=2;s/=2,r++){
   const rd=[];
   for(let m=0;m<s/2;m++){
-   const id=`K${r}-${m}`;let a,b;
-   if(r===0){const sa=order[2*m],sb=order[2*m+1];a={seed:sa,id:ent&&ent[sa-1]?ent[sa-1].id:null,label:ent&&ent[sa-1]?ent[sa-1].label:`Cap de sèrie ${sa}`,bye:sa>teQualifiers().count};b={seed:sb,id:ent&&ent[sb-1]?ent[sb-1].id:null,label:ent&&ent[sb-1]?ent[sb-1].label:`Cap de sèrie ${sb}`,bye:sb>teQualifiers().count}}
+   const id=`${L}-K${r}-${m}`;let a,b;
+   if(r===0){const side=sd=>({seed:sd,id:ent&&ent[sd-1]?ent[sd-1].id:null,label:ent&&ent[sd-1]?ent[sd-1].label:`Cap de sèrie ${sd}`,bye:sd>q});a=side(order[2*m]);b=side(order[2*m+1])}
    else{a={id:prev[2*m].winner,label:`Guanyador ${prev[2*m].code}`};b={id:prev[2*m+1].winner,label:`Guanyador ${prev[2*m+1].code}`}}
    const code=RCODE[s/2]+(s>2?(m+1):'');let winner=null;
    if(a.bye&&!b.bye)winner=b.id;else if(b.bye&&!a.bye)winner=a.id;
@@ -2130,27 +2166,30 @@ function teKo(){
 }
 function teAllTies(){
  const out=TE.plan?TE.plan.ties.map(t=>Object.assign({},t)):[];
- const ko=teKo();if(ko)ko.rounds.forEach((rd,r)=>rd.forEach(m=>{if(m.a.bye||m.b.bye)return;out.push({id:m.id,stage:'K',round:r,name:RNAME[rd.length],code:m.code,a:m.a.id,b:m.b.id,la:m.a.label,lb:m.b.label})}));
+ TE_LEVELS.forEach(L=>{const ko=teKo(L);if(ko)ko.rounds.forEach((rd,r)=>rd.forEach(m=>{if(m.a.bye||m.b.bye)return;out.push({id:m.id,level:L,stage:'K',round:r,name:RNAME[rd.length],code:m.code,a:m.a.id,b:m.b.id,la:m.a.label,lb:m.b.label})}))});
  return out;
 }
 
 /* ---------- exemples ---------- */
+// n equips per nivell (els tres nivells: A, B i C)
 function teDemo(n){
- n=Math.max(3,Math.min(16,n||8));
+ n=Math.max(3,Math.min(8,n||4));
  const M=['Marc','Jordi','Pau','Albert','Xavi','Sergi','Oriol','Dani','Pere','Joan','Arnau','Roger','Víctor','Guillem','Ferran','Toni','Carles','Àlex','Ivan','Nil','Bernat','Eloi','David','Raül','Quim','Lluís','Adrià','Gerard'];
  const F=['Anna','Laia','Marta','Núria','Clara','Júlia','Berta','Mireia','Elena','Sara','Gemma','Carla','Alba','Paula','Irene','Ona','Neus','Rosa','Txell','Aina','Judit','Maria','Íngrid','Noemí'];
  const S=['Puig','Vidal','Soler','Ferrer','Roca','Serra','Font','Pons','Costa','Bosch','Mas','Riera','Sala','Torres','Camps','Prat','Coll','Vila','Casas','Garcia','Marín','Pujol','Martí','Ribas','Valls','Duran','Comas','Oliva','Bassa','Rovira','Sabaté','Tort'];
  const r=rng((Date.now()^n*104729)&0x7fffffff),taken=new Set();
  const nm=list=>{for(;;){const x=`${list[Math.floor(r()*list.length)]} ${S[Math.floor(r()*S.length)]} ${S[Math.floor(r()*S.length)]}`;if(!taken.has(norm(x))){taken.add(norm(x));return x}}};
  const mk=x=>({name:x,phone:'600'+String(Math.floor(r()*1e6)).padStart(6,'0'),mail:norm(x).replace(/[^a-z]+/g,'.')+'@exemple.cat',member:r()<.6});
- for(let i=0;i<n;i++){const [color]=TE_COLORS[i];
-  TE.teams.push({id:'t'+Date.now().toString(36)+i+Math.floor(r()*1e6).toString(36),name:'Equip '+color,color,demo:true,players:{m:[mk(nm(M)),mk(nm(M))],f:[mk(nm(F)),mk(nm(F))],x:[mk(nm(M)),mk(nm(F))]}});}
+ let c=0;
+ TE_LEVELS.forEach(L=>{for(let i=0;i<n;i++){const [color]=TE_COLORS[c++];
+  TE.teams.push({id:'t'+Date.now().toString(36)+c+Math.floor(r()*1e6).toString(36),name:'Equip '+color,color,level:L,demo:true,players:{m:[mk(nm(M)),mk(nm(M))],f:[mk(nm(F)),mk(nm(F))],x:[mk(nm(M)),mk(nm(F))]}});}});
 }
+// Omple amb resultats inventats: 'G' tota la fase de grups; 'K' la fase final de tots els nivells
 function teFill(stage){
  const r=rng((Date.now()*7)&0x7fffffff);let n=0;
  const fill=t=>{if(!t.a||!t.b)return;const cur=TE.results[t.id]||{};TE_PAIRS.forEach(([k])=>{if(cur[k])return;cur[k]={wo:null,sets:txRandomScore(r,'nine')};n++});TE.results[t.id]=cur};
  if(stage==='G')TE.plan.ties.forEach(fill);
- else for(let g=0;g<6;g++){const ko=teKo();if(!ko)break;let before=n;ko.rounds.forEach(rd=>rd.forEach(m=>{if(m.a.bye||m.b.bye||!m.a.id||!m.b.id)return;fill({id:m.id,a:m.a.id,b:m.b.id})}));if(n===before)break}
+ else TE_LEVELS.forEach(L=>{for(let g=0;g<6;g++){const ko=teKo(L);if(!ko)break;const before=n;ko.rounds.forEach(rd=>rd.forEach(m=>{if(m.a.bye||m.b.bye||!m.a.id||!m.b.id)return;fill({id:m.id,a:m.a.id,b:m.b.id})}));if(n===before)break}});
  return n;
 }
 
@@ -2176,6 +2215,10 @@ function teNormativa(){
  <article class="rule"><h3><span class="ic">👕</span>Els equips</h3><ul>
   <li>Cada equip té <b>6 jugadors</b> i un color: una <b>parella masculina</b>, una <b>parella femenina</b> i una <b>parella mixta</b>.</li>
   <li>Cada jugador només forma part d’una parella i d’un equip.</li></ul></article>
+ <article class="rule"><h3><span class="ic">📶</span>Tres categories per nivell</h3><ul>
+  <li>Cada equip s’inscriu en un nivell: <b>A</b>, <b>B</b> o <b>C</b>. Així els enfrontaments són entre equips de nivell semblant.</li>
+  <li>El nivell de l’equip és el de les seves parelles; si no coincideixen, el de la majoria. L’organització pot canviar-lo per equilibrar les categories.</li>
+  <li>Cada nivell és una categoria amb els seus grups, la seva fase final i el seu <b>equip campió</b>. Les tres categories comparteixen pistes i horari.</li></ul></article>
  <article class="rule"><h3><span class="ic">🤝</span>L’enfrontament</h3><ul>
   <li>Dos equips s’enfronten amb <b>3 partits alhora</b>, a 3 pistes: masculí contra masculí, femení contra femení i mixt contra mixt.</li>
   <li>Guanya l’enfrontament l’equip que guanya <b>2 dels 3 partits</b>. Els tres partits es juguen sempre i compten per a la classificació.</li></ul></article>
@@ -2183,14 +2226,14 @@ function teNormativa(){
   <li><b>Partits a 9 jocs.</b> Guanya la primera parella que arriba a 9 (de 9-0 a 9-7). A 8-8 es juga un tie-break i queda 9-8.</li>
   <li>Cada enfrontament té un torn de ${c.slot} minuts de pista.</li></ul></article>
  <article class="rule"><h3><span class="ic">🗂️</span>Fase de grups</h3><ul>
-  <li>Els equips es reparteixen per sorteig en grups de 3 o 4 (amb 5 equips o menys, un sol grup).</li>
+  <li>Dins de cada nivell, els equips es reparteixen per sorteig en grups de 3 o 4 (amb 5 equips o menys, un sol grup). Cal un mínim de 3 equips per nivell.</li>
   <li>Dins de cada grup, tots contra tots.</li></ul></article>
  <article class="rule"><h3><span class="ic">⚖️</span>Classificació dels grups</h3><ul>
   <li>1. Enfrontaments guanyats. 2. Partits guanyats. 3. Diferència de jocs. 4. Jocs guanyats. 5. Enfrontament directe. 6. Sorteig.</li></ul></article>
  <article class="rule"><h3><span class="ic">🏆</span>Fase final</h3><ul>
-  <li>Hi passen els <b>dos primers de cada grup</b> (amb un sol grup, els quatre primers).</li>
+  <li>Cada nivell té el seu quadre. Hi passen els <b>dos primers de cada grup</b> (amb un sol grup, els quatre primers; amb 3 equips, els dos primers juguen la final).</li>
   <li>Quadre eliminatori (quarts, semifinals, final) amb caps de sèrie: els primers de grup primer, i un primer mai no s’enfronta al segon del seu grup a la primera ronda.</li>
-  <li>L’equip guanyador de la final és el <b>campió del torneig</b>.</li></ul></article>
+  <li>L’equip guanyador de cada final és el <b>campió del seu nivell</b>.</li></ul></article>
  <article class="rule"><h3><span class="ic">🕒</span>Horaris i pistes</h3><ul>
   <li>Amb ${c.courts} pistes es juguen <b>${per} ${per===1?'enfrontament':'enfrontaments'} alhora</b> (3 pistes cadascun).</li>
   <li>Cada equip té com a mínim ${c.rest} ${c.rest===1?'torn':'torns'} de descans entre enfrontaments sempre que és possible.</li></ul></article>
@@ -2215,6 +2258,9 @@ function teInscripcions(){
   <input id="te-${k}${i}-phone" type="tel" inputmode="tel" placeholder="Telèfon" value="${esc(p?p.phone:'')}" aria-label="${esc(label)}: telèfon">
   <input id="te-${k}${i}-mail" type="email" inputmode="email" placeholder="Email" value="${esc(p?p.mail:'')}" aria-label="${esc(label)}: email">
   <select id="te-${k}${i}-member" aria-label="${esc(label)}: abonat/da"><option value="">Abonat/da?</option><option value="1"${p&&p.member?' selected':''}>Abonat/da</option><option value="0"${p&&!p.member?' selected':''}>No abonat/da</option></select></div>`;
+ const noLv=TE.teams.filter(t=>TE_LEVELS.indexOf(t.level)<0).length;
+ if(TES.filter==='none'&&!noLv)TES.filter='all';
+ const shown=TE.teams.filter(t=>TES.filter==='all'||(TES.filter==='none'?TE_LEVELS.indexOf(t.level)<0:t.level===TES.filter)).sort((a,b)=>(a.level||'Z').localeCompare(b.level||'Z'));
  const players=TE.teams.length*6,money=TE.teams.reduce((s,t)=>s+TE_PAIRS.reduce((a,[k])=>a+t.players[k].reduce((b,p)=>b+(p.member?c.priceMember:c.priceNon),0),0),0);
  $('teBody').innerHTML=`<div class="stack">
  <div class="card"><h3>Dades del torneig</h3><div class="grid tx-cfg" style="margin-top:10px">
@@ -2227,14 +2273,17 @@ function teInscripcions(){
  </div></div>
  <form class="card tx-form" id="teForm" novalidate><h3>${e?'Editar equip':'Inscripció d’un equip'}</h3><p class="muted small">Un equip són 6 jugadors: una parella masculina, una de femenina i una de mixta.</p>
   <div class="tx-2" style="margin-top:10px"><div><label class="lbl" for="te-tname">Nom de l’equip</label><input id="te-tname" value="${esc(e?e.name:'')}" placeholder="p. ex. Equip Vermell"></div>
-  <div><label class="lbl" for="te-color">Color</label><select id="te-color">${freeColors.map(([n])=>`<option${e&&e.color===n?' selected':''}>${n}</option>`).join('')}</select></div></div>
+  <div><label class="lbl" for="te-color">Color</label><select id="te-color">${freeColors.map(([n])=>`<option${e&&e.color===n?' selected':''}>${n}</option>`).join('')}</select></div>
+  <div><label class="lbl" for="te-level">Nivell de l’equip</label><select id="te-level"><option value="">Tria el nivell</option>${TE_LEVELS.map(L=>`<option value="${L}"${e&&e.level===L?' selected':''}>Nivell ${L}</option>`).join('')}</select></div></div>
+  <p class="small muted">Per homogeneïtzar les categories, el nivell de l’equip és el de les seves parelles (si no coincideixen, el de la majoria).</p>
   ${TE_PAIRS.map(([k,title,,labels])=>`<fieldset class="tx-player te-pair te-${k}"><legend>${esc(title)}</legend>${labels.map((l,i)=>row(k,i,l,e&&e.players[k][i])).join('')}</fieldset>`).join('')}
   <div class="sb-err" id="teFormErr" role="alert"></div>
   <div class="actions-row"><button class="primary" type="submit">${e?'Guardar canvis':'Inscriure l’equip'}</button>${e?'<button class="secondary" type="button" data-te="cancel">Cancel·lar</button>':''}</div>
  </form>
- <div class="card"><div class="ag-sum"><div><h3>Equips inscrits</h3><p class="muted small">${TE.teams.length} equips · ${players} jugadors · ingressos previstos ${money} €</p></div>
-  <div class="demo-box"><label class="lbl" for="teDemoN">Crear exemple</label><div class="demo-row"><select id="teDemoN">${[4,6,8,12,16].map(n=>`<option value="${n}"${n===TES.demoN?' selected':''}>${n} equips</option>`).join('')}</select><button class="secondary small-btn" data-te="demo">Crear exemple</button>${TE.teams.length?'<button class="secondary small-btn" data-te="clear">Esborrar tots</button>':''}</div><span class="small muted">Equips inventats per fer proves. Substitueixen els actuals.</span></div></div>
-  ${TE.teams.length?`<div class="te-teams">${TE.teams.map(t=>`<article class="te-card" style="--team:${teColor(t)}"><div class="te-card-h"><b>${teDot(t)}${esc(t.name)}</b><span class="sb-actions"><button class="secondary small-btn" data-te="edit" data-id="${t.id}">Editar</button><button class="secondary small-btn" data-te="del" data-id="${t.id}">Treure</button></span></div>
+ <div class="card"><div class="ag-sum"><div><h3>Equips inscrits</h3><p class="muted small">${TE.teams.length} equips (${TE_LEVELS.map(L=>`${L}: ${teCatTeams(L).length}`).join(' · ')}) · ${players} jugadors · ingressos previstos ${money} €</p></div>
+  <div class="demo-box"><label class="lbl" for="teDemoN">Crear exemple</label><div class="demo-row"><select id="teDemoN">${[3,4,5,6,8].map(n=>`<option value="${n}"${n===TES.demoN?' selected':''}>${n} equips per nivell</option>`).join('')}</select><button class="secondary small-btn" data-te="demo">Crear exemple</button>${TE.teams.length?'<button class="secondary small-btn" data-te="clear">Esborrar tots</button>':''}</div><span class="small muted">Equips inventats per fer proves. Substitueixen els actuals.</span></div></div>
+  ${TE.teams.length?`<div class="chips te-filter" style="margin-top:12px">${[['all','Tots',TE.teams.length]].concat(TE_LEVELS.map(L=>[L,'Nivell '+L,teCatTeams(L).length])).concat(noLv?[['none','Sense nivell',noLv]]:[]).map(([k,n,c])=>`<button data-tefilter="${k}" aria-pressed="${k===TES.filter}">${n}<span>${c} equips</span></button>`).join('')}</div>
+  ${shown.length?'':'<div class="empty">No hi ha cap equip en aquest nivell.</div>'}<div class="te-teams">${shown.map(t=>`<article class="te-card" style="--team:${teColor(t)}"><div class="te-card-h"><b>${teDot(t)}${esc(t.name)} ${TE_LEVELS.indexOf(t.level)>=0?`<span class="lv lv-${t.level}">${t.level}</span>`:'<span class="pill todo">Falta el nivell</span>'}</b><span class="sb-actions"><button class="secondary small-btn" data-te="edit" data-id="${t.id}">Editar</button><button class="secondary small-btn" data-te="del" data-id="${t.id}">Treure</button></span></div>
    ${TE_PAIRS.map(([k,,short])=>`<div class="te-line"><span class="lv">${short}</span><span>${esc(tePairName(t,k))}</span></div>`).join('')}${t.demo?'<span class="small muted">Equip d’exemple</span>':''}</article>`).join('')}</div>`:'<div class="empty">Encara no hi ha cap equip inscrit.</div>'}
   <p class="muted small" style="margin-top:10px">Les dades de contacte només es guarden en aquest dispositiu.</p></div>
  </div>`;
@@ -2243,6 +2292,7 @@ function teReadForm(){
  const v=id=>$(id).value.trim(),name=v('te-tname'),color=v('te-color');
  if(name.length<2)return {err:'Posa un nom a l’equip.'};
  if(!color)return {err:'Tria un color per a l’equip.'};
+ const level=v('te-level');if(TE_LEVELS.indexOf(level)<0)return {err:'Tria el nivell de l’equip (A, B o C).'};
  if(TE.teams.some(t=>t.id!==TES.edit&&norm(t.name)===norm(name)))return {err:'Ja hi ha un equip amb aquest nom.'};
  const players={},seen=new Set();
  for(const [k,title,,labels] of TE_PAIRS){players[k]=[];
@@ -2257,51 +2307,57 @@ function teReadForm(){
    if(other)return {err:`${p.name} ja juga a l’${other.name}.`};
    seen.add(norm(p.name));players[k].push({name:p.name,phone:p.phone,mail:p.mail,member:p.member==='1'});
   }}
- return {team:{name,color,players}};
+ return {team:{name,color,level,players}};
 }
 
 /* --- Grups i horaris --- */
-function tePlanStale(){if(!TE.plan)return false;return TE.plan.sig!==TE.teams.map(t=>t.id).sort().join()+'|'+[TE.config.start,TE.config.end,TE.config.slot,TE.config.courts,TE.config.rest].join()}
+function teSig(){return TE.teams.map(t=>t.id+':'+(t.level||'')).sort().join()+'|'+[TE.config.start,TE.config.end,TE.config.slot,TE.config.courts,TE.config.rest].join()}
+function tePlanStale(){return !!TE.plan&&TE.plan.sig!==teSig()}
+function teLevelChips(withCount){
+ return `<div><span class="lbl">Nivell</span><div class="chips">${TE_LEVELS.map(L=>`<button data-televel="${L}" aria-pressed="${L===TES.level}">Nivell ${L}${withCount?`<span>${teCatTeams(L).length} equips</span>`:''}</button>`).join('')}</div></div>`;
+}
 function teHoraris(){
  const c=TE.config,per=Math.floor(c.courts/3);
  const cfg=`<div class="card"><h3>Logística</h3><div class="grid tx-cfg" style="margin-top:10px">
   <div><label class="lbl" for="tec-slot">Durada de cada torn</label><select id="tec-slot" data-tecfg="slot">${[45,60,75,90].map(m=>`<option value="${m}"${m===c.slot?' selected':''}>${m} minuts</option>`).join('')}</select></div>
-  <div><label class="lbl" for="tec-courts">Pistes disponibles</label><select id="tec-courts" data-tecfg="courts">${[3,4,5,6,7,8,9].map(n=>`<option${n===c.courts?' selected':''}>${n}</option>`).join('')}</select></div>
+  <div><label class="lbl" for="tec-courts">Pistes disponibles</label><select id="tec-courts" data-tecfg="courts">${[3,4,5,6,7,8,9,10,11,12].map(n=>`<option${n===c.courts?' selected':''}>${n}</option>`).join('')}</select></div>
   <div><label class="lbl" for="tec-rest">Descans mínim entre enfrontaments</label><select id="tec-rest" data-tecfg="rest">${[0,1,2].map(n=>`<option value="${n}"${n===c.rest?' selected':''}>${n===0?'Cap torn':n+' '+(n===1?'torn':'torns')}</option>`).join('')}</select></div>
- </div><p class="small muted" style="margin-top:8px">Cada enfrontament ocupa 3 pistes alhora: amb ${c.courts} pistes es poden jugar ${per} ${per===1?'enfrontament':'enfrontaments'} a la vegada.</p></div>`;
- if(TE.teams.length<3){$('teBody').innerHTML=`<div class="stack">${cfg}<div class="card"><div class="empty">Calen com a mínim 3 equips inscrits (pestanya Inscripcions).</div></div></div>`;return}
+ </div><p class="small muted" style="margin-top:8px">Cada enfrontament ocupa 3 pistes alhora: amb ${c.courts} pistes es poden jugar ${per} ${per===1?'enfrontament':'enfrontaments'} a la vegada. Els tres nivells comparteixen les pistes.</p></div>`;
+ if(!TE_LEVELS.some(L=>teCatTeams(L).length>=3)){$('teBody').innerHTML=`<div class="stack">${cfg}<div class="card"><div class="empty">Cal que algun nivell tingui com a mínim 3 equips inscrits (pestanya Inscripcions).</div></div></div>`;return}
  const hasRes=Object.keys(TE.results).length>0;
- const gen=`<div class="card"><div class="ag-sum"><div><h3>Sorteig de grups i horaris</h3><p class="muted small">Reparteix els equips en grups, fa el tots contra tots i assigna hora i pistes a cada enfrontament, també als de la fase final.</p></div></div>
+ const gen=`<div class="card"><div class="ag-sum"><div><h3>Sorteig de grups i horaris</h3><p class="muted small">Per a cada nivell (A, B i C) reparteix els equips en grups, fa el tots contra tots i assigna hora i pistes a cada enfrontament, també als de la fase final.</p></div></div>
   ${TE.plan&&tePlanStale()?'<div class="notice" style="margin-bottom:10px">⚠️ Hi ha canvis als equips o a la logística des de l’últim càlcul. Torna a generar els horaris.</div>':''}
   <div class="actions-row"><button class="primary" data-te="gen">${TE.plan?'Tornar a calcular els horaris':'Fer el sorteig i els horaris'}</button>${TE.plan?'<button class="secondary" data-te="redraw">Nou sorteig</button>':''}</div>
   ${hasRes?'<p class="small muted" style="margin-top:8px">Ja hi ha resultats guardats: tornar a generar o fer un nou sorteig els esborrarà (et demanarà confirmació).</p>':''}</div>`;
  if(!TE.plan){$('teBody').innerHTML=`<div class="stack">${cfg}${gen}</div>`;return}
  const P=TE.plan,S=P.schedule,slots=txSlotsFor(c);
- const koT=P.ko.reduce((a,rd)=>a.concat(rd.ties.filter(x=>x.slot!=null)),[]);
+ const koT=[].concat.apply([],TE_LEVELS.map(L=>(P.ko[L]||[]).reduce((a,rd)=>a.concat(rd.ties.filter(x=>x.slot!=null)),[])));
  const lastSlot=Math.max.apply(null,Object.keys(S).map(k=>S[k].slot).concat(koT.map(x=>x.slot),[0]));
- const groups=`<div class="te-groups">${P.groups.map(g=>`<div class="te-group"><h4>Grup ${g.name}</h4>${g.teams.map(id=>teChip(teTeam(id))).join('')}</div>`).join('')}</div>`;
+ const groups=TE_LEVELS.map(L=>{const C=P.cats[L];
+  return `<div class="te-lvblock"><h4><span class="lv lv-${L}">Nivell ${L}</span> <span class="small muted">${C.n} equips${C.groups.length?` · ${teQualifiers(L).count} a la fase final`:''}</span></h4>${C.groups.length?`<div class="te-groups">${C.groups.map(g=>`<div class="te-group"><h4>Grup ${g.name}</h4>${g.teams.map(id=>teChip(teTeam(id))).join('')}</div>`).join('')}</div>`:'<p class="small muted">Aquest nivell no es juga: calen com a mínim 3 equips.</p>'}</div>`}).join('');
  const summary=`<div class="card"><div class="facts" style="margin-top:0">
-  <div class="fact"><div class="k">Fase de grups</div><div class="v">${P.ties.length} enfrontaments</div><div class="d">${P.groups.length} ${P.groups.length===1?'grup':'grups'} · ${P.ties.length*3} partits</div></div>
-  <div class="fact"><div class="k">Fase final</div><div class="v">${koT.length} enfrontaments</div><div class="d">${teQualifiers().count} equips classificats</div></div>
+  <div class="fact"><div class="k">Fase de grups</div><div class="v">${P.ties.length} enfrontaments</div><div class="d">${P.ties.length*3} partits · 3 nivells</div></div>
+  <div class="fact"><div class="k">Fases finals</div><div class="v">${koT.length} enfrontaments</div><div class="d">${TE_LEVELS.map(L=>`${L}: ${teQualifiers(L).count}`).join(' · ')} equips</div></div>
   <div class="fact"><div class="k">Horari</div><div class="v">${esc(c.start)} – ${fromMin(slots[Math.min(lastSlot,slots.length-1)]+c.slot)}</div><div class="d">${lastSlot+1} torns de ${c.slot} min</div></div>
   <div class="fact"><div class="k">Pistes</div><div class="v">${c.courts}</div><div class="d">${per} ${per===1?'enfrontament':'enfrontaments'} alhora</div></div></div>
   ${groups}
   ${P.warnings.length?`<details class="tx-warn" open><summary>${P.warnings.length} ${P.warnings.length===1?'avís':'avisos'}</summary><ul>${P.warnings.map(w=>`<li>${esc(w)}</li>`).join('')}</ul></details>`:'<p class="small" style="margin-top:10px">✅ Tots els enfrontaments encaixen, amb descans entre els enfrontaments de cada equip.</p>'}</div>`;
- // ordre de joc per torns
+ // ordre de joc per torns (tots els nivells junts, que comparteixen pistes)
  const bySlot={};
- P.ties.forEach(t=>{const s=S[t.id];if(!s)return;(bySlot[s.slot]=bySlot[s.slot]||[]).push(`<li><span class="te-courts">Pistes ${s.courts[0]}–${s.courts[2]}</span><span class="pill">Grup ${t.group}</span>${teChip(teTeam(t.a))}<span class="vs-badge">vs</span>${teChip(teTeam(t.b))}</li>`)});
- P.ko.forEach(rd=>rd.ties.forEach(x=>{if(x.slot==null)return;(bySlot[x.slot]=bySlot[x.slot]||[]).push(`<li class="ko-li"><span class="te-courts">Pistes ${x.courts[0]}–${x.courts[2]}</span><span class="pill todo">Fase final</span><b>${esc(rd.name)}</b></li>`)}));
+ P.ties.forEach(t=>{const s=S[t.id];if(!s)return;(bySlot[s.slot]=bySlot[s.slot]||[]).push(`<li><span class="te-courts">Pistes ${s.courts[0]}–${s.courts[2]}</span><span class="lv lv-${t.level}">${t.level}</span><span class="pill">Grup ${t.group}</span>${teChip(teTeam(t.a))}<span class="vs-badge">vs</span>${teChip(teTeam(t.b))}</li>`)});
+ TE_LEVELS.forEach(L=>(P.ko[L]||[]).forEach(rd=>rd.ties.forEach(x=>{if(x.slot==null)return;(bySlot[x.slot]=bySlot[x.slot]||[]).push(`<li class="ko-li"><span class="te-courts">Pistes ${x.courts[0]}–${x.courts[2]}</span><span class="lv lv-${L}">${L}</span><span class="pill todo">Fase final</span><b>${esc(rd.name)}</b></li>`)})));
  const order=Object.keys(bySlot).map(Number).sort((a,b)=>a-b).map(i=>`<div class="te-slot"><div class="te-time">${fromMin(slots[i])}</div><ul>${bySlot[i].join('')}</ul></div>`).join('');
  // horari de cada equip
- const perTeam=TE.teams.map(t=>{const mine=P.ties.filter(x=>x.a===t.id||x.b===t.id).sort((a,b)=>(S[a.id]||{slot:99}).slot-(S[b.id]||{slot:99}).slot);
-  const g=P.groups.find(x=>x.teams.indexOf(t.id)>=0);
+ const perTeam=TE_LEVELS.map(L=>teCatTeams(L).map(t=>{const mine=P.ties.filter(x=>x.a===t.id||x.b===t.id).sort((a,b)=>(S[a.id]||{slot:99}).slot-(S[b.id]||{slot:99}).slot);
+  const g=P.cats[L].groups.find(x=>x.teams.indexOf(t.id)>=0);if(!g)return '';
   const lines=mine.map(x=>{const s=S[x.id],o=teTeam(x.a===t.id?x.b:x.a);return `${s?fromMin(slots[s.slot]):'—'} · Pistes ${s?s.courts[0]+'–'+s.courts[2]:'—'} · contra ${o?o.name:''}`});
-  const text=`🎾 ${c.name}${c.date?' · '+fmtLong(c.date):''}\n${t.name} · Grup ${g?g.name:''}\n`+lines.map(l=>'• '+l).join('\n')+`\nMasculí, femení i mixt juguen alhora: tot l’equip a pista 10 minuts abans. Som-hi!`;
-  return `<li><div><b>${teDot(t)}${esc(t.name)}</b>${lines.map(l=>`<span class="small">${esc(l)}</span>`).join('')}</div><a class="btn ghost small-btn" target="_blank" rel="noopener" href="https://wa.me/?text=${encodeURIComponent(text)}">WhatsApp</a></li>`}).join('');
+  const text=`🎾 ${c.name}${c.date?' · '+fmtLong(c.date):''}\n${t.name} · Nivell ${L} · Grup ${g.name}\n`+lines.map(l=>'• '+l).join('\n')+`\nMasculí, femení i mixt juguen alhora: tot l’equip a pista 10 minuts abans. Som-hi!`;
+  return `<li><div><b>${teDot(t)}${esc(t.name)} <span class="lv lv-${L}">${L}</span></b>${lines.map(l=>`<span class="small">${esc(l)}</span>`).join('')}</div><a class="btn ghost small-btn" target="_blank" rel="noopener" href="https://wa.me/?text=${encodeURIComponent(text)}">WhatsApp</a></li>`}).join('')).join('');
  $('teBody').innerHTML=`<div class="stack">${cfg}${gen}${summary}
-  <div class="card"><h3>Ordre de joc</h3><div class="te-order">${order}</div></div>
+  <div class="card"><h3>Ordre de joc</h3><p class="small muted">Tots els nivells junts, perquè comparteixen les pistes.</p><div class="te-order">${order}</div></div>
   <div class="card"><h3>Horari de cada equip</h3><ul class="tx-list" style="margin-top:10px">${perTeam}</ul></div></div>`;
 }
+
 
 /* --- Resultats --- */
 function teTieCard(t,meta){
@@ -2317,25 +2373,28 @@ function teTieCard(t,meta){
 }
 function teResultats(){
  if(!TE.plan){$('teBody').innerHTML='<div class="card"><div class="empty">Primer cal fer el sorteig (pestanya Grups i horaris).</div></div>';return}
- const P=TE.plan,S=P.schedule,stages=P.groups.map(g=>g.name).concat(['K']);
- if(stages.indexOf(TES.stage)<0)TES.stage=stages[0];
- const chips=`<div class="card ag-controls"><div><span class="lbl">Fase</span><div class="chips">${stages.map(k=>`<button data-testage="${k}" aria-pressed="${k===TES.stage}">${k==='K'?'Fase final':'Grup '+k}</button>`).join('')}</div></div></div>`;
+ const P=TE.plan,S=P.schedule,L=TES.level,C=P.cats[L];
+ const stages=C.groups.map(g=>g.name).concat(C.groups.length?['K']:[]);
+ if(stages.indexOf(TES.stage)<0)TES.stage=stages[0]||'';
+ const chips=`<div class="card ag-controls">${teLevelChips(false)}${stages.length?`<div><span class="lbl">Fase</span><div class="chips">${stages.map(k=>`<button data-testage="${k}" aria-pressed="${k===TES.stage}">${k==='K'?'Fase final':'Grup '+k}</button>`).join('')}</div></div>`:''}</div>`;
  let body;
- if(TES.stage==='K'){
-  const ko=teKo();
-  body=ko?ko.rounds.map((rd,r)=>{const sch=P.ko[r]?P.ko[r].ties:[];const cards=rd.filter(m=>!(m.a.bye||m.b.bye)).map(m=>{const x=sch.find(y=>y.id===m.id);return teTieCard({id:m.id,a:m.a.id,b:m.b.id,la:m.a.label,lb:m.b.label},`${RNAME[rd.length]} · ${m.code}${x&&x.slot!=null?` · ${teSlotsTxt(x.slot)} · Pistes ${x.courts[0]}–${x.courts[2]}`:''}`)});
+ if(!C.groups.length)body=`<div class="empty">El nivell ${L} no es juga: calen com a mínim 3 equips.</div>`;
+ else if(TES.stage==='K'){
+  const ko=teKo(L),sch=P.ko[L]||[];
+  body=ko?ko.rounds.map((rd,r)=>{const st=sch[r]?sch[r].ties:[];const cards=rd.filter(m=>!(m.a.bye||m.b.bye)).map(m=>{const x=st.find(y=>y.id===m.id);return teTieCard({id:m.id,a:m.a.id,b:m.b.id,la:m.a.label,lb:m.b.label},`Nivell ${L} · ${RNAME[rd.length]} · ${m.code}${x&&x.slot!=null?` · ${teSlotsTxt(x.slot)} · Pistes ${x.courts[0]}–${x.courts[2]}`:''}`)});
    return cards.length?`<h4 class="tx-gh">${esc(RNAME[rd.length])}</h4><div class="mts">${cards.join('')}</div>`:''}).join(''):'<div class="empty">No hi ha fase final.</div>';
-  body+=`<p class="muted small" style="margin-top:12px">Els equips de la fase final surten de la classificació dels grups quan s’acaben tots els enfrontaments.</p>`;
+  body+=`<p class="muted small" style="margin-top:12px">Els equips de la fase final surten de la classificació dels grups del nivell ${L} quan s’acaben tots els seus enfrontaments.</p>`;
  }else{
-  const ts=P.ties.filter(t=>t.group===TES.stage).sort((a,b)=>a.round-b.round);
-  body=`<div class="mts">${ts.map(t=>{const s=S[t.id];return teTieCard(t,`Grup ${t.group} · Ronda ${t.round}${s?` · ${teSlotsTxt(s.slot)} · Pistes ${s.courts[0]}–${s.courts[2]}`:''}`)}).join('')}</div>`;
+  const ts=C.ties.filter(t=>t.group===TES.stage).sort((a,b)=>a.round-b.round);
+  body=`<div class="mts">${ts.map(t=>{const s=S[t.id];return teTieCard(t,`Nivell ${L} · Grup ${t.group} · Ronda ${t.round}${s?` · ${teSlotsTxt(s.slot)} · Pistes ${s.courts[0]}–${s.courts[2]}`:''}`)}).join('')}</div>`;
  }
  const left=P.ties.filter(t=>!teTie(t.id).done).length;
- $('teBody').innerHTML=`<div class="stack">${chips}<div class="card demo-card"><div><b>Crear exemple</b><p class="small muted">Omple amb resultats inventats tots els partits pendents de la fase de grups (${left} enfrontaments).</p></div><button class="secondary small-btn" data-te="fillg"${left?'':' disabled'}>Crear exemple</button></div><div class="card">${body}</div></div>`;
+ $('teBody').innerHTML=`<div class="stack">${chips}<div class="card demo-card"><div><b>Crear exemple</b><p class="small muted">Omple amb resultats inventats tots els partits pendents de la fase de grups dels tres nivells (${left} enfrontaments).</p></div><button class="secondary small-btn" data-te="fillg"${left?'':' disabled'}>Crear exemple</button></div><div class="card">${body}</div></div>`;
 }
 
+
 /* --- Classificació i quadre final --- */
-function teBracketHtml(ko){
+function teBracketHtml(ko){   // quadre d'un nivell
  const W=230,H=86,GX=40,TOP=28,U=H+18,cols=ko.rounds.length;
  const x=c=>16+c*(W+GX),y=(r,i)=>TOP+(i+.5)*Math.pow(2,r)*U-H/2;
  const width=32+cols*W+(cols-1)*GX,height=TOP+ko.size/2*U+130;
@@ -2356,19 +2415,23 @@ function teBracketHtml(ko){
 }
 function teClassificacio(){
  if(!TE.plan){$('teBody').innerHTML='<div class="card"><div class="empty">Primer cal fer el sorteig (pestanya Grups i horaris).</div></div>';return}
- const P=TE.plan,single=P.groups.length===1,q=single?teQualifiers().count:2;
- const tables=P.groups.map(g=>{const s=teStandings(g.name);
-  return `<div class="card"><div class="ag-sum"><h3>Grup ${g.name}</h3><span class="pill">${s.played} de ${s.total} enfrontaments</span></div>
+ const P=TE.plan,L=TES.level,C=P.cats[L],single=C.groups.length===1,q=single?teQualifiers(L).count:2;
+ const champs=`<div class="te-champs">${TE_LEVELS.map(X=>{const ko=P.cats[X].groups.length?teKo(X):null,ch=ko&&ko.champion?teTeam(ko.champion):null;
+  return `<div class="te-champ${ch?' done':''}"><span class="lv lv-${X}">Nivell ${X}</span><span class="cup" aria-hidden="true">🏆</span>${ch?`<b>${teDot(ch)}${esc(ch.name)}</b><span class="small muted">Campions</span>`:`<b class="muted">${ko?'Pendent':'No es juga'}</b><span class="small muted">${ko?'Equip campió':'Menys de 3 equips'}</span>`}</div>`}).join('')}</div>`;
+ const tables=C.groups.map(g=>{const s=teStandings(L,g.name);
+  return `<div class="card"><div class="ag-sum"><h3>Nivell ${L} · Grup ${g.name}</h3><span class="pill">${s.played} de ${s.total} enfrontaments</span></div>
   <div class="table-wrap"><table class="rk te-rk"><thead><tr><th>#</th><th>Equip</th><th title="Enfrontaments jugats">EJ</th><th title="Enfrontaments guanyats">EG</th><th title="Enfrontaments perduts">EP</th><th title="Partits guanyats">PG</th><th title="Partits perduts">PP</th><th title="Jocs guanyats">JG</th><th title="Jocs perduts">JP</th><th title="Diferència de jocs">Dif.</th></tr></thead>
   <tbody>${s.rows.map((r,i)=>`<tr class="${i<q?'q-main':''}"><td class="pos">${i+1}</td><td class="team">${teDot(r.t)}${esc(r.t.name)}</td><td>${r.ej}</td><td class="pts">${r.eg}</td><td>${r.ep}</td><td>${r.pg}</td><td>${r.pp}</td><td>${r.jg}</td><td>${r.jp}</td><td>${r.dif>0?'+':''}${r.dif}</td></tr>`).join('')}</tbody></table></div>
   <p class="swipe">↔ Llisca la taula per veure totes les columnes</p></div>`}).join('');
- const ko=teKo(),ent=teKoEntrants();
+ const ko=C.groups.length?teKo(L):null,ent=teKoEntrants(L);
  $('teBody').innerHTML=`<div class="stack">
-  <div class="card demo-card"><div><b>Crear exemple</b><p class="small muted">Juga amb resultats inventats tota la fase final (cal que la fase de grups estigui acabada).</p></div><button class="secondary small-btn" data-te="fillk">Crear exemple</button></div>
-  <div class="te-tables">${tables}</div>
+  <div class="card"><h3>Campions per nivell</h3>${champs}</div>
+  <div class="card ag-controls">${teLevelChips(false)}</div>
+  <div class="card demo-card"><div><b>Crear exemple</b><p class="small muted">Juga amb resultats inventats la fase final dels tres nivells (cal que la fase de grups estigui acabada).</p></div><button class="secondary small-btn" data-te="fillk">Crear exemple</button></div>
+  ${C.groups.length?`<div class="te-tables">${tables}</div>
   <div class="legend"><span>Classificats per a la fase final</span></div>
-  <div class="card"><div class="ag-sum"><div><h3>🏆 Quadre final</h3><p class="muted small">${ent?'Caps de sèrie segons la classificació dels grups.':'Previsió: els equips s’hi col·loquen sols quan acabi la fase de grups.'}</p></div></div>${ko?teBracketHtml(ko):'<div class="empty">No hi ha prou equips per a una fase final.</div>'}</div>
-  <p class="muted small">El resultat de cada enfrontament de la fase final s’anota a Resultats → Fase final.</p></div>`;
+  <div class="card"><div class="ag-sum"><div><h3>🏆 Quadre final · Nivell ${L}</h3><p class="muted small">${ent?'Caps de sèrie segons la classificació dels grups.':'Previsió: els equips s’hi col·loquen sols quan acabi la fase de grups.'}</p></div></div>${ko?teBracketHtml(ko,L):'<div class="empty">No hi ha prou equips per a una fase final.</div>'}</div>
+  <p class="muted small">El resultat de cada enfrontament de la fase final s’anota a Resultats → Fase final.</p>`:`<div class="card"><div class="empty">El nivell ${L} no es juga: calen com a mínim 3 equips.</div></div>`}</div>`;
 }
 
 /* --- esdeveniments --- */
@@ -2376,19 +2439,21 @@ function teClick(e){
  const b=e.target.closest('button');if(!b||b.disabled)return;
  if(b.dataset.tesub){TES.sub=b.dataset.tesub;TES.edit=null;renderTeams();return}
  if(b.dataset.testage){TES.stage=b.dataset.testage;renderTeams();return}
+ if(b.dataset.televel){TES.level=b.dataset.televel;TES.stage='1';renderTeams();return}
+ if(b.dataset.tefilter){TES.filter=b.dataset.tefilter;renderTeams();return}
  const a=b.dataset.te;
  const twoTap=t=>{if(b.dataset.sure==='1')return true;b.dataset.sure='1';b.textContent=t;b.classList.add('danger');return false};
  if(a==='cancel'){TES.edit=null;renderTeams();return}
  if(a==='edit'){TES.edit=b.dataset.id;renderTeams();$('teForm').scrollIntoView({block:'start'});return}
- if(a==='del'){const inPlan=TE.plan&&TE.plan.groups.some(g=>g.teams.indexOf(b.dataset.id)>=0);
+ if(a==='del'){const inPlan=TE.plan&&TE_LEVELS.some(L=>TE.plan.cats[L].groups.some(g=>g.teams.indexOf(b.dataset.id)>=0));
   if(!twoTap(inPlan?'Segur? S’esborrarà el sorteig':'Segur?'))return;
   TE.teams=TE.teams.filter(t=>t.id!==b.dataset.id);if(inPlan){TE.plan=null;TE.results={}}teSave();renderTeams();return}
  if(a==='clear'){if(!twoTap('Segur? Toca per esborrar-los tots'))return;TE.teams=[];TE.plan=null;TE.results={};teSave();renderTeams();return}
- if(a==='demo'){const n=+$('teDemoN').value||8;TES.demoN=n;if(TE.teams.length&&!twoTap('Substituirà els equips. Toca per confirmar'))return;TE.teams=[];TE.plan=null;TE.results={};teDemo(n);teSave();renderTeams();return}
+ if(a==='demo'){const n=+$('teDemoN').value||4;TES.demoN=n;if(TE.teams.length&&!twoTap('Substituirà els equips. Toca per confirmar'))return;TE.teams=[];TE.plan=null;TE.results={};teDemo(n);teSave();renderTeams();return}
  if(a==='gen'||a==='redraw'){
   if(Object.keys(TE.results).length&&!twoTap('Esborrarà els resultats. Toca per confirmar'))return;
   const seed=a==='redraw'||!TE.plan?(Date.now()&0x7fffffff):TE.plan.seed;
-  TE.results={};teBuild(seed);TE.plan.sig=TE.teams.map(t=>t.id).sort().join()+'|'+[TE.config.start,TE.config.end,TE.config.slot,TE.config.courts,TE.config.rest].join();teSave();renderTeams();return;
+  TE.results={};teBuild(seed);TE.plan.sig=teSig();teSave();renderTeams();return;
  }
  if(a==='fillg'||a==='fillk'){const n=teFill(a==='fillg'?'G':'K');teSave();renderTeams();$('teBody').insertAdjacentHTML('afterbegin',`<div class="notice">${n?`S’han omplert ${n} partits d’exemple.`:a==='fillk'?'Cal acabar la fase de grups abans de jugar la fase final.':'No hi ha partits pendents.'}</div>`);return}
  // marcadors dels partits
