@@ -578,6 +578,7 @@ button.secondary:hover{filter:brightness(.97)}
    <button role="tab" id="tab-playoffs" aria-controls="view-playoffs" data-view="playoffs">Playoffs</button>
    <button role="tab" id="tab-americanes" aria-controls="view-americanes" data-view="americanes">Americanes</button>
    <button role="tab" id="tab-kings" aria-controls="view-kings" data-view="kings">King’s Padel Champions</button>
+   <button role="tab" id="tab-kingsinfo" aria-controls="view-kingsinfo" data-view="kingsinfo">Informació i normativa King’s Padel</button>
   </nav>
  </div>
 </header>
@@ -770,6 +771,37 @@ button.secondary:hover{filter:brightness(.97)}
     <tbody><tr><td colspan="4" style="white-space:normal;position:static"><div class="empty">Encara no hi ha punts. El ranking s’anirà omplint amb els resultats de la temporada.</div></td></tr></tbody></table></div>
   </div>
  </section>
+</section>
+
+<!-- ============ INFORMACIÓ I NORMATIVA KING'S PADEL ============ -->
+<section id="view-kingsinfo" class="view hidden" role="tabpanel" aria-labelledby="tab-kingsinfo">
+ <div class="view-head">
+  <div><h2>Informació i normativa King’s Padel</h2><p class="muted">Com funciona el King’s Padel Champions i les normes de la competició. Els detalls marcats com a pendents s’aniran completant.</p></div>
+  <span class="pill todo">Estructura</span>
+ </div>
+ <div class="sec-title"><span class="n">1</span><h2>Informació</h2></div>
+ <div class="rules">
+  <article class="rule"><h3><span class="ic">🎾</span>Què és</h3><ul>
+   <li>Competició anual del club: <b>competeix</b> i <b>acumula punts</b> al llarg de tota la temporada.</li>
+   <li>Els punts compten per al <b>King’s Padel Champions Ranking</b>.</li></ul></article>
+  <article class="rule"><h3><span class="ic">💰</span>4 Tornejos Premier</h3><ul>
+   <li>La temporada inclou <b>4 Tornejos Premier</b> amb <b>prize money</b>.</li>
+   <li>Calendari i premis de cada torneig: <span class="pill todo">Pendent de definir</span></li></ul></article>
+  <article class="rule"><h3><span class="ic">📈</span>Ranking anual</h3><ul>
+   <li>Un sol rànquing per a tota la temporada, que suma els punts aconseguits.</li>
+   <li>Sistema de puntuació: <span class="pill todo">Pendent de definir</span></li></ul></article>
+  <article class="rule"><h3><span class="ic">🎁</span>Premis de final de temporada</h3><ul>
+   <li><b>Premis exclusius</b> per als millors classificats del rànquing a final de temporada.</li>
+   <li>Premis i posicions premiades: <span class="pill todo">Pendent de definir</span></li></ul></article>
+ </div>
+ <div class="sec-title"><span class="n">2</span><h2>Normativa</h2></div>
+ <div class="rules">
+  <article class="rule wide"><h3><span class="ic">📋</span>Normes de la competició</h3><ul>
+   <li>Inscripció i requisits per participar: <span class="pill todo">Pendent de definir</span></li>
+   <li>Format dels partits i dels tornejos: <span class="pill todo">Pendent de definir</span></li>
+   <li>Puntuació i criteris de desempat del rànquing: <span class="pill todo">Pendent de definir</span></li>
+   <li>Incompareixences, retards i reclamacions: <span class="pill todo">Pendent de definir</span></li></ul></article>
+ </div>
 </section>
 
 <!-- ============ AMERICANES ============ -->
@@ -1734,7 +1766,7 @@ try{const x=JSON.parse(localStorage.getItem(PKEY));if(x&&typeof x==='object')P=O
 function savePrefs(){try{localStorage.setItem(PKEY,JSON.stringify(P))}catch(e){}}
 
 /* ---------------- PESTANYES ---------------- */
-const VIEWS=['lliga','tornejos','playoffs','americanes','kings'];
+const VIEWS=['lliga','tornejos','playoffs','americanes','kings','kingsinfo'];
 function showView(v){
  if(VIEWS.indexOf(v)<0)v='lliga';
  P.view=v;savePrefs();
