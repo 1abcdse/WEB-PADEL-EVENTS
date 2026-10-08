@@ -426,6 +426,11 @@ header{position:relative;overflow:hidden;color:var(--on-head);padding-top:26px;
 header::after{content:"";position:absolute;left:0;right:0;bottom:0;height:3px;background:linear-gradient(90deg,var(--lime),var(--green) 45%,var(--accent2))}
 header h1{font-family:var(--display);font-size:40px;font-weight:800;letter-spacing:.01em;text-transform:uppercase;line-height:1}
 .club{color:var(--lime);opacity:1;font-weight:800;font-size:12px;letter-spacing:.14em;margin-bottom:4px}
+.slogan{list-style:none;margin:10px 0 0;padding:0;display:flex;flex-wrap:wrap;gap:4px 0;font-family:var(--display);font-weight:700;font-size:16px;letter-spacing:.03em;text-transform:uppercase;color:#ffffffd9}
+.slogan li{display:flex;align-items:center}
+.slogan li+li::before{content:"";width:6px;height:6px;border-radius:50%;background:var(--lime);margin:0 12px;flex:0 0 auto}
+.slogan b{color:var(--lime);font-weight:800}
+@media(max-width:700px){.slogan{font-size:13px;letter-spacing:.02em}.slogan li+li::before{margin:0 8px;width:5px;height:5px}}
 .main-tabs{gap:4px;margin-top:20px}
 .main-tabs button{font-family:var(--display);font-size:17px;letter-spacing:.02em;padding:12px 20px;border-radius:14px 14px 0 0;color:#ffffffcc;background:#ffffff12;transition:background .15s,color .15s}
 .main-tabs button:hover{background:#ffffff26;color:#fff}
@@ -562,6 +567,9 @@ button.secondary:hover{filter:brightness(.97)}
  <div class="wrap">
   <div class="club">Tennis &amp; Pàdel El Masnou</div>
   <h1>Competicions</h1>
+  <ul class="slogan" aria-label="Eslògan">
+   <li>Competeix</li><li>Acumula punts</li><li><span><b>Prize money</b> en 4 Tornejos Premier</span></li><li>Premis exclusius a final de temporada</li><li>Ranking anual</li>
+  </ul>
   <nav class="main-tabs" role="tablist" aria-label="Seccions">
    <button role="tab" id="tab-lliga" aria-controls="view-lliga" data-view="lliga">Lliga Social</button>
    <button role="tab" id="tab-tornejos" aria-controls="view-tornejos" data-view="tornejos">Tornejos</button>
