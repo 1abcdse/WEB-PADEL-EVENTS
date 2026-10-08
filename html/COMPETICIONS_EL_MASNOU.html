@@ -3574,6 +3574,7 @@ const AM_STYLE=`<link rel="stylesheet" href="https://fonts.googleapis.com/css2?f
 :root{${AM_TOKENS_LIGHT};--display:"Barlow Semi Condensed","Barlow",-apple-system,"Segoe UI",Roboto,Arial,sans-serif}
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){${AM_TOKENS_DARK}}}
 :root[data-theme="dark"]{${AM_TOKENS_DARK}}
+html{overflow:hidden}
 body{font-family:"Barlow",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif}
 h1,h2,h3{font-family:var(--display);letter-spacing:.01em}
 header{background:none!important;color:var(--ink)!important;padding:0 0 4px!important}
@@ -3592,8 +3593,10 @@ function mountAmericanes(){
  const f=$('amFrame');if(f.dataset.on)return;f.dataset.on='1';
  f.addEventListener('load',()=>{
   const w=f.contentWindow,doc=f.contentDocument;
-  const fit=()=>{f.style.height=Math.ceil(doc.body.getBoundingClientRect().height)+'px'};
-  new w.ResizeObserver(fit).observe(doc.body);fit();
+  // L'alçada es canvia al fotograma següent i només si ha canviat: així el marc no entra en bucle
+  let raf=0;
+  const fit=()=>{const h=Math.ceil(doc.body.getBoundingClientRect().height)+'px';if(f.style.height!==h)f.style.height=h};
+  new w.ResizeObserver(()=>{cancelAnimationFrame(raf);raf=requestAnimationFrame(fit)}).observe(doc.body);fit();
   new w.MutationObserver(ms=>ms.forEach(m=>m.addedNodes.forEach(n=>{if(n.classList&&n.classList.contains('dlg'))placeAmDialog(f,n)}))).observe(doc.body,{childList:true});
  });
  f.srcdoc='<!doctype html><html lang="ca"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">'+AM_HEAD+'</head><body>'+$('americanaSrc').innerHTML+AM_STYLE+'</body></html>';
