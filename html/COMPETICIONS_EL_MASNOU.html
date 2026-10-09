@@ -941,9 +941,12 @@ tr.champ-row td,.rank tr.champ-row td{background:var(--gold-bg)}
  .dlg{align-items:flex-end}
  .dlg-box .actions button{flex:1 1 0}
 }
+/* Americana de 2 categories */
+.cat-head{grid-column:1/-1;margin:16px 0 8px}
+#players .cat-head:first-child,#ranking .cat-head:first-child{margin-top:4px}
 </style>
 <header><div><h1>Americana Pàdel</h1><div>Tennis &amp; Pàdel El Masnou · rondes classificatòries + playoffs opcionals + lliga acumulada</div>
-<nav class="main-tabs"><button id="nav-americana" class="active" onclick="showView('americana')">Americana del dia</button><button id="nav-league" onclick="showView('league')">🏆 Lliga 100 punts</button></nav>
+<nav class="main-tabs"><button id="nav-americana" class="active" onclick="showView('americana')">Americana del dia · 1 categoria</button><button id="nav-americana2" onclick="showView('americana2')">Americana del dia · 2 categories (C i B)</button><button id="nav-league" onclick="showView('league')">🏆 Lliga 100 punts</button></nav>
 </div></header>
 <main>
 <div id="jsWarn" class="notice error" style="font-size:15px;line-height:1.45">
@@ -956,7 +959,9 @@ Recarrega la pàgina. Si continua igual, obre l’enllaç amb Safari o Chrome.
 <section class="card">
 <h2>1. Configuració</h2>
 <div class="grid">
-<div><label>Pistes</label><select id="courtCount"><option value="2" selected>2 pistes — 8 jugadors</option><option value="3">3 pistes — 12 jugadors</option><option value="4">4 pistes — 16 jugadors</option><option value="5">5 pistes — 20 jugadors</option><option value="6">6 pistes — 24 jugadors</option><option value="7">7 pistes — 28 jugadors</option><option value="8">8 pistes — 32 jugadors</option></select></div>
+<div class="mode1"><label>Pistes</label><select id="courtCount"><option value="2" selected>2 pistes — 8 jugadors</option><option value="3">3 pistes — 12 jugadors</option><option value="4">4 pistes — 16 jugadors</option><option value="5">5 pistes — 20 jugadors</option><option value="6">6 pistes — 24 jugadors</option><option value="7">7 pistes — 28 jugadors</option><option value="8">8 pistes — 32 jugadors</option></select></div>
+<div class="mode2 hidden"><label>Pistes categoria B (9 → 8 → 3 → 4)</label><select id="courtsB"><option value="2">2 pistes — 8 jugadors</option><option value="3">3 pistes — 12 jugadors</option><option value="4" selected>4 pistes — 16 jugadors</option></select></div>
+<div class="mode2 hidden"><label>Pistes categoria C (7 → 6 → 1 → 2)</label><select id="courtsC"><option value="2">2 pistes — 8 jugadors</option><option value="3">3 pistes — 12 jugadors</option><option value="4" selected>4 pistes — 16 jugadors</option></select></div>
 <div><label>Rondes classificatòries</label><select id="roundCount"><option value="1">1 rondes</option><option value="2">2 rondes</option><option value="3">3 rondes</option><option value="4" selected>4 rondes</option><option value="5">5 rondes</option><option value="6">6 rondes</option><option value="7">7 rondes</option><option value="8">8 rondes</option></select></div>
 <div>
 <label>Format de parelles</label>
@@ -972,7 +977,7 @@ Recarrega la pàgina. Si continua igual, obre l’enllaç amb Safari o Chrome.
 
 <section class="card">
 <h2>2. Jugadors</h2>
-<p class="muted">La capacitat és de 4 jugadors per pista. Pots treballar des de 2 fins a 8 pistes.</p>
+<p class="muted" id="playersHint">La capacitat és de 4 jugadors per pista. Pots treballar des de 2 fins a 8 pistes.</p>
 <div id="players" class="player-grid"></div>
 <div class="actions"><button class="primary" onclick="createTournament()">Crear Americana</button><button class="secondary" onclick="demo()">Omplir exemple</button><button class="danger" onclick="resetApp()">Esborrar</button></div>
 <div id="msg"></div>
@@ -1006,6 +1011,7 @@ Recarrega la pàgina. Si continua igual, obre l’enllaç amb Safari o Chrome.
 <h2>4. Playoffs — mètode opcional</h2>
 <p class="muted">No és obligatori utilitzar playoffs. Escull el tram segons el nombre de parelles. Els noms de les parelles es poden escriure o corregir directament a cada requadre del quadre.</p>
 <div class="grid">
+<div class="mode2 hidden"><label>Categoria</label><select id="poCat"><option value="B">Categoria B</option><option value="C">Categoria C</option></select></div>
 <div><label>Format</label><select id="playoffFormat">
 <option value="64">Ronda de 32 (64 parelles)</option>
 <option value="32">Setzens de final (32 parelles)</option>
@@ -1091,6 +1097,19 @@ const MOVEMENT=[9,8,7,6,1,2,3,4];
 // Pistes en joc segons el nombre de pistes (COURTS) i ordenades segons el moviment.
 // Ex.: 5 pistes → 9,8,7,6,4 · 6 pistes → 9,8,7,6,3,4 · 8 pistes → 9,8,7,6,1,2,3,4
 function ladder(n){const act=COURTS.slice(0,n);return MOVEMENT.filter(c=>act.indexOf(c)>=0)}
+// Americana de 2 categories: cada categoria té la seva pròpia escala de pistes (Reina → Pozo)
+// i els jugadors només es mouen dins la seva categoria.
+// Categoria B: 9 → 8 → 3 → 4 (Pozo) · Categoria C: 7 → 6 → 1 → 2 (Pozo)
+const CATS=['B','C'];
+const CAT_LADDERS={B:[9,8,3,4],C:[7,6,1,2]};
+let MODE='1'; // '1' = 1 categoria (sistema original) · '2' = 2 categories
+const MKEY='padel-americana-mode-v1';
+function emptyS(){return MODE==='2'?{players:[],courts:8,cc:{B:4,C:4},mode:'2',rounds:4,rs:[],current:0,sort:'points',playoff:null,format:'fixed'}:{players:[],courts:2,rounds:4,rs:[],current:0,sort:'points',playoff:null,format:'fixed'}}
+// Escales de pistes de l'Americana en joc: una sola (1 categoria) o una per categoria
+function groups(){return S.mode==='2'?CATS.map(c=>({cat:c,lad:CAT_LADDERS[c].slice(0,S.cc[c])})):[{cat:null,lad:ladder(S.courts)}]}
+function groupOf(m){return groups().find(g=>g.lad.indexOf(m.court)>=0)||groups()[0]}
+function formCourts(){return MODE==='2'?{B:+$('courtsB').value,C:+$('courtsC').value}:null}
+function totalCourts(){const c=formCourts();return c?c.B+c.C:+$('courtCount').value}
 
 let S={players:[],courts:2,rounds:4,rs:[],current:0,sort:'points',playoff:null,format:'fixed'};
 
@@ -1100,7 +1119,11 @@ function toObj(pairs){const o={};pairs.forEach(([k,v])=>o[k]=v);return o}
 function shuffle(a){for(let i=a.length-1;i>0;i--){let j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}}
 function init(){
  $('courtCount').onchange=()=>{renderPlayers();updateCapacity()};
+ $('courtsB').onchange=$('courtsC').onchange=()=>{renderPlayers();updateCapacity()};
  $('pairFormat').onchange=updateFormatInfo;
+ // Es recorda l'última pestanya d'Americana utilitzada en aquest dispositiu
+ try{if(localStorage.getItem(MKEY)==='2'){setModeKeys('2');S=emptyS()}}catch(e){}
+ applyModeUI();
  renderPlayers();updateCapacity();updateFormatInfo();
  $('evDate').value=today();
  $('players').addEventListener('change',e=>{
@@ -1111,12 +1134,17 @@ function init(){
   if(known&&known.playtomic&&!link.value)link.value=known.playtomic;
  });
  $('players').addEventListener('input',saveNames);
- ['courtCount','roundCount','pairFormat'].forEach(id=>$(id).addEventListener('change',saveNames));
+ ['courtCount','courtsB','courtsC','roundCount','pairFormat'].forEach(id=>$(id).addEventListener('change',saveNames));
  restoreSession();
  renderLeague();renderSync();
  connectCloud();
 }
 function updateCapacity(){
+ const cc=formCourts();
+ if(cc){
+  $('capacity').innerHTML=CATS.map(c=>{const lad=CAT_LADDERS[c].slice(0,cc[c]);return `<div><strong>Categoria ${c}</strong>: ${cc[c]} pistes → <strong>${cc[c]*4} jugadors</strong> · pistes: <strong>${lad.join(' → ')}</strong> (Reina ${lad[0]} · Pozo ${lad[lad.length-1]})</div>`}).join('')+`<div style="margin-top:4px">Total: <strong>${(cc.B+cc.C)*4} jugadors</strong>. Cada categoria es juga per separat: els jugadors només pugen i baixen dins la seva categoria.</div>`;
+  return;
+ }
  let n=+$('courtCount').value;
  $('capacity').innerHTML=`<strong>${n} pistes</strong> → <strong>${n*4} jugadors</strong> · pistes: <strong>${ladder(n).join(' → ')}</strong>`;
 }
@@ -1124,19 +1152,25 @@ function updateFormatInfo(){
  const f=$('pairFormat').value;
  $('formatInfo').innerHTML=f==='fixed'
  ? '<strong>Parelles fixes:</strong> la parella inicial es manté junta durant totes les rondes. La parella es mou de pista segons guanya o perd.'
- : '<strong>Format canari:</strong> a cada ronda les parelles es desfan i es tornen a creuar. Es prioritza no repetir parella i jugar amb persones diferents. La Pista 9 és la Reina i la Pista 4 és el Pozo.';
+ : '<strong>Format canari:</strong> a cada ronda les parelles es desfan i es tornen a creuar. Es prioritza no repetir parella i jugar amb persones diferents. '+(MODE==='2'?'Categoria B: la Pista 9 és la Reina i la Pista 4 és el Pozo. Categoria C: la Pista 7 és la Reina i la Pista 2 és el Pozo.':'La Pista 9 és la Reina i la Pista 4 és el Pozo.');
 }
 function renderPlayers(old=[]){
- let n=+$('courtCount').value, vals=old.length?old:[...document.querySelectorAll('.pname')].map(x=>x.value);
+ let n=totalCourts(), vals=old.length?old:[...document.querySelectorAll('.pname')].map(x=>x.value);
  let links=[...document.querySelectorAll('.plink')].map(x=>x.value);
- let h='';for(let i=0;i<n*4;i++)h+=`<div class="player-box"><h4>Jugador ${i+1}</h4><label>Nom i cognoms</label><input class="pname" list="leaguePlayers" autocomplete="off" value="${esc(vals[i]||'')}" placeholder="Nom"><label style="margin-top:7px">Playtomic (opcional)</label><input class="plink" value="${esc(links[i]||'')}" placeholder="https://playtomic.io/..."></div>`;
+ const cc=formCourts();
+ let h='';for(let i=0;i<n*4;i++){
+  if(cc&&(i===0||i===cc.B*4))h+=`<h3 class="cat-head">Categoria ${i===0?'B':'C'} · ${(i===0?cc.B:cc.C)*4} jugadors</h3>`;
+  h+=`<div class="player-box"><h4>Jugador ${i+1}</h4><label>Nom i cognoms</label><input class="pname" list="leaguePlayers" autocomplete="off" value="${esc(vals[i]||'')}" placeholder="Nom"><label style="margin-top:7px">Playtomic (opcional)</label><input class="plink" value="${esc(links[i]||'')}" placeholder="https://playtomic.io/..."></div>`;
+ }
  $('players').innerHTML=h;
 }
 function demo(){document.querySelectorAll('.pname').forEach((x,i)=>x.value='Jugador '+(i+1))}
 function createTournament(){
- let names=[...document.querySelectorAll('.pname')].map(x=>x.value.trim()),links=[...document.querySelectorAll('.plink')].map(x=>x.value.trim()),n=+$('courtCount').value*4;
+ let names=[...document.querySelectorAll('.pname')].map(x=>x.value.trim()),links=[...document.querySelectorAll('.plink')].map(x=>x.value.trim()),n=totalCourts()*4;
  if(names.some(x=>!x)){ $('msg').innerHTML=`<div class="notice error">❌ Cal introduir els ${n} jugadors abans de començar.</div>`;return}
- S={players:names.map((name,i)=>({id:i+1,name,playtomic:links[i],stats:{pj:0,pg:0,pp:0,gamesWon:0,gamesLost:0,diff:0,points:0},partners:new Set()})),courts:+$('courtCount').value,rounds:+$('roundCount').value,rs:[],current:0,sort:'points',playoff:null,format:$('pairFormat').value};
+ S={players:names.map((name,i)=>({id:i+1,name,playtomic:links[i],stats:{pj:0,pg:0,pp:0,gamesWon:0,gamesLost:0,diff:0,points:0},partners:new Set()})),courts:totalCourts(),rounds:+$('roundCount').value,rs:[],current:0,sort:'points',playoff:null,format:$('pairFormat').value};
+ const cc=formCourts();
+ if(cc){S.mode='2';S.cc=cc;S.players.forEach((p,i)=>p.cat=i<cc.B*4?'B':'C')}
  makeRound(0);
  $('app').classList.remove('hidden');$('rankCard').classList.remove('hidden');$('playoffCard').classList.remove('hidden');
  $('msg').innerHTML='';
@@ -1148,11 +1182,14 @@ function makeRound(i){
  // Pista 8: 5+6 vs 7+8, etc.
  let ids=S.players.map(p=>p.id);
  if(i>0)ids=nextOrder(S.rs[i-1]);
- let matches=[];
- for(let c=0;c<S.courts;c++){
-  let a=ids.slice(c*4,c*4+4);
-  matches.push({court:ladder(S.courts)[c],players:a,teamA:[a[0],a[1]],teamB:[a[2],a[3]],a:null,b:null,done:false});
- }
+ // 2 categories: primer les pistes de la B (9, 8, 3, 4) i després les de la C (7, 6, 1, 2)
+ let matches=[],c=0;
+ groups().forEach(g=>g.lad.forEach(court=>{
+  let a=ids.slice(c*4,c*4+4);c++;
+  const m={court,players:a,teamA:[a[0],a[1]],teamB:[a[2],a[3]],a:null,b:null,done:false};
+  if(g.cat)m.cat=g.cat;
+  matches.push(m);
+ }));
  S.rs[i]={number:i+1,matches,done:false};
 }
 function pairKey(a,b){return [a,b].sort((x,y)=>x-y).join('-')}
@@ -1204,7 +1241,14 @@ function nextOrder(r){
  // 2 rep perdedors de 1 + guanyadors de 3
  // 3 rep perdedors de 2 + guanyadors de 4
  // 4 rep perdedors de 3 + perdedors de 4
- const lad=ladder(S.courts);
+ //
+ // Amb 2 categories, el moviment es calcula per separat dins de cada escala:
+ // B: 9 → 8 → 3 → 4 · C: 7 → 6 → 1 → 2
+ let out=[];
+ groups().forEach(g=>out.push(...nextOrderLadder(r,g.lad)));
+ return out;
+}
+function nextOrderLadder(r,lad){
  let incoming=toObj(lad.map(c=>[c,[]]));
  const byCourt=toObj(r.matches.map(m=>[m.court,m]));
  for(let i=0;i<lad.length;i++){
@@ -1223,7 +1267,7 @@ function nextOrder(r){
   incoming[down].push(...lose);
  }
  let out=[];
- for(let i=0;i<S.courts;i++){
+ for(let i=0;i<lad.length;i++){
   const court=lad[i];
   let ids=incoming[court].slice();
   // Seguretat: cada pista ha de rebre 4 jugadors.
@@ -1285,8 +1329,8 @@ function stats(){
   })
  }))
 }
-function sorted(){
- let a=[...S.players];
+function sorted(cat){
+ let a=S.players.filter(p=>!cat||p.cat===cat);
  a.sort((x,y)=>{let k=S.sort;if(y.stats[k]!==x.stats[k])return y.stats[k]-x.stats[k];if(y.stats.diff!==x.stats.diff)return y.stats.diff-x.stats.diff;return x.name.localeCompare(y.name)});
  return a;
 }
@@ -1294,6 +1338,10 @@ function setSort(k){S.sort=k;renderRanking()}
 function renderAll(){summary();tabs();round();renderRanking();renderPlayoffUI();saveDraft()}
 function summary(){
  let mode=S.format==='fixed'?'Parelles fixes':'Format canari';
+ if(S.mode==='2'){
+  $('summary').innerHTML=`<span class="pill">${S.players.length} jugadors</span><span class="pill">2 categories</span><span class="pill">${S.courts} pistes</span><span class="pill">${S.rounds} rondes</span><span class="pill">${mode}</span>`+groups().map(g=>`<span class="pill"><b>Cat. ${g.cat}</b>: ${g.lad.join(' → ')} · Reina ${g.lad[0]} · Pozo ${g.lad[g.lad.length-1]}</span>`).join('');
+  return;
+ }
  $('summary').innerHTML=`<span class="pill">${S.players.length} jugadors</span><span class="pill">${S.courts} pistes</span><span class="pill">${S.rounds} rondes</span><span class="pill">${mode}</span><span class="pill">Reina: 9</span><span class="pill">Pozo: ${ladder(S.courts)[S.courts-1]}</span><span class="pill">Moviment: ${ladder(S.courts).join(' → ')}</span>`;
 }
 function tabs(){
@@ -1301,16 +1349,26 @@ function tabs(){
  const act=$('roundTabs').querySelector('.active');if(act)$('roundTabs').scrollLeft=act.offsetLeft-$('roundTabs').offsetLeft-20;
 }
 function round(){
- let r=S.rs[S.current],h=`<div class="notice ${r.done?'success':''}"><strong>Ronda ${r.number}</strong> · ${r.done?'Resultats guardats':'pendent'}</div><div class="courts">`;
- r.matches.forEach((m,i)=>h+=`<div class="court"><div class="court-head ${m.court===9?'queen':''}"><strong>${m.court===9?'👑 ':''}Pista ${m.court}</strong><span>${m.court===9?'Pista Reina':m.court===ladder(S.courts)[S.courts-1]?'Pista Pozo':''}</span></div><div class="court-body"><div class="pair"><b>A</b> · ${name(m.teamA[0])} + ${name(m.teamA[1])}</div><div class="pair"><b>B</b> · ${name(m.teamB[0])} + ${name(m.teamB[1])}</div><div class="score"><div><label>Jocs A</label><input id="a${i}" type="number" inputmode="numeric" min="0" value="${m.a==null?'':m.a}" ${r.done?'disabled':''}></div><div><label>Jocs B</label><input id="b${i}" type="number" inputmode="numeric" min="0" value="${m.b==null?'':m.b}" ${r.done?'disabled':''}></div></div></div></div>`);
+ let r=S.rs[S.current],h=`<div class="notice ${r.done?'success':''}"><strong>Ronda ${r.number}</strong> · ${r.done?'Resultats guardats':'pendent'}</div>${S.mode==='2'?'':'<div class="courts">'}`;
+ r.matches.forEach((m,i)=>{
+  const g=groupOf(m),queen=m.court===g.lad[0],pozo=m.court===g.lad[g.lad.length-1];
+  // 2 categories: capçalera de categoria abans de la seva primera pista
+  if(g.cat&&(i===0||r.matches[i-1].cat!==m.cat))h+=`${i?'</div>':''}<h3 class="cat-head">Categoria ${g.cat}</h3><div class="courts">`;
+  h+=`<div class="court"><div class="court-head ${queen?'queen':''}"><strong>${queen?'👑 ':''}Pista ${m.court}</strong><span>${queen?'Pista Reina':pozo?'Pista Pozo':''}</span></div><div class="court-body"><div class="pair"><b>A</b> · ${name(m.teamA[0])} + ${name(m.teamA[1])}</div><div class="pair"><b>B</b> · ${name(m.teamB[0])} + ${name(m.teamB[1])}</div><div class="score"><div><label>Jocs A</label><input id="a${i}" type="number" inputmode="numeric" min="0" value="${m.a==null?'':m.a}" ${r.done?'disabled':''}></div><div><label>Jocs B</label><input id="b${i}" type="number" inputmode="numeric" min="0" value="${m.b==null?'':m.b}" ${r.done?'disabled':''}></div></div></div></div>`;
+ });
  h+=`</div><div class="actions">${!r.done?`<button class="primary" onclick="saveRound()">Guardar resultats</button><button class="secondary" onclick="randomRound()">Omplir exemple</button>`:''}${S.current<S.rounds-1?`<button class="primary" onclick="nextRound()">Generar següent ronda →</button>`:''}${S.current?`<button class="secondary" onclick="S.current--;renderAll()">← Anterior</button>`:''}</div>`;
  $('roundView').innerHTML=h;
 }
 function name(id){return esc((S.players.find(p=>p.id===id)||{}).name||'')}
 function renderRanking(){
- let a=sorted(),h='<div class="table-wrap"><table class="rank"><thead><tr><th>#</th><th>Jugador</th><th>Punts</th><th>PJ</th><th>PG</th><th>PP</th><th>JG</th><th>JP</th><th>Dif.</th><th>Playtomic</th></tr></thead><tbody>';
+ // 2 categories: una classificació per categoria
+ if(S.mode==='2'){$('ranking').innerHTML=CATS.map(c=>`<h3 class="cat-head">Categoria ${c}</h3>`+rankingTable(sorted(c))).join('');return}
+ $('ranking').innerHTML=rankingTable(sorted());
+}
+function rankingTable(a){
+ let h='<div class="table-wrap"><table class="rank"><thead><tr><th>#</th><th>Jugador</th><th>Punts</th><th>PJ</th><th>PG</th><th>PP</th><th>JG</th><th>JP</th><th>Dif.</th><th>Playtomic</th></tr></thead><tbody>';
  a.forEach((p,i)=>{let s=p.stats;h+=`<tr><td>${i+1}</td><td><b>${esc(p.name)}</b></td><td><b>${s.points}</b></td><td>${s.pj}</td><td>${s.pg}</td><td>${s.pp}</td><td>${s.gamesWon}</td><td>${s.gamesLost}</td><td>${s.diff>0?'+':''}${s.diff}</td><td>${p.playtomic?`<a target="_blank" href="${esc(p.playtomic)}">Obrir</a>`:'—'}</td></tr>`});
- h+='</tbody></table></div><p class="swipe-hint">↔ Llisca la taula per veure totes les columnes</p>';$('ranking').innerHTML=h;
+ h+='</tbody></table></div><p class="swipe-hint">↔ Llisca la taula per veure totes les columnes</p>';return h;
 }
 
 /* ---------------- PLAYOFFS ---------------- */
@@ -1341,7 +1399,7 @@ function generatePlayoffs(){
   if(pairs.filter(Boolean).length<n)msg='<div class="notice">Hi ha parelles sense nom. Les pots escriure directament al quadre.</div>';
  }else{
   if(!S.players.length){$('playoffMsg').innerHTML='<div class="notice error">Encara no hi ha classificació. Crea l’Americana o tria «Introducció manual».</div>';return}
-  let a=sorted();
+  let a=sorted(S.mode==='2'?$('poCat').value:null);
   for(let i=0;i<n;i++){let p1=a[i*2],p2=a[i*2+1];pairs.push(p1&&p2?`${p1.name} + ${p2.name}`:'')}
   if(pairs.some(x=>!x))msg='<div class="notice">No hi ha prou jugadors per omplir tot el quadre. Escriu les parelles que falten directament al quadre.</div>';
  }
@@ -1447,8 +1505,8 @@ function clearPlayoffs(){S.playoff=null;$('bracket').innerHTML='';$('playoffMsg'
 async function resetApp(){
  if(!await uiConfirm('Esborrar tota l’Americana? La lliga acumulada no s’esborra.','Esborrar','danger'))return;
  try{localStorage.removeItem(DKEY);localStorage.removeItem(NKEY)}catch(e){}
- S={players:[],courts:2,rounds:4,rs:[],current:0,sort:'points',playoff:null,format:'fixed'};
- $('courtCount').value=2;$('roundCount').value=4;$('pairFormat').value='fixed';
+ S=emptyS();
+ $('courtCount').value=2;$('courtsB').value=4;$('courtsC').value=4;$('roundCount').value=4;$('pairFormat').value='fixed';
  document.querySelectorAll('.pname,.plink').forEach(x=>x.value='');renderPlayers([]);
  document.querySelectorAll('.pname,.plink').forEach(x=>x.value='');
  updateCapacity();updateFormatInfo();
@@ -1477,7 +1535,37 @@ function uiAlert(msg){return uiDialog(msg,'D’acord')}
 
 /* ---------------- AMERICANA EN CURS ---------------- */
 // Es guarda al dispositiu perquè no es perdi si el mòbil recarrega la pàgina.
-const DKEY='padel-americana-draft-v1',NKEY='padel-americana-names-v1';
+// Cada pestanya (1 categoria / 2 categories) guarda la seva Americana per separat.
+let DKEY='padel-americana-draft-v1',NKEY='padel-americana-names-v1';
+function setModeKeys(m){
+ MODE=m;
+ DKEY=m==='2'?'padel-americana2-draft-v1':'padel-americana-draft-v1';
+ NKEY=m==='2'?'padel-americana2-names-v1':'padel-americana-names-v1';
+}
+function applyModeUI(){
+ document.querySelectorAll('.mode1').forEach(x=>x.classList.toggle('hidden',MODE!=='1'));
+ document.querySelectorAll('.mode2').forEach(x=>x.classList.toggle('hidden',MODE!=='2'));
+ $('playersHint').textContent=MODE==='2'?'4 jugadors per pista. Omple primer els jugadors de la categoria B i després els de la categoria C.':'La capacitat és de 4 jugadors per pista. Pots treballar des de 2 fins a 8 pistes.';
+ if($('view-league').classList.contains('hidden')){
+  $('nav-americana').classList.toggle('active',MODE==='1');
+  $('nav-americana2').classList.toggle('active',MODE==='2');
+ }
+}
+function switchMode(m){
+ if(m===MODE)return;
+ saveDraft();saveNames();
+ setModeKeys(m);try{localStorage.setItem(MKEY,m)}catch(e){}
+ S=emptyS();
+ $('courtCount').value=2;$('courtsB').value=4;$('courtsC').value=4;$('roundCount').value=4;$('pairFormat').value='fixed';
+ applyModeUI();
+ document.querySelectorAll('.pname,.plink').forEach(x=>x.value='');renderPlayers([]);
+ document.querySelectorAll('.pname,.plink').forEach(x=>x.value='');
+ updateCapacity();updateFormatInfo();
+ $('app').classList.add('hidden');$('rankCard').classList.add('hidden');
+ $('bracket').innerHTML='';$('playoffMsg').innerHTML='';$('msg').innerHTML='';$('leagueAddMsg').innerHTML='';$('evTitle').value='';
+ restoreSession();
+ renderAddState();
+}
 function saveDraft(){
  try{
   if(!S.players.length){localStorage.removeItem(DKEY);return}
@@ -1493,17 +1581,18 @@ function loadDraft(){
  }catch(e){return false}
 }
 function saveNames(){
- try{localStorage.setItem(NKEY,JSON.stringify({courts:$('courtCount').value,rounds:$('roundCount').value,format:$('pairFormat').value,names:[...document.querySelectorAll('.pname')].map(x=>x.value),links:[...document.querySelectorAll('.plink')].map(x=>x.value)}))}catch(e){}
+ try{localStorage.setItem(NKEY,JSON.stringify({courts:$('courtCount').value,cc:formCourts(),rounds:$('roundCount').value,format:$('pairFormat').value,names:[...document.querySelectorAll('.pname')].map(x=>x.value),links:[...document.querySelectorAll('.plink')].map(x=>x.value)}))}catch(e){}
 }
 function restoreForm(f){
  $('courtCount').value=f.courts;$('roundCount').value=f.rounds;$('pairFormat').value=f.format;
+ if(f.cc){$('courtsB').value=f.cc.B;$('courtsC').value=f.cc.C}
  renderPlayers(f.names||[]);
  document.querySelectorAll('.plink').forEach((x,i)=>x.value=(f.links||[])[i]||'');
  updateCapacity();updateFormatInfo();
 }
 function restoreSession(){
  if(loadDraft()){
-  restoreForm({courts:S.courts,rounds:S.rounds,format:S.format,names:S.players.map(p=>p.name),links:S.players.map(p=>p.playtomic||'')});
+  restoreForm({courts:S.mode==='2'?2:S.courts,cc:S.cc,rounds:S.rounds,format:S.format,names:S.players.map(p=>p.name),links:S.players.map(p=>p.playtomic||'')});
   stats();
   $('app').classList.remove('hidden');$('rankCard').classList.remove('hidden');
   renderAll();
@@ -1609,9 +1698,12 @@ function leagueTable(){
  return {rows:[...map.values()],champion};
 }
 function showView(v){
- $('view-americana').classList.toggle('hidden',v!=='americana');
+ const am=v==='americana'||v==='americana2';
+ if(am)switchMode(v==='americana2'?'2':'1');
+ $('view-americana').classList.toggle('hidden',!am);
  $('view-league').classList.toggle('hidden',v!=='league');
  $('nav-americana').classList.toggle('active',v==='americana');
+ $('nav-americana2').classList.toggle('active',v==='americana2');
  $('nav-league').classList.toggle('active',v==='league');
  if(v==='league')renderLeague();
  window.scrollTo(0,0);
