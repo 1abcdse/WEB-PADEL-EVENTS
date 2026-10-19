@@ -5,6 +5,9 @@ import { hasLocale, NextIntlClientProvider } from "next-intl";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { routing } from "@/i18n/routing";
 import { site } from "@/content/site";
+import { Header } from "@/components/layout/Header";
+import { Footer } from "@/components/layout/Footer";
+import { StickyCTA, WhatsAppButton } from "@/components/layout/ContactButtons";
 import "../globals.css";
 
 const archivo = Archivo({
@@ -65,7 +68,13 @@ export default async function LocaleLayout({
   return (
     <html lang={locale} className={`${archivo.variable} ${inter.variable}`}>
       <body className="min-h-dvh">
-        <NextIntlClientProvider>{children}</NextIntlClientProvider>
+        <NextIntlClientProvider>
+          <Header />
+          <div id="contingut">{children}</div>
+          <Footer />
+          <WhatsAppButton />
+          <StickyCTA />
+        </NextIntlClientProvider>
       </body>
     </html>
   );

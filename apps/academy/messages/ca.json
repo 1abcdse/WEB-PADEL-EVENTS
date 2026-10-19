@@ -45,10 +45,154 @@
     "advanced": "Avançat",
     "competition": "Competició"
   },
+  "nav": {
+    "experiences": "Experiències",
+    "allExperiences": "Totes les experiències",
+    "howItWorks": "Com funciona",
+    "academy": "Acadèmia",
+    "facilities": "Instal·lacions",
+    "faq": "FAQ",
+    "contact": "Contacte",
+    "menu": "Menú",
+    "openMenu": "Obre el menú",
+    "closeMenu": "Tanca el menú",
+    "language": "Idioma",
+    "book": "Reserva",
+    "home": "Inici",
+    "skip": "Salta al contingut"
+  },
   "home": {
-    "eyebrow": "Fase 1 · Web en construcció",
-    "title": "Entrena com un pro. Viu-ho com una experiència.",
-    "subtitle": "Estem preparant la nova web de Padel System Academy. Mentrestant, pots revisar el sistema de disseny.",
-    "styleguideLink": "Veure l'styleguide"
+    "hero": {
+      "eyebrow": "Acadèmia internacional de pàdel · Maresme",
+      "title": "Entrena com un pro. Viu-ho com una experiència.",
+      "subtitle": "Packs tot inclòs: allotjament, àpats i fins a 30 hores de pàdel amb el mètode PS. Tu només has de venir a jugar.",
+      "scroll": "Desplaça't"
+    },
+    "stats": {
+      "weekend": "en un cap de setmana",
+      "stage": "en 4 dies",
+      "allIn": "Tot inclòs",
+      "allInSub": "allotjament, àpats i pista",
+      "groups": "Grups reduïts",
+      "groupsSub": "màxim 4 jugadors per entrenador"
+    },
+    "formats": {
+      "eyebrow": "Dos formats",
+      "title": "Tria el teu format"
+    },
+    "includes": {
+      "eyebrow": "Tot inclòs",
+      "title": "Què inclou cada experiència",
+      "padel": "Pàdel",
+      "padelText": "Entrenament en grups reduïts, de 8 a 30 hores segons el pack, amb un pla fet per a tu.",
+      "stay": "Allotjament",
+      "stayText": "Dorms a prop de la pista. Arribes, deixes la bossa i a jugar.",
+      "meals": "Àpats",
+      "mealsText": "Menús pensats per a esportistes, perquè rendeixis tot el dia.",
+      "tracking": "Seguiment i anàlisi",
+      "trackingText": "Diagnòstic a l'inici, objectius clars i un informe final per seguir millorant a casa."
+    },
+    "packs": {
+      "eyebrow": "Experiències",
+      "title": "Packs destacats",
+      "all": "Tots",
+      "seeAll": "Veure totes les experiències",
+      "filterLabel": "Filtra per format"
+    },
+    "method": {
+      "eyebrow": "El mètode PS",
+      "title": "Un sistema, no un curset",
+      "intro": "Cada experiència segueix els mateixos quatre passos. Per això l'acadèmia es diu System.",
+      "s1": "Diagnòstic",
+      "s1Text": "Analitzem el teu joc a pista el primer dia: tècnica, posició i presa de decisions.",
+      "s2": "Pla personalitzat",
+      "s2Text": "Fixem 2 o 3 objectius concrets i adaptem cada sessió al teu nivell.",
+      "s3": "Entrenament intensiu",
+      "s3Text": "Blocs tècnics, tàctics i de joc real, en grups reduïts i amb correcció constant.",
+      "s4": "Informe final",
+      "s4Text": "T'emportes un resum del que has millorat i els exercicis per continuar a casa."
+    },
+    "day": {
+      "eyebrow": "Un dia a l'acadèmia",
+      "title": "Així és un dia de stage",
+      "note": "Exemple orientatiu d'un dia de Stage Performance. Els horaris s'adapten a cada grup.",
+      "t0800": "Esmorzar",
+      "t0900": "Escalfament i activació",
+      "t0930": "Bloc tècnic",
+      "t1200": "Joc dirigit",
+      "t1330": "Dinar",
+      "t1500": "Descans, fisio o piscina",
+      "t1630": "Bloc tàctic",
+      "t1830": "Partits amb correcció",
+      "t2100": "Sopar"
+    },
+    "team": {
+      "eyebrow": "L'equip",
+      "title": "Entrenadors que juguen amb tu",
+      "placeholder": "Perfil pendent: afegeix nom, foto i trajectòria",
+      "role1": "Direcció tècnica",
+      "role2": "Entrenador/a",
+      "role3": "Preparació física"
+    },
+    "testimonials": {
+      "eyebrow": "Testimonis",
+      "title": "Ho diuen els jugadors",
+      "example": "Exemple",
+      "note": "Espai reservat per a testimonis reals. Substitueix aquests exemples abans de publicar.",
+      "q1": "[Testimoni real d'un jugador del Clinic Focus]",
+      "q2": "[Testimoni real d'un jugador del Stage Performance]",
+      "q3": "[Testimoni real d'un acompanyant o d'un jugador d'iniciació]",
+      "name": "[Nom del jugador]"
+    },
+    "gallery": {
+      "eyebrow": "Galeria",
+      "title": "Ambient de pista"
+    },
+    "faq": {
+      "eyebrow": "Preguntes freqüents",
+      "title": "Abans de reservar",
+      "more": "Veure totes les preguntes",
+      "q1": "Quin nivell necessito?",
+      "a1": "Cap en concret. Tenim packs des d'iniciació fins a competició i fem els grups per nivell.",
+      "q2": "Puc venir sol o sola?",
+      "a2": "És clar. Et col·loquem en un grup del teu nivell i no et caldrà buscar parella.",
+      "q3": "Puc venir amb un acompanyant que no jugui?",
+      "a3": "Sí. Pots afegir l'extra d'acompanyant no jugador, amb allotjament i àpats inclosos.",
+      "q4": "Com es fa la reserva?",
+      "a4": "Envia'ns la sol·licitud amb el pack i la data. Et responem personalment per confirmar la plaça i els detalls.",
+      "q5": "On es fan les experiències?",
+      "a5": "Al Maresme, entre el Masnou i Montgat. Et confirmem la instal·lació exacta de cada data en reservar."
+    },
+    "finalCta": {
+      "title": "Places limitades per cap de setmana. Reserva la teva.",
+      "subtitle": "Grups de màxim 4 jugadors. Quan s'omplen, s'han acabat."
+    }
+  },
+  "footer": {
+    "tagline": "Experiències de pàdel tot inclòs al Maresme.",
+    "contact": "Contacte",
+    "explore": "Explora",
+    "legal": "Legal",
+    "legalNotice": "Avís legal",
+    "privacy": "Privacitat",
+    "cookies": "Cookies",
+    "follow": "Segueix-nos",
+    "rights": "Tots els drets reservats.",
+    "mapSoon": "Mapa disponible quan confirmem les instal·lacions"
+  },
+  "photo": {
+    "replace": "Foto pendent",
+    "hero": "Foto o vídeo d'acció a pista",
+    "court": "Pista",
+    "coach": "Retrat de l'entrenador/a",
+    "match": "Partit",
+    "group": "Grup entrenant",
+    "stay": "Allotjament",
+    "food": "Àpats",
+    "detail": "Detall de pala i pilota"
+  },
+  "contact": {
+    "whatsappGeneric": "Hola! Vull informació sobre les experiències de Padel System Academy.",
+    "whatsappPack": "Hola! Vull informació sobre el pack {pack} de Padel System Academy."
   }
 }

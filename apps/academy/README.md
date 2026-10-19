@@ -21,6 +21,9 @@ Després del primer `pnpm install`, fes commit del `pnpm-lock.yaml` actualitzat.
 
 ## Editar contingut (sense tocar components)
 
+> Les fotos són espais reservats (`PhotoSlot`, amb l'etiqueta "Foto pendent"). Quan tinguis les fotos reals, substitueix-los per `<Image />` de `next/image`.
+> Els testimonis i els perfils de l'equip són exemples marcats com a tals: canvia'ls per contingut real abans de publicar.
+
 | Què | On |
 |---|---|
 | Packs: hores, nits, preus, textos, programa dia a dia, extres | `src/content/packs.ts` |
@@ -71,6 +74,18 @@ Els tokens són a `src/app/globals.css` (Tailwind 4 els exposa com a classes: `b
 Components base a `src/components/`: `Button`, `FormatBadge`, `SkewTag`, `LimeBar`, `VDivider`, `Ball`, `Icon`,
 `DayStrip`, `Counter`, `FadeIn`, `PackCard`, `FormatCard`.
 
+## Previsualització dins de Claude
+
+La web també es publica com a pàgina estàtica (artifact de Claude) per revisar-la sense desplegar:
+
+```bash
+python3 scripts/preview/build_site.py preview.html
+```
+
+Genera la Home i el layout als tres idiomes, i l'styleguide, llegint els mateixos `messages/*.json`,
+`src/content/packs.ts` i `public/brand/`. És una còpia visual: els textos i les dades són els del codi,
+però les pàgines que encara no existeixen no hi són.
+
 ## Variables d'entorn
 
 Copia `.env.example` a `.env.local`. Resend s'activarà a la Fase 4.
@@ -85,7 +100,7 @@ Copia `.env.example` a `.env.local`. Resend s'activarà a la Fase 4.
 ## Fases
 
 1. ✅ Setup + sistema de disseny + `/styleguide`
-2. Layout (header, footer, menú mòbil, CTA fixa, WhatsApp) + Home
+2. ✅ Layout (header, footer, menú mòbil, CTA fixa, WhatsApp) + Home
 3. Experiències, formats i detall de pack
 4. Configurador de reserva + emails
 5. Pàgines restants, i18n, SEO, legals, cookies

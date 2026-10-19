@@ -12,3 +12,4 @@ data/
 *.inscrits.*
 demo-dist/
 .env*.local
+apps/academy/scripts/preview/_*.html

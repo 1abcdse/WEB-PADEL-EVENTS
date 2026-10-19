@@ -54,7 +54,7 @@ export default function StyleguidePage({ params }: { params: Promise<{ locale: s
     <main>
       {/* Capçalera */}
       <header className="bg-ink text-paper">
-        <div className="mx-auto flex max-w-6xl flex-col gap-8 px-5 py-14 sm:px-8 sm:py-20">
+        <div className="mx-auto flex max-w-6xl flex-col gap-8 px-5 pb-14 pt-28 sm:px-8 sm:pb-20 sm:pt-32">
           <Logo tone="dark" className="w-72 sm:w-96" />
           <div className="flex flex-wrap items-center gap-4">
             <SkewTag tone="lime">Styleguide · Fase 1</SkewTag>

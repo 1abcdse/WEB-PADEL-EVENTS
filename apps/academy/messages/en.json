@@ -45,10 +45,154 @@
     "advanced": "Advanced",
     "competition": "Competition"
   },
+  "nav": {
+    "experiences": "Experiences",
+    "allExperiences": "All experiences",
+    "howItWorks": "How it works",
+    "academy": "Academy",
+    "facilities": "Facilities",
+    "faq": "FAQ",
+    "contact": "Contact",
+    "menu": "Menu",
+    "openMenu": "Open menu",
+    "closeMenu": "Close menu",
+    "language": "Language",
+    "book": "Book",
+    "home": "Home",
+    "skip": "Skip to content"
+  },
   "home": {
-    "eyebrow": "Phase 1 · Website under construction",
-    "title": "Train like a pro. Live it as an experience.",
-    "subtitle": "We are building the new Padel System Academy website. In the meantime, you can review the design system.",
-    "styleguideLink": "View the styleguide"
+    "hero": {
+      "eyebrow": "International padel academy · Maresme, Barcelona",
+      "title": "Train like a pro. Live it as an experience.",
+      "subtitle": "All-inclusive packs: accommodation, meals and up to 30 hours of padel with the PS method. All you have to do is play.",
+      "scroll": "Scroll"
+    },
+    "stats": {
+      "weekend": "in one weekend",
+      "stage": "in 4 days",
+      "allIn": "All inclusive",
+      "allInSub": "accommodation, meals and court time",
+      "groups": "Small groups",
+      "groupsSub": "max. 4 players per coach"
+    },
+    "formats": {
+      "eyebrow": "Two formats",
+      "title": "Choose your format"
+    },
+    "includes": {
+      "eyebrow": "All inclusive",
+      "title": "What every experience includes",
+      "padel": "Padel",
+      "padelText": "Small-group training, from 8 to 30 hours depending on the pack, with a plan built around you.",
+      "stay": "Accommodation",
+      "stayText": "You sleep close to the courts. Arrive, drop your bag and play.",
+      "meals": "Meals",
+      "mealsText": "Menus designed for athletes, so you perform all day long.",
+      "tracking": "Tracking and analysis",
+      "trackingText": "An initial assessment, clear goals and a final report so you keep improving at home."
+    },
+    "packs": {
+      "eyebrow": "Experiences",
+      "title": "Featured packs",
+      "all": "All",
+      "seeAll": "See all experiences",
+      "filterLabel": "Filter by format"
+    },
+    "method": {
+      "eyebrow": "The PS method",
+      "title": "A system, not a course",
+      "intro": "Every experience follows the same four steps. That is why the academy is called System.",
+      "s1": "Assessment",
+      "s1Text": "On day one we analyse your game on court: technique, positioning and decision-making.",
+      "s2": "Personal plan",
+      "s2Text": "We set 2 or 3 specific goals and tailor every session to your level.",
+      "s3": "Intensive training",
+      "s3Text": "Technical, tactical and match-play blocks in small groups, with constant feedback.",
+      "s4": "Final report",
+      "s4Text": "You leave with a summary of your progress and drills to keep working at home."
+    },
+    "day": {
+      "eyebrow": "A day at the academy",
+      "title": "What a stage day looks like",
+      "note": "Sample day of the Stage Performance pack. Times are adapted to each group.",
+      "t0800": "Breakfast",
+      "t0900": "Warm-up and activation",
+      "t0930": "Technique block",
+      "t1200": "Coached play",
+      "t1330": "Lunch",
+      "t1500": "Rest, physio or pool",
+      "t1630": "Tactics block",
+      "t1830": "Matches with feedback",
+      "t2100": "Dinner"
+    },
+    "team": {
+      "eyebrow": "The team",
+      "title": "Coaches who play with you",
+      "placeholder": "Profile pending: add name, photo and background",
+      "role1": "Head of coaching",
+      "role2": "Coach",
+      "role3": "Strength and conditioning"
+    },
+    "testimonials": {
+      "eyebrow": "Testimonials",
+      "title": "In the players' words",
+      "example": "Example",
+      "note": "Reserved for real testimonials. Replace these examples before going live.",
+      "q1": "[Real testimonial from a Clinic Focus player]",
+      "q2": "[Real testimonial from a Stage Performance player]",
+      "q3": "[Real testimonial from a companion or a beginner]",
+      "name": "[Player's name]"
+    },
+    "gallery": {
+      "eyebrow": "Gallery",
+      "title": "Life on court"
+    },
+    "faq": {
+      "eyebrow": "FAQ",
+      "title": "Before you book",
+      "more": "See all questions",
+      "q1": "What level do I need?",
+      "a1": "None in particular. We have packs from beginner to competition level and group players by level.",
+      "q2": "Can I come on my own?",
+      "a2": "Of course. We place you in a group at your level, so you don't need a partner.",
+      "q3": "Can I bring a companion who doesn't play?",
+      "a3": "Yes. Add the non-playing companion extra, with accommodation and meals included.",
+      "q4": "How do I book?",
+      "a4": "Send us a request with your pack and date. We reply personally to confirm your spot and the details.",
+      "q5": "Where do the experiences take place?",
+      "a5": "In the Maresme, between El Masnou and Montgat, near Barcelona. We confirm the exact venue for each date when you book."
+    },
+    "finalCta": {
+      "title": "Limited spots every weekend. Book yours.",
+      "subtitle": "Groups of max. 4 players. When they're full, they're full."
+    }
+  },
+  "footer": {
+    "tagline": "All-inclusive padel experiences in the Maresme, Barcelona.",
+    "contact": "Contact",
+    "explore": "Explore",
+    "legal": "Legal",
+    "legalNotice": "Legal notice",
+    "privacy": "Privacy",
+    "cookies": "Cookies",
+    "follow": "Follow us",
+    "rights": "All rights reserved.",
+    "mapSoon": "Map available once the venues are confirmed"
+  },
+  "photo": {
+    "replace": "Photo pending",
+    "hero": "Action photo or video on court",
+    "court": "Court",
+    "coach": "Coach portrait",
+    "match": "Match",
+    "group": "Group training",
+    "stay": "Accommodation",
+    "food": "Meals",
+    "detail": "Racket and ball detail"
+  },
+  "contact": {
+    "whatsappGeneric": "Hi! I'd like information about the Padel System Academy experiences.",
+    "whatsappPack": "Hi! I'd like information about the {pack} pack at Padel System Academy."
   }
 }
