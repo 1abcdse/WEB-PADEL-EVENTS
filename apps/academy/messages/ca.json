@@ -1,0 +1,487 @@
+{
+  "meta": {
+    "title": "Padel System Academy — Experiències de pàdel amb tot inclòs",
+    "description": "Clínics de cap de setmana (fins a 20 h) i stages intensius de 4 dies (fins a 30 h) amb allotjament, àpats i entrenament amb el mètode PS.",
+    "experiences": {
+      "title": "Experiències",
+      "description": "Compara els dos formats i tots els packs de Padel System Academy."
+    },
+    "booking": {
+      "title": "Crea la teva experiència",
+      "description": "Tria format, pack, data i extres i envia'ns la teva sol·licitud en 2 minuts."
+    },
+    "howItWorks": {
+      "title": "Com funciona",
+      "description": "Com reservar la teva plaça en 4 passos i condicions de cancel·lació."
+    },
+    "academy": {
+      "title": "L'acadèmia",
+      "description": "La història, el mètode PS, l'equip i els valors de Padel System Academy."
+    },
+    "facilities": {
+      "title": "Instal·lacions i allotjament",
+      "description": "Pistes, allotjament, restauració i com arribar a l'acadèmia."
+    },
+    "faq": {
+      "title": "Preguntes freqüents",
+      "description": "Tot el que necessites saber abans de reservar la teva experiència de pàdel."
+    },
+    "contact": {
+      "title": "Contacte",
+      "description": "Parla amb nosaltres per WhatsApp, correu o telèfon."
+    },
+    "legalNotice": {
+      "title": "Avís legal"
+    },
+    "privacy": {
+      "title": "Política de privacitat"
+    },
+    "cookies": {
+      "title": "Política de cookies"
+    }
+  },
+  "nav": {
+    "skip": "Salta al contingut",
+    "home": "Inici",
+    "experiences": "Experiències",
+    "allExperiences": "Totes les experiències",
+    "compare": "Compara formats i packs",
+    "howItWorks": "Com funciona",
+    "academy": "Acadèmia",
+    "facilities": "Instal·lacions",
+    "faq": "FAQ",
+    "contact": "Contacte",
+    "cta": "Demana la teva plaça",
+    "book": "Reserva",
+    "menu": "Menú",
+    "openMenu": "Obre el menú",
+    "closeMenu": "Tanca el menú",
+    "language": "Idioma",
+    "whatsapp": "Escriu-nos per WhatsApp"
+  },
+  "common": {
+    "from": "des de",
+    "perPerson": "per persona",
+    "hoursShort": "{count} h",
+    "hoursOfPadel": "hores de pàdel",
+    "upTo": "fins a",
+    "nights": "{count, plural, one {# nit} other {# nits}}",
+    "groupMax": "Màx. {count} per grup",
+    "viewPack": "Veure el pack",
+    "viewFormat": "Veure el format",
+    "requestPlace": "Sol·licita plaça",
+    "onRequest": "a consultar",
+    "photo": "Foto",
+    "allPacks": "Tots els packs",
+    "readMore": "Més informació",
+    "backHome": "Torna a l'inici",
+    "upcomingDates": "Properes dates",
+    "noDates": "Encara no hi ha dates publicades. Escriu-nos i t'avisem de les properes.",
+    "featured": "Més demanat",
+    "levels": {
+      "iniciacio": "Iniciació",
+      "intermedi": "Intermedi",
+      "avancat": "Avançat",
+      "competicio": "Competició"
+    },
+    "status": {
+      "disponible": "Disponible",
+      "poques-places": "Poques places",
+      "complet": "Complet"
+    },
+    "days": {
+      "dv": "Dv",
+      "ds": "Ds",
+      "dg": "Dg",
+      "dl": "Dl"
+    },
+    "daysLong": {
+      "dv": "Divendres",
+      "ds": "Dissabte",
+      "dg": "Diumenge",
+      "dl": "Dilluns"
+    },
+    "whatsappPack": "Hola! M'interessa el pack {pack}. Em podeu donar més informació?",
+    "whatsappGeneric": "Hola! M'agradaria rebre informació sobre les experiències de Padel System Academy.",
+    "fullBoard": "Pensió completa"
+  },
+  "home": {
+    "hero": {
+      "eyebrow": "Clínics i stages de pàdel tot inclòs",
+      "title1": "Entrena com un pro.",
+      "title2": "Viu-ho com una experiència.",
+      "subtitle": "Allotjament, àpats i fins a 30 hores de pàdel amb el mètode PS. Tu només has de venir a jugar.",
+      "ctaPacks": "Descobreix els packs",
+      "ctaTalk": "Parla amb nosaltres",
+      "scroll": "Desplaça't"
+    },
+    "stats": {
+      "weekendValue": "20",
+      "weekend": "en un cap de setmana",
+      "stageValue": "30",
+      "stage": "en 4 dies",
+      "allIn": "Tot inclòs",
+      "allInLabel": "allotjament + àpats + pàdel",
+      "groups": "Grups reduïts",
+      "groupsLabel": "màxim 4 jugadors per entrenador"
+    },
+    "formats": {
+      "eyebrow": "Tria el teu format",
+      "title": "Dos dies o quatre. Tu decideixes la intensitat.",
+      "max": "hores màx.",
+      "cta": "Veure els packs"
+    },
+    "includes": {
+      "eyebrow": "Què inclou",
+      "title": "Tot pensat perquè només et preocupis de jugar",
+      "padel": {
+        "title": "Pàdel",
+        "text": "Entrenament tècnic, tàctic i físic amb entrenadors titulats, pistes i material inclosos."
+      },
+      "stay": {
+        "title": "Allotjament",
+        "text": "Dorms a tocar de les pistes. Descans de qualitat per rendir l'endemà."
+      },
+      "meals": {
+        "title": "Àpats",
+        "text": "Pensió completa amb menús pensats per a l'esforç. Adaptem al·lèrgies i dietes."
+      },
+      "analysis": {
+        "title": "Seguiment i anàlisi",
+        "text": "Diagnòstic inicial, vídeo-anàlisi i informe final amb el teu pla de millora."
+      }
+    },
+    "packs": {
+      "eyebrow": "Packs",
+      "title": "Troba el teu pack",
+      "filterAll": "Tots",
+      "filterLabel": "Filtra per format"
+    },
+    "method": {
+      "eyebrow": "El mètode PS",
+      "title": "No és un campus. És un sistema.",
+      "subtitle": "Cada experiència segueix el mateix procés per garantir que marxes jugant millor que quan vas arribar.",
+      "steps": {
+        "1": {
+          "title": "Diagnòstic",
+          "text": "Analitzem el teu joc en pista i en vídeo i fixem objectius concrets."
+        },
+        "2": {
+          "title": "Pla personalitzat",
+          "text": "Ajustem grup, continguts i intensitat al teu nivell i al que vols millorar."
+        },
+        "3": {
+          "title": "Entrenament intensiu",
+          "text": "Tècnica, tàctica, físic i partits dirigits amb correccions constants."
+        },
+        "4": {
+          "title": "Informe final",
+          "text": "T'emportes un informe amb el teu progrés i un pla per continuar a casa."
+        }
+      }
+    },
+    "day": {
+      "eyebrow": "Un dia a l'acadèmia",
+      "title": "Així és un dissabte a PS",
+      "subtitle": "Exemple d'un dia de Clinic Max. Cada pack ajusta el volum d'hores.",
+      "items": {
+        "0900": "Esmorzar i escalfament",
+        "0930": "Bloc tècnic",
+        "1130": "Situacions de joc",
+        "1330": "Dinar i descans",
+        "1600": "Bloc tàctic",
+        "1800": "Partits dirigits",
+        "1930": "Físic, estiraments i fisio",
+        "2100": "Sopar i vídeo-anàlisi"
+      }
+    },
+    "team": {
+      "eyebrow": "Equip",
+      "title": "Entrenadors que han viscut la competició"
+    },
+    "testimonials": {
+      "eyebrow": "Testimonis",
+      "title": "El que diuen els que ja han vingut",
+      "rating": "{rating} de 5"
+    },
+    "gallery": {
+      "eyebrow": "Galeria",
+      "title": "Pàdel, esforç i bon ambient"
+    },
+    "faq": {
+      "eyebrow": "FAQ",
+      "title": "Preguntes freqüents",
+      "all": "Veure totes les preguntes"
+    },
+    "finalCta": {
+      "title": "Places limitades per cap de setmana.",
+      "titleAccent": "Reserva la teva.",
+      "subtitle": "Grups de màxim 4 jugadors per entrenador. Quan s'omplen, s'omplen.",
+      "cta": "Demana la teva plaça"
+    }
+  },
+  "footer": {
+    "tagline": "Experiències de pàdel amb allotjament, àpats i entrenament. Velocitat, precisió i energia.",
+    "contact": "Contacte",
+    "explore": "Explora",
+    "legal": "Legal",
+    "follow": "Segueix-nos",
+    "rights": "Tots els drets reservats.",
+    "legalNotice": "Avís legal",
+    "privacy": "Privacitat",
+    "cookies": "Cookies",
+    "cookieSettings": "Configura les cookies"
+  },
+  "experiences": {
+    "eyebrow": "Experiències",
+    "title": "Dos formats. Sis packs. Una sola manera d'entrenar.",
+    "subtitle": "Compara els formats i tria el pack que s'adapta al teu nivell i al temps que tens.",
+    "compareTitle": "Compara els formats",
+    "rows": {
+      "days": "Dies",
+      "nights": "Nits d'allotjament",
+      "maxHours": "Hores màximes",
+      "meals": "Àpats",
+      "packs": "Packs",
+      "ideal": "Ideal per a"
+    },
+    "meals": "Pensió completa",
+    "idealWeekend": "Treballar un cop concret sense agafar festa",
+    "idealStage": "Fer un salt de nivell real abans de competir",
+    "allPacksTitle": "Tots els packs"
+  },
+  "format": {
+    "forWho": "Per a qui és",
+    "packsTitle": "Packs d'aquest format",
+    "programTitle": "Programa tipus",
+    "datesTitle": "Properes dates",
+    "faqTitle": "Dubtes sobre aquest format",
+    "ctaTitle": "Tens la data? Nosaltres tenim la pista.",
+    "ctaText": "Envia'ns la sol·licitud i et confirmem disponibilitat en menys de 24 h.",
+    "requestDate": "Sol·licita aquesta data",
+    "maxHoursLabel": "hores màximes",
+    "nightsLabel": "allotjament",
+    "allInLabel": "tot inclòs"
+  },
+  "pack": {
+    "breadcrumbExperiences": "Experiències",
+    "summary": "Resum",
+    "hours": "Hores de pàdel",
+    "nights": "Allotjament",
+    "meals": "Àpats",
+    "level": "Nivell recomanat",
+    "group": "Grup",
+    "programTitle": "Programa dia a dia",
+    "dayHours": "{count} h de pàdel",
+    "includesTitle": "Què inclou",
+    "excludesTitle": "Què no inclou",
+    "extrasTitle": "Extres opcionals",
+    "datesTitle": "Dates disponibles",
+    "galleryTitle": "Galeria",
+    "asideTitle": "Preu per persona",
+    "asideNote": "Sense pagament ara. Et responem en menys de 24 h.",
+    "asideCta": "Sol·licita aquest pack",
+    "asideWhatsapp": "Pregunta per WhatsApp",
+    "otherPacks": "Altres packs del format"
+  },
+  "booking": {
+    "eyebrow": "Reserva",
+    "title": "Crea la teva experiència",
+    "subtitle": "En 6 passos ràpids. No pagues res ara: és una sol·licitud i et responem personalment.",
+    "stepOf": "Pas {current} de {total}",
+    "steps": {
+      "format": "Format",
+      "pack": "Pack",
+      "date": "Data",
+      "players": "Jugadors",
+      "extras": "Extres",
+      "contact": "Dades",
+      "summary": "Resum"
+    },
+    "formatQuestion": "Quin format t'encaixa?",
+    "packQuestion": "Tria un pack o personalitza les hores",
+    "customPack": "Hores personalitzades",
+    "customPackText": "Dissenyem el programa amb les hores que vulguis.",
+    "customHours": "Hores de pàdel: {count} h",
+    "customHoursHelp": "Màxim {max} h en aquest format.",
+    "dateQuestion": "Quan vols venir?",
+    "flexible": "Soc flexible / proposeu-me data",
+    "playersQuestion": "Qui ve?",
+    "players": "Nombre de jugadors",
+    "level": "Nivell",
+    "companions": "Acompanyants no jugadors",
+    "extrasQuestion": "Vols afegir algun extra?",
+    "noExtras": "Aquest pack no té extres opcionals.",
+    "contactQuestion": "Les teves dades",
+    "name": "Nom i cognoms",
+    "email": "Correu electrònic",
+    "phone": "Telèfon (amb prefix si no és d'Espanya)",
+    "comments": "Comentaris (al·lèrgies, objectius, dubtes…)",
+    "privacy": "He llegit i accepto la <link>política de privacitat</link>.",
+    "summaryTitle": "Revisa la teva sol·licitud",
+    "edit": "Edita",
+    "next": "Continua",
+    "back": "Enrere",
+    "send": "Envia la sol·licitud",
+    "sending": "Enviant…",
+    "orWhatsapp": "o envia-ho per WhatsApp",
+    "successTitle": "Sol·licitud enviada!",
+    "successText": "Gràcies, {name}. T'hem enviat una còpia per correu i et respondrem en menys de 24 h.",
+    "successAgain": "Fes una altra sol·licitud",
+    "error": "No s'ha pogut enviar. Torna-ho a provar o escriu-nos per WhatsApp.",
+    "summary": {
+      "format": "Format",
+      "pack": "Pack",
+      "hours": "Hores",
+      "date": "Data",
+      "players": "Jugadors",
+      "level": "Nivell",
+      "companions": "Acompanyants",
+      "extras": "Extres",
+      "none": "Cap",
+      "contact": "Contacte",
+      "comments": "Comentaris",
+      "priceFrom": "Preu orientatiu"
+    },
+    "whatsappIntro": "Hola! Vull sol·licitar una experiència a Padel System Academy:"
+  },
+  "contact": {
+    "eyebrow": "Contacte",
+    "title": "Parlem del teu pàdel",
+    "subtitle": "Escriu-nos pel canal que prefereixis. Responem personalment, normalment en poques hores.",
+    "whatsapp": "WhatsApp",
+    "whatsappText": "La via més ràpida",
+    "email": "Correu",
+    "phone": "Telèfon",
+    "address": "On som",
+    "formTitle": "Envia'ns un missatge",
+    "subject": "Assumpte",
+    "message": "Missatge",
+    "send": "Envia el missatge",
+    "sending": "Enviant…",
+    "success": "Missatge enviat! Et respondrem aviat.",
+    "error": "No s'ha pogut enviar. Prova-ho per WhatsApp o correu."
+  },
+  "howItWorks": {
+    "eyebrow": "Com funciona",
+    "title": "De la sol·licitud a la pista en 4 passos",
+    "subtitle": "Sense pagaments online ni sorpreses. Cada reserva la gestionem personalment.",
+    "steps": {
+      "1": {
+        "title": "Envia la sol·licitud",
+        "text": "Tria format, pack, data i extres al configurador o escriu-nos per WhatsApp."
+      },
+      "2": {
+        "title": "Et truquem o t'escrivim",
+        "text": "En menys de 24 h confirmem disponibilitat, nivell i qualsevol detall."
+      },
+      "3": {
+        "title": "Confirma amb la paga i senyal",
+        "text": "Et enviem les dades de pagament. Amb la paga i senyal la plaça és teva."
+      },
+      "4": {
+        "title": "Vine a jugar",
+        "text": "Uns dies abans reps la guia de l'estada: horaris, què portar i com arribar."
+      }
+    },
+    "cancellationTitle": "Política de cancel·lació",
+    "cancellationNote": "⚠️ Condicions provisionals: revisa-les abans de publicar.",
+    "cancellation": {
+      "1": "Cancel·lació amb més de 30 dies d'antelació: es retorna la paga i senyal íntegra.",
+      "2": "Entre 30 i 15 dies: es retorna el 50 % o es pot canviar de data sense cost.",
+      "3": "Menys de 15 dies: no hi ha devolució, però pots cedir la plaça a una altra persona.",
+      "4": "Si cancel·lem nosaltres (meteorologia extrema, força major), es retorna l'import íntegre."
+    },
+    "cta": "Comença la sol·licitud"
+  },
+  "academy": {
+    "eyebrow": "L'acadèmia",
+    "title": "Fem que el pàdel tingui un sistema",
+    "historyTitle": "La nostra història",
+    "history1": "Padel System Academy neix de la idea d'unir dues coses que normalment van per separat: l'entrenament de qualitat i l'experiència de viatjar a jugar. Després d'anys entrenant jugadors de tots els nivells, vam veure que els que més progressaven eren els que podien concentrar hores d'entrenament amb descans i seguiment.",
+    "history2": "Per això vam crear un format tancat i tot inclòs: tu arribes, i nosaltres ens encarreguem de les pistes, l'allotjament, els àpats i, sobretot, d'un pla d'entrenament amb cap i peus.",
+    "methodTitle": "El mètode PS",
+    "teamTitle": "L'equip",
+    "valuesTitle": "Els nostres valors",
+    "values": {
+      "1": {
+        "title": "Precisió",
+        "text": "Cada exercici té un perquè. Res de pilotes a l'atzar."
+      },
+      "2": {
+        "title": "Velocitat",
+        "text": "Grups reduïts per maximitzar el temps de pilota de cada jugador."
+      },
+      "3": {
+        "title": "Energia",
+        "text": "Exigència i bon ambient alhora. Es treballa fort i s'hi passa bé."
+      },
+      "4": {
+        "title": "Honestedat",
+        "text": "Et diem on ets i què necessites, encara que no sigui el que vols sentir."
+      }
+    }
+  },
+  "facilities": {
+    "eyebrow": "Instal·lacions",
+    "title": "Tot a tocar: pista, habitació i taula",
+    "subtitle": "⚠️ Textos provisionals: completa'ls amb les dades reals de les instal·lacions.",
+    "courtsTitle": "Pistes",
+    "courtsText": "Pistes de vidre panoràmic, cobertes i a l'aire lliure, amb il·luminació LED i gespa de darrera generació. Zona de vídeo-anàlisi a peu de pista.",
+    "roomsTitle": "Allotjament",
+    "roomsText": "Habitacions dobles amb bany privat a pocs minuts caminant de les pistes. Opció d'habitació individual.",
+    "foodTitle": "Restauració",
+    "foodText": "Cuina mediterrània i menús pensats per a l'esforç esportiu. Adaptem al·lèrgies, intoleràncies i dietes.",
+    "locationTitle": "Ubicació i com arribar",
+    "car": "En cotxe",
+    "carText": "Aparcament gratuït per a participants.",
+    "train": "En tren",
+    "trainText": "Estació a pocs minuts. Et podem recollir.",
+    "plane": "En avió",
+    "planeText": "Aeroport més proper: {airport}. Trasllat disponible com a extra.",
+    "openMap": "Obre a Google Maps"
+  },
+  "faq": {
+    "eyebrow": "FAQ",
+    "title": "Preguntes freqüents",
+    "subtitle": "Si no trobes la resposta, escriu-nos per WhatsApp.",
+    "search": "Cerca una pregunta…",
+    "searchLabel": "Cerca a les preguntes freqüents",
+    "noResults": "No hem trobat cap pregunta. Prova amb una altra paraula o pregunta'ns directament.",
+    "all": "Totes"
+  },
+  "cookies": {
+    "text": "Fem servir només cookies tècniques necessàries perquè el web funcioni. No fem servir cookies publicitàries.",
+    "accept": "D'acord",
+    "reject": "Només les necessàries",
+    "more": "Política de cookies"
+  },
+  "errors": {
+    "required": "Aquest camp és obligatori.",
+    "email": "Introdueix un correu vàlid.",
+    "phone": "Introdueix un telèfon vàlid.",
+    "privacy": "Has d'acceptar la política de privacitat.",
+    "tooLong": "El text és massa llarg.",
+    "hours": "Hores fora del límit del format.",
+    "players": "Entre 1 i 12 jugadors."
+  },
+  "notFound": {
+    "title": "Fora de pista",
+    "text": "Aquesta pàgina no existeix o s'ha mogut.",
+    "cta": "Torna a l'inici"
+  },
+  "legal": {
+    "updated": "Darrera actualització: {date}",
+    "draft": "⚠️ Text model provisional. Revisa'l amb un professional abans de publicar."
+  },
+  "email": {
+    "clientSubject": "Hem rebut la teva sol·licitud — Padel System Academy",
+    "clientHello": "Hola {name},",
+    "clientIntro": "Gràcies per confiar en nosaltres. Hem rebut la teva sol·licitud i et respondrem personalment en menys de 24 hores. Aquest és el resum:",
+    "clientOutro": "Si vols afegir alguna cosa, respon aquest correu o escriu-nos per WhatsApp.",
+    "contactSubject": "Hem rebut el teu missatge — Padel System Academy",
+    "contactIntro": "Gràcies pel teu missatge. Et respondrem ben aviat.",
+    "signature": "L'equip de Padel System Academy",
+    "customHours": "Personalitzat"
+  }
+}

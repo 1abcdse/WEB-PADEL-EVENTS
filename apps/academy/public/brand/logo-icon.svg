@@ -1,0 +1,8 @@
+<!-- ⚠️ PLACEHOLDER: substitueix per l'arxiu original del logo (versió icona/app) -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 104" role="img" aria-label="PS — Padel System Academy">
+  <polygon points="28,14 114,14 98,96 12,96" fill="#0B0B0B"/>
+  <polygon points="14.3,84 100.3,84 98,96 12,96" fill="#D6FF2E"/>
+  <text x="56" y="73" text-anchor="middle" font-family="Archivo, 'Arial Black', Arial, sans-serif" font-weight="900" font-style="italic" font-size="54" fill="#FFFFFF" letter-spacing="-2">PS</text>
+  <circle cx="113" cy="15" r="11" fill="#D6FF2E" stroke="#0B0B0B" stroke-width="2.5"/>
+  <path d="M104.5 9.5c5 2.5 7 8 5.5 14M121.5 20.5c-5-2.5-7-8-5.5-14" fill="none" stroke="#0B0B0B" stroke-width="1.8"/>
+</svg>

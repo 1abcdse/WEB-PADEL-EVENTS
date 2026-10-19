@@ -1,0 +1,175 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ── Tokens de marca (també exposats a Tailwind: bg-ink, text-lime…) ── */
+:root {
+  --ink: 11 11 11; /* #0B0B0B */
+  --lime: 214 255 46; /* #D6FF2E */
+  --paper: 255 255 255; /* #FFFFFF */
+  --stone: 236 236 231; /* #ECECE7 */
+  --graphite: 26 26 26; /* #1A1A1A */
+  --mute: 138 138 133; /* #8A8A85 */
+  --skew: -12deg;
+  --header-h: 72px;
+}
+
+@layer base {
+  html {
+    -webkit-text-size-adjust: 100%;
+    scroll-behavior: smooth;
+    scroll-padding-top: calc(var(--header-h) + 16px);
+  }
+  body {
+    @apply bg-ink font-sans text-paper antialiased;
+    text-rendering: optimizeLegibility;
+  }
+  ::selection {
+    @apply bg-lime text-ink;
+  }
+  :focus-visible {
+    outline: 2px solid rgb(var(--lime));
+    outline-offset: 3px;
+  }
+  .on-light :focus-visible {
+    outline-color: rgb(var(--ink));
+  }
+  h1,
+  h2,
+  h3,
+  h4 {
+    @apply font-display font-extrabold uppercase;
+    text-wrap: balance;
+  }
+  p {
+    text-wrap: pretty;
+  }
+}
+
+@layer components {
+  .container-brand {
+    @apply mx-auto w-full max-w-[1320px] px-4 sm:px-6 lg:px-10;
+  }
+  /* Etiqueta / eyebrow: com el wordmark del logo */
+  .eyebrow {
+    @apply font-display text-xs font-semibold uppercase tracking-brand sm:text-[0.8rem];
+  }
+  /* Paral·lelogram de marca: el contenidor s'inclina i el contingut es redreça */
+  .skew-box {
+    transform: skewX(var(--skew));
+  }
+  .skew-box > * {
+    transform: skewX(calc(var(--skew) * -1));
+  }
+  /* Franja llima a la base d'un bloc (com la del logo) */
+  .lime-stripe {
+    @apply relative;
+  }
+  .lime-stripe::after {
+    content: "";
+    @apply pointer-events-none absolute inset-x-0 bottom-0 h-1.5 bg-lime;
+  }
+  .display-italic {
+    @apply font-display font-black uppercase italic;
+  }
+}
+
+@layer utilities {
+  /* Gra lleuger de fotografia */
+  .grain::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    opacity: 0.08;
+    mix-blend-mode: overlay;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+  .text-outline {
+    color: transparent;
+    -webkit-text-stroke: 1.5px rgb(var(--paper));
+  }
+  .no-scrollbar {
+    scrollbar-width: none;
+  }
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+/* Entrada del hero amb CSS (no bloqueja el LCP esperant JS) */
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@keyframes ball-bounce {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(10px);
+  }
+}
+.animate-rise {
+  animation: rise 0.6s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+.animate-ball {
+  animation: ball-bounce 1.6s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* Reveal: només s'amaga si hi ha JS (classe .js a <html>) i no es demana menys moviment */
+.js .reveal {
+  opacity: 0;
+  transform: translateY(24px);
+  transition:
+    opacity 0.45s cubic-bezier(0.22, 1, 0.36, 1),
+    transform 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.js .reveal.is-visible {
+  opacity: 1;
+  transform: none;
+}
+@media (prefers-reduced-motion: reduce) {
+  .js .reveal {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+}
+@keyframes drop-in {
+  from {
+    opacity: 0;
+    transform: translate(-50%, 8px);
+  }
+}
+.animate-fade {
+  animation: fade-in 0.25s ease-out both;
+}
+.animate-drop {
+  animation: drop-in 0.2s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
