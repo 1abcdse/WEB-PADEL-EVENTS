@@ -6,6 +6,7 @@ Aplicació web per gestionar la Lliga Social de Pàdel (temporada 2026/27).
 - Motors de domini purs (sense BD ni UI): [`packages/domain`](packages/domain)
 - API REST + PostgreSQL: [`apps/api`](apps/api)
 - Web (Next.js): [`apps/web`](apps/web) — pantalla de parella a `/p/<token>`
+- Web de **Padel System Academy** (Next.js): [`apps/academy`](apps/academy) — `pnpm --filter @padel/academy dev`
 
 ## Desenvolupament
 

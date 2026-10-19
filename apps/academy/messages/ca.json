@@ -1,0 +1,54 @@
+{
+  "meta": {
+    "title": "Padel System Academy — Experiències de pàdel tot inclòs al Maresme",
+    "description": "Clínics de cap de setmana i stages intensius de 4 dies amb allotjament, àpats i fins a 30 hores d'entrenament de pàdel. Places limitades."
+  },
+  "common": {
+    "requestSpot": "Demana la teva plaça",
+    "discoverPacks": "Descobreix els packs",
+    "talkToUs": "Parla amb nosaltres",
+    "viewPack": "Veure el pack",
+    "from": "des de",
+    "perPerson": "per persona",
+    "hoursShort": "h",
+    "hoursOfPadel": "hores de pàdel",
+    "nights": "{count, plural, one {# nit} other {# nits}}",
+    "spotsPerGroup": "Màx. {count} jugadors per grup",
+    "level": "Nivell",
+    "includes": "Inclou",
+    "whatsapp": "Escriu-nos per WhatsApp",
+    "comingSoon": "Molt aviat"
+  },
+  "formats": {
+    "weekend": {
+      "name": "Clinic cap de setmana",
+      "badge": "Cap de setmana",
+      "summary": "Dissabte i diumenge de clínics temàtics per polir el teu joc.",
+      "maxHours": "Fins a {hours}h de pàdel"
+    },
+    "stage": {
+      "name": "Stage intensiu",
+      "badge": "Stage 4 dies",
+      "summary": "De divendres a dilluns: immersió total per fer un salt de nivell.",
+      "maxHours": "Fins a {hours}h de pàdel"
+    }
+  },
+  "days": {
+    "fri": "Dv",
+    "sat": "Ds",
+    "sun": "Dg",
+    "mon": "Dl"
+  },
+  "levels": {
+    "initiation": "Iniciació",
+    "intermediate": "Intermedi",
+    "advanced": "Avançat",
+    "competition": "Competició"
+  },
+  "home": {
+    "eyebrow": "Fase 1 · Web en construcció",
+    "title": "Entrena com un pro. Viu-ho com una experiència.",
+    "subtitle": "Estem preparant la nova web de Padel System Academy. Mentrestant, pots revisar el sistema de disseny.",
+    "styleguideLink": "Veure l'styleguide"
+  }
+}

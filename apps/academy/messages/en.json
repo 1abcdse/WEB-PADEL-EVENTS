@@ -1,0 +1,54 @@
+{
+  "meta": {
+    "title": "Padel System Academy — All-inclusive padel experiences in the Maresme",
+    "description": "Weekend clinics and intensive 4-day stages with accommodation, meals and up to 30 hours of padel training. Limited spots."
+  },
+  "common": {
+    "requestSpot": "Request your spot",
+    "discoverPacks": "Discover the packs",
+    "talkToUs": "Talk to us",
+    "viewPack": "View pack",
+    "from": "from",
+    "perPerson": "per person",
+    "hoursShort": "h",
+    "hoursOfPadel": "hours of padel",
+    "nights": "{count, plural, one {# night} other {# nights}}",
+    "spotsPerGroup": "Max. {count} players per group",
+    "level": "Level",
+    "includes": "Includes",
+    "whatsapp": "Message us on WhatsApp",
+    "comingSoon": "Coming soon"
+  },
+  "formats": {
+    "weekend": {
+      "name": "Weekend clinic",
+      "badge": "Weekend",
+      "summary": "Saturday and Sunday of themed clinics to sharpen your game.",
+      "maxHours": "Up to {hours}h of padel"
+    },
+    "stage": {
+      "name": "Intensive stage",
+      "badge": "4-day stage",
+      "summary": "Friday to Monday: full immersion to level up your game.",
+      "maxHours": "Up to {hours}h of padel"
+    }
+  },
+  "days": {
+    "fri": "Fri",
+    "sat": "Sat",
+    "sun": "Sun",
+    "mon": "Mon"
+  },
+  "levels": {
+    "initiation": "Beginner",
+    "intermediate": "Intermediate",
+    "advanced": "Advanced",
+    "competition": "Competition"
+  },
+  "home": {
+    "eyebrow": "Phase 1 · Website under construction",
+    "title": "Train like a pro. Live it as an experience.",
+    "subtitle": "We are building the new Padel System Academy website. In the meantime, you can review the design system.",
+    "styleguideLink": "View the styleguide"
+  }
+}

@@ -11,3 +11,4 @@ next-env.d.ts
 data/
 *.inscrits.*
 demo-dist/
+.env*.local
