@@ -1,0 +1,90 @@
+@import "tailwindcss";
+
+/* ───────────────────────── Tokens de marca ─────────────────────────
+   Regla d'or: el llima és escàs. Només per a accions i dades clau,
+   i sempre sobre negre (mai text llarg en llima sobre blanc). */
+@theme {
+  --color-ink: #0b0b0b;
+  --color-lime: #d6ff2e;
+  --color-paper: #ffffff;
+  --color-stone: #ecece7;
+  --color-graphite: #1a1a1a;
+  --color-mute: #8a8a85;
+  /* Variant de text secundari sobre fons clars (contrast AA sobre blanc i stone) */
+  --color-mute-strong: #5f5f5a;
+
+  /* Escala tipogràfica fluida */
+  --text-hero: clamp(3rem, 9vw, 7.5rem);
+  --text-hero--line-height: 0.92;
+  --text-display: clamp(2.25rem, 5.5vw, 4.5rem);
+  --text-display--line-height: 0.95;
+  --text-title: clamp(1.75rem, 3.2vw, 2.75rem);
+  --text-title--line-height: 1.05;
+  --text-giant: clamp(4.5rem, 12vw, 10rem);
+  --text-giant--line-height: 0.85;
+
+  --tracking-brand: 0.25em;
+  --radius-brand: 10px;
+  --ease-brand: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* Fonts carregades amb next/font (variables definides al layout) */
+@theme inline {
+  --font-display: var(--font-archivo), "Arial Black", sans-serif;
+  --font-sans: var(--font-inter), system-ui, sans-serif;
+}
+
+@layer base {
+  html {
+    -webkit-text-size-adjust: 100%;
+    scroll-behavior: smooth;
+  }
+  body {
+    background: var(--color-paper);
+    color: var(--color-ink);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+  }
+  ::selection {
+    background: var(--color-lime);
+    color: var(--color-ink);
+  }
+  :focus-visible {
+    outline: 3px solid var(--color-lime);
+    outline-offset: 3px;
+    box-shadow: 0 0 0 6px var(--color-ink);
+  }
+}
+
+@layer components {
+  /* Paral·lelogram inclinat: la forma del logo */
+  .ps-skew {
+    transform: skewX(-12deg);
+  }
+  .ps-unskew {
+    display: inline-block;
+    transform: skewX(12deg);
+  }
+  /* Eyebrow / etiquetes amb el tracking del wordmark */
+  .ps-eyebrow {
+    font-family: var(--font-display);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: var(--tracking-brand);
+    font-size: 0.75rem;
+    line-height: 1.2;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

@@ -1,0 +1,198 @@
+{
+  "meta": {
+    "title": "Padel System Academy — Experiencias de pádel todo incluido en el Maresme",
+    "description": "Clínics de fin de semana y stages intensivos de 4 días con alojamiento, comidas y hasta 30 horas de entrenamiento de pádel. Plazas limitadas."
+  },
+  "common": {
+    "requestSpot": "Pide tu plaza",
+    "discoverPacks": "Descubre los packs",
+    "talkToUs": "Habla con nosotros",
+    "viewPack": "Ver el pack",
+    "from": "desde",
+    "perPerson": "por persona",
+    "hoursShort": "h",
+    "hoursOfPadel": "horas de pádel",
+    "nights": "{count, plural, one {# noche} other {# noches}}",
+    "spotsPerGroup": "Máx. {count} jugadores por grupo",
+    "level": "Nivel",
+    "includes": "Incluye",
+    "whatsapp": "Escríbenos por WhatsApp",
+    "comingSoon": "Muy pronto"
+  },
+  "formats": {
+    "weekend": {
+      "name": "Clinic fin de semana",
+      "badge": "Fin de semana",
+      "summary": "Sábado y domingo de clínics temáticos para pulir tu juego.",
+      "maxHours": "Hasta {hours}h de pádel"
+    },
+    "stage": {
+      "name": "Stage intensivo",
+      "badge": "Stage 4 días",
+      "summary": "De viernes a lunes: inmersión total para dar un salto de nivel.",
+      "maxHours": "Hasta {hours}h de pádel"
+    }
+  },
+  "days": {
+    "fri": "Vi",
+    "sat": "Sá",
+    "sun": "Do",
+    "mon": "Lu"
+  },
+  "levels": {
+    "initiation": "Iniciación",
+    "intermediate": "Intermedio",
+    "advanced": "Avanzado",
+    "competition": "Competición"
+  },
+  "nav": {
+    "experiences": "Experiencias",
+    "allExperiences": "Todas las experiencias",
+    "howItWorks": "Cómo funciona",
+    "academy": "Academia",
+    "facilities": "Instalaciones",
+    "faq": "FAQ",
+    "contact": "Contacto",
+    "menu": "Menú",
+    "openMenu": "Abrir el menú",
+    "closeMenu": "Cerrar el menú",
+    "language": "Idioma",
+    "book": "Reserva",
+    "home": "Inicio",
+    "skip": "Saltar al contenido"
+  },
+  "home": {
+    "hero": {
+      "eyebrow": "Academia internacional de pádel · Maresme",
+      "title": "Entrena como un pro. Vívelo como una experiencia.",
+      "subtitle": "Packs todo incluido: alojamiento, comidas y hasta 30 horas de pádel con el método PS. Tú solo tienes que venir a jugar.",
+      "scroll": "Desplázate"
+    },
+    "stats": {
+      "weekend": "en un fin de semana",
+      "stage": "en 4 días",
+      "allIn": "Todo incluido",
+      "allInSub": "alojamiento, comidas y pista",
+      "groups": "Grupos reducidos",
+      "groupsSub": "máximo 4 jugadores por entrenador"
+    },
+    "formats": {
+      "eyebrow": "Dos formatos",
+      "title": "Elige tu formato"
+    },
+    "includes": {
+      "eyebrow": "Todo incluido",
+      "title": "Qué incluye cada experiencia",
+      "padel": "Pádel",
+      "padelText": "Entrenamiento en grupos reducidos, de 8 a 30 horas según el pack, con un plan hecho para ti.",
+      "stay": "Alojamiento",
+      "stayText": "Duermes cerca de la pista. Llegas, dejas la bolsa y a jugar.",
+      "meals": "Comidas",
+      "mealsText": "Menús pensados para deportistas, para que rindas todo el día.",
+      "tracking": "Seguimiento y análisis",
+      "trackingText": "Diagnóstico al inicio, objetivos claros y un informe final para seguir mejorando en casa."
+    },
+    "packs": {
+      "eyebrow": "Experiencias",
+      "title": "Packs destacados",
+      "all": "Todos",
+      "seeAll": "Ver todas las experiencias",
+      "filterLabel": "Filtra por formato"
+    },
+    "method": {
+      "eyebrow": "El método PS",
+      "title": "Un sistema, no un cursillo",
+      "intro": "Cada experiencia sigue los mismos cuatro pasos. Por eso la academia se llama System.",
+      "s1": "Diagnóstico",
+      "s1Text": "Analizamos tu juego en pista el primer día: técnica, posición y toma de decisiones.",
+      "s2": "Plan personalizado",
+      "s2Text": "Fijamos 2 o 3 objetivos concretos y adaptamos cada sesión a tu nivel.",
+      "s3": "Entrenamiento intensivo",
+      "s3Text": "Bloques técnicos, tácticos y de juego real, en grupos reducidos y con corrección constante.",
+      "s4": "Informe final",
+      "s4Text": "Te llevas un resumen de lo que has mejorado y los ejercicios para seguir en casa."
+    },
+    "day": {
+      "eyebrow": "Un día en la academia",
+      "title": "Así es un día de stage",
+      "note": "Ejemplo orientativo de un día de Stage Performance. Los horarios se adaptan a cada grupo.",
+      "t0800": "Desayuno",
+      "t0900": "Calentamiento y activación",
+      "t0930": "Bloque técnico",
+      "t1200": "Juego dirigido",
+      "t1330": "Comida",
+      "t1500": "Descanso, fisio o piscina",
+      "t1630": "Bloque táctico",
+      "t1830": "Partidos con corrección",
+      "t2100": "Cena"
+    },
+    "team": {
+      "eyebrow": "El equipo",
+      "title": "Entrenadores que juegan contigo",
+      "placeholder": "Perfil pendiente: añade nombre, foto y trayectoria",
+      "role1": "Dirección técnica",
+      "role2": "Entrenador/a",
+      "role3": "Preparación física"
+    },
+    "testimonials": {
+      "eyebrow": "Testimonios",
+      "title": "Lo dicen los jugadores",
+      "example": "Ejemplo",
+      "note": "Espacio reservado para testimonios reales. Sustituye estos ejemplos antes de publicar.",
+      "q1": "[Testimonio real de un jugador del Clinic Focus]",
+      "q2": "[Testimonio real de un jugador del Stage Performance]",
+      "q3": "[Testimonio real de un acompañante o de un jugador de iniciación]",
+      "name": "[Nombre del jugador]"
+    },
+    "gallery": {
+      "eyebrow": "Galería",
+      "title": "Ambiente de pista"
+    },
+    "faq": {
+      "eyebrow": "Preguntas frecuentes",
+      "title": "Antes de reservar",
+      "more": "Ver todas las preguntas",
+      "q1": "¿Qué nivel necesito?",
+      "a1": "Ninguno en concreto. Tenemos packs desde iniciación hasta competición y hacemos los grupos por nivel.",
+      "q2": "¿Puedo venir solo o sola?",
+      "a2": "Claro. Te colocamos en un grupo de tu nivel y no tendrás que buscar pareja.",
+      "q3": "¿Puedo venir con un acompañante que no juegue?",
+      "a3": "Sí. Puedes añadir el extra de acompañante no jugador, con alojamiento y comidas incluidos.",
+      "q4": "¿Cómo se hace la reserva?",
+      "a4": "Envíanos la solicitud con el pack y la fecha. Te respondemos personalmente para confirmar la plaza y los detalles.",
+      "q5": "¿Dónde se hacen las experiencias?",
+      "a5": "En el Maresme, entre El Masnou y Montgat. Te confirmamos la instalación exacta de cada fecha al reservar."
+    },
+    "finalCta": {
+      "title": "Plazas limitadas por fin de semana. Reserva la tuya.",
+      "subtitle": "Grupos de máximo 4 jugadores. Cuando se llenan, se acabó."
+    }
+  },
+  "footer": {
+    "tagline": "Experiencias de pádel todo incluido en el Maresme.",
+    "contact": "Contacto",
+    "explore": "Explora",
+    "legal": "Legal",
+    "legalNotice": "Aviso legal",
+    "privacy": "Privacidad",
+    "cookies": "Cookies",
+    "follow": "Síguenos",
+    "rights": "Todos los derechos reservados.",
+    "mapSoon": "Mapa disponible cuando confirmemos las instalaciones"
+  },
+  "photo": {
+    "replace": "Foto pendiente",
+    "hero": "Foto o vídeo de acción en pista",
+    "court": "Pista",
+    "coach": "Retrato del entrenador/a",
+    "match": "Partido",
+    "group": "Grupo entrenando",
+    "stay": "Alojamiento",
+    "food": "Comidas",
+    "detail": "Detalle de pala y pelota"
+  },
+  "contact": {
+    "whatsappGeneric": "¡Hola! Quiero información sobre las experiencias de Padel System Academy.",
+    "whatsappPack": "¡Hola! Quiero información sobre el pack {pack} de Padel System Academy."
+  }
+}
